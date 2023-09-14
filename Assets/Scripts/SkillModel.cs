@@ -1,0 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SkillModel : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    void delete (GameObject choiceWindow,GameObject choiceText)
+    {
+        choiceWindow.SetActive(false);
+        choiceText.SetActive(false);
+    }
+        
+}

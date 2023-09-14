@@ -59,10 +59,11 @@ public class BattleManager : MonoBehaviour
     bool isQuestionTurn;
 
     //タイマー
-    float leftTime = 15;
+    float remainTime = 15;
     float timer;
 
-    GameObject clickedGameObject;
+    //選んだ選択肢
+    GameObject playerChoice;
 
 
     // Start is called before the first frame update
@@ -79,26 +80,35 @@ public class BattleManager : MonoBehaviour
         {
             
             //制限時間内か
-            if (leftTime >= 0)
+            if (remainTime >= 0)
             {
                 //カウントダウン
-                leftTime -= Time.deltaTime;
-                timeText.GetComponent<Text>().text = leftTime.ToString("f1");
-                timeBar.GetComponent<Slider>().value = leftTime;
+                remainTime -= Time.deltaTime;
+                timeText.GetComponent<Text>().text = remainTime.ToString("f1");
+                timeBar.GetComponent<Slider>().value = remainTime;
             }
+            else
+            //時間が0になったら
+            {
+
+            }
+            //左クリックしたら
             if (Input.GetMouseButtonDown(0))
             {
-                //選択肢をクリック
+                //クリックした位置を取得
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                //クリックした位置にあるオブジェクトを取得
                 RaycastHit2D hit2D = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction);
 
+                //オブジェクトを取得していたら
                 if (hit2D)
                 {
                     isQuestionTurn = false;
-                    ChangePhase();
-                    clickedGameObject = hit2D.transform.gameObject;
+                    ChangeTurn();
+                    playerChoice = hit2D.transform.gameObject;
+
                     //正解か不正解か
-                    if(clickedGameObject.tag == "true")
+                    if(playerChoice.tag == "true")
                     {
                         Debug.Log("正解");
                         //ダメージ計算
@@ -109,24 +119,40 @@ public class BattleManager : MonoBehaviour
                     else
                     {
                         Debug.Log("不正解");
-                        messageText.GetComponent<Text>().text = "不正解!";
+                        messageText.GetComponent<Text>().text = "不正解...";
                     }
-                    StartCoroutine("Interval");
-                    MonsterTurn();
+                    StartCoroutine("MonsterTurn");
                 }
             }
         }
     }
 
-    void MonsterTurn()
+    void PlayerTurn()
     {
+        int act = 1;
+        while(false)
+        {
+            if(Input.GetKeyDown(KeyCode.A) && act != 1)
+            {
+                act--;
+                //オブジェクトを動かす
+            }
+            if(Input.GetKeyDown(KeyCode.D) && act != 4)
+            {
+                act++;
+            }
+        }
+    }
+
+    /*void MonsterTurn()
+        StartCoroutine("Interval");
         int damage = monsterAtk - playerDef;
         messageText.GetComponent<Text>().text = "スライムの攻撃!" + damage + "のダメージを受けた";
         playerHpBar.GetComponent<Slider>().value = playerHp - damage;
         StartCoroutine("Interval");
         SetQuestion();
-        ChangePhase();
-    }
+        ChangeTurn();
+    }*/
 
     void SetQuestion()
     {
@@ -144,10 +170,21 @@ public class BattleManager : MonoBehaviour
         choiceWindow4.tag = "false";
     }
 
-    IEnumerator Interval()
+    IEnumerator MonsterTurn()
     {
         //2秒待つ
         yield return new WaitForSeconds(2);
+        //ダメージ計算
+        int damage = monsterAtk - playerDef;
+        //メッセージ出力
+        messageText.GetComponent<Text>().text = "スライムの攻撃!" + damage + "のダメージを受けた";
+        //ダメージバー変更
+        playerHpBar.GetComponent<Slider>().value = playerHp - damage;
+        //2秒待つ
+        yield return new WaitForSeconds(2);
+        //
+        SetQuestion();
+        ChangeTurn();
     }
 
  
@@ -162,11 +199,11 @@ public class BattleManager : MonoBehaviour
         monsterHpBar.GetComponent<Slider>().value = monsterHp;
         isQuestionTurn = true;
         SetQuestion();
-        ChangePhase();
+        ChangeTurn();
     }
 
 
-    void ChangePhase()
+    void ChangeTurn()
     {
         if (isQuestionTurn)
         {
