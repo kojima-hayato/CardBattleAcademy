@@ -111,13 +111,13 @@ public class BattleManager : MonoBehaviour
             {
                 //–îˆó‚ð“®‚©‚·
                 act--;
-                actSelect.transform.Translate(-0.5f,0,0);
+                actSelect.transform.Translate(-0.65f,0,0);
             }
             if (Input.GetKeyDown(KeyCode.S) && act != 4)
             {
                 //–îˆó‚ð“®‚©‚·
                 act++;
-                actSelect.transform.Translate(0.5f,0,0);
+                actSelect.transform.Translate(0.65f,0,0);
             }
             if(Input.GetKeyDown(KeyCode.Return) && act == 1)
             {
