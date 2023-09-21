@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class UIControl : MonoBehaviour
 {
     public static bool isUINow; //UIを開いているか判別するトークン
 
-    public GameObject ui;   //UI全体の格納
+    public GameObject ui, parents;   //UI全体の格納
 
     TextMeshProUGUI[] tMP;
 
@@ -17,7 +14,7 @@ public class UIControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tMP = ui.GetComponentsInChildren<TextMeshProUGUI>();
+        tMP = parents.GetComponentsInChildren<TextMeshProUGUI>();
 
         tMP[nowIndex].color = Color.yellow;
 
@@ -52,7 +49,8 @@ public class UIControl : MonoBehaviour
             if (nowIndex == 0)
             {
                 nowIndex = tMP.Length - 1;
-            } else
+            }
+            else
             {
                 nowIndex -= 1;
             }
