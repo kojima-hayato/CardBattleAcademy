@@ -75,6 +75,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7769346573757960091, guid: 037f476bc0afc9046ac4172eae225a5d, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6db5a2ad7725b004d83124a26421238e, type: 2}
     - target: {fileID: 9081382358483096740, guid: 037f476bc0afc9046ac4172eae225a5d, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -119,3 +123,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a100c54838d9ed448fa993cd8556eff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MoveSecond: 0.1
+  RPGSceneManager: {fileID: 0}
+  _pos: {x: 0, y: 0, z: 0}
