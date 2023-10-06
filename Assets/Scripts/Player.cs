@@ -106,6 +106,7 @@ public class Player : MonoBehaviour
         }
     }
 
+
     Animator Animator { get => GetComponent<Animator>(); }
     static readonly string TRIGGER_MoveDown = "MoveDownTrigger";
     static readonly string TRIGGER_MoveLeft = "MoveLeftTrigger";
@@ -126,12 +127,17 @@ public class Player : MonoBehaviour
             default: throw new System.NotImplementedException("");
         }
         Animator.SetTrigger(triggerName);
+        Debug.Log("Trigger Name: " + triggerName);
+
     }
 
     private void Awake()
     {
         SetDirAnimation(_currentDir);
     }
+
+    
+
 }
 
 
