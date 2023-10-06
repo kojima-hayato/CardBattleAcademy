@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: pipo-map001_16
+  m_Name: MoveDungeonMapChip
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -448949087, guid: 8091e9c708c730145a2f63c867117711, type: 3}
-  m_Color: {r: 0.754717, g: 0.71555716, b: 0.71555716, a: 1}
+  m_Sprite: {fileID: 1676636924, guid: d01b1ce7502788a448f250f18fa30dae, type: 3}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0

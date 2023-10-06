@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: pipo-map001_16
+  m_Name: DungeonStartPos
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -448949087, guid: 8091e9c708c730145a2f63c867117711, type: 3}
-  m_Color: {r: 0.754717, g: 0.71555716, b: 0.71555716, a: 1}
+  m_Sprite: {fileID: -2042896749, guid: e7dcf7c8067ba144c810ebe2c7974a53, type: 3}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0
