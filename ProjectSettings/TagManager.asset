@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - true
-  - false
+  - Frame
+  - Roop
   layers:
   - Default
   - TransparentFX
@@ -38,7 +38,7 @@ TagManager:
   - 
   - 
   - 
-  - background
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
@@ -46,9 +46,9 @@ TagManager:
   - name: Background
     uniqueID: 1552801971
     locked: 0
-  - name: Map
+  - name: Image
     uniqueID: 2043157801
     locked: 0
-  - name: Player
-    uniqueID: 141986967
+  - name: Prayler
+    uniqueID: 2135505957
     locked: 0
