@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerModel : MonoBehaviour
 {
-    public Player player = new Player();
+    public PlayerDB player = new PlayerDB();
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    public Player PlayerSet()
+    public PlayerDB PlayerSet()
     {
         player.name = "‚ ‚ ‚ ‚ ";
         player.lv = 1;
@@ -28,7 +28,7 @@ public class PlayerModel : MonoBehaviour
     }
 
 }
-public class Player
+public class PlayerDB
 {
     public string name;
     public int lv;

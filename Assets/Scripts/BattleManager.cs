@@ -10,7 +10,7 @@ public class BattleManager : MonoBehaviour
     SkillModel sm;
     ItemModel im;
     MonsterModel mm;
-    Player p;
+    PlayerDB p;
     MonsterDB m;
    
     //選択肢ウィンドウ
@@ -75,14 +75,6 @@ public class BattleManager : MonoBehaviour
 
     //プレイヤー情報
     public GameObject playerText;
-    string playerName = "ああああ";
-    int playerLv = 1;
-    int playerHp = 12;
-    int playerMaxHp = 15;
-    int playerMaxSp = 10;
-    int playerSp = 10;
-    float playerAtk = 5;
-    float playerDef = 2;
 
     //モンスター情報
     public static int monsterID;
@@ -123,14 +115,6 @@ public class BattleManager : MonoBehaviour
     {
         //プレイヤー情報
         p = pm.PlayerSet();
-        playerName = p.name;
-        playerLv = p.lv;
-        playerMaxHp = p.maxHp;
-        playerHp = p.nowHp;
-        playerMaxSp = p.maxSp;
-        playerSp = p.nowSp;
-        playerAtk = p.atk;
-        playerDef = p.def;
 
         //モンスター情報
         m = mm.MonsterDB(2);
@@ -314,7 +298,7 @@ public class BattleManager : MonoBehaviour
     {
         //スキル
         isSkillTurn = false;
-        sm.SkillUse(skillAct, playerSp);
+        sm.SkillUse(skillAct, p.nowSp);
         MessageActive();
 
         if(0 > p.nowSp - costSp)
@@ -328,7 +312,7 @@ public class BattleManager : MonoBehaviour
         {
             yield return new WaitForSeconds(battleSpeed);
             //SPバー反映
-            playerSp -= costSp;
+            p.nowSp -= costSp;
             playerSpBar.GetComponent<Slider>().value = p.nowSp;
             nowSp.GetComponent<Text>().text = p.nowSp.ToString();
             isQuestionTurn = true;
