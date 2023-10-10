@@ -22,7 +22,9 @@ public class Map : MonoBehaviour
     public bool FindMassEventPos(TileBase tile, out Vector3Int pos)
     {
         var eventLayer = _tilemaps[EVENT_BOX_TILEMAP_NAME];
-        var renderer = eventLayer.GetComponent();
+        var renderer = eventLayer.GetComponent<Renderer>();
+        //↑エラー吐いてたから<Renderer>を追加しました。正しいかは分かりません。
+        
         var min = eventLayer.LocalToCell(renderer.bounds.min);
         var max = eventLayer.LocalToCell(renderer.bounds.max);
         pos = Vector3Int.zero;
@@ -83,7 +85,5 @@ public class Map : MonoBehaviour
         }
         return mass;
     }
-
-
 
 }
