@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: '[Base]BaseChip_pipo_1029'
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: -627847122, guid: b09d8a88c99badb4382a0c2c230b338a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0.02109909, a: 1}
   m_Transform:
     e00: 1
     e01: 0

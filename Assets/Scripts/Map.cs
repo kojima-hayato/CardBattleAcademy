@@ -1,4 +1,3 @@
-//Map.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,8 +22,6 @@ public class Map : MonoBehaviour
     {
         var eventLayer = _tilemaps[EVENT_BOX_TILEMAP_NAME];
         var renderer = eventLayer.GetComponent<Renderer>();
-        //↑エラー吐いてたから<Renderer>を追加しました。正しいかは分かりません。
-        
         var min = eventLayer.LocalToCell(renderer.bounds.min);
         var max = eventLayer.LocalToCell(renderer.bounds.max);
         pos = Vector3Int.zero;
@@ -39,8 +36,6 @@ public class Map : MonoBehaviour
         return false;
     }
 
-
-
     private void Awake()
     {
         _tilemaps = new Dictionary<string, Tilemap>();
@@ -52,7 +47,6 @@ public class Map : MonoBehaviour
         //EventBoxを非表示にする
         _tilemaps[EVENT_BOX_TILEMAP_NAME].gameObject.SetActive(false);
     }
-
 
     public Vector3 GetWorldPos(Vector3Int pos)
     {
@@ -85,5 +79,4 @@ public class Map : MonoBehaviour
         }
         return mass;
     }
-
 }
