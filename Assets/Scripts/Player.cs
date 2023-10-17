@@ -41,8 +41,9 @@ public class Player : MonoBehaviour
             }
 
         }
-    }
-    public void SetPosNoCoroutine(Vector3Int pos)
+}
+
+public void SetPosNoCoroutine(Vector3Int pos)
     {
         _pos = pos;
         transform.position = RPGSceneManager.ActiveMap.Grid.CellToWorld(pos);
@@ -136,7 +137,43 @@ public class Player : MonoBehaviour
         SetDirAnimation(_currentDir);
     }
 
-    
+
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            Move(Vector3.right); // ‰E‚ÉˆÚ“®
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            Move(Vector3.left); // ¶‚ÉˆÚ“®
+        }
+        else if (Input.GetKey(KeyCode.UpArrow))
+        {
+            Move(Vector3.up); // ã‚ÉˆÚ“®
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            Move(Vector3.down); // ‰º‚ÉˆÚ“®
+        }
+        else
+        {
+            StopMoving(); // •ûŒüƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍˆÚ“®‚ğ’â~
+        }
+    }
+
+    void Move(Vector3 direction)
+    {
+        // ‚±‚±‚ÉˆÚ“®ˆ—‚ğÀ‘•‚·‚é
+        // direction ‚ÍˆÚ“®•ûŒü‚ğ¦‚µ‚Ü‚·
+    }
+
+    void StopMoving()
+    {
+        // ‚±‚±‚ÉˆÚ“®‚ğ’â~‚·‚éˆ—‚ğÀ‘•‚·‚é
+    }
+
+
 
 }
 

@@ -6,7 +6,14 @@ using UnityEngine;
 
 public class move_chara: MonoBehaviour
 {
-    private float speed = 0.1f; //float‚Í¬”“_
+    private float speed = 0.005f; //float‚Í¬”“_
+    private Animator animator;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();//¦g‚¤‚Æ‚«‚Íƒ„‚ğ”¼Šp‚É‚µ‚Ä‚­‚¾‚³‚¢
+    }
+
 
     void Update()
     {
