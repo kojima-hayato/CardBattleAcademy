@@ -10,7 +10,7 @@ public class Talk : MonoBehaviour
     public Text Text;
 
     [SerializeField]
-    string words = "意味のない日々";
+    string words = "若者をハッピーに！ハッピーハッピーハッピーハッピーハッピーハッピーハッピーハッピー";
 
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -18,6 +18,9 @@ public class Talk : MonoBehaviour
         {
             Text.text = words;
             dialogue.SetActive(true);
+
+
+
         }
     }
 

@@ -2839,9 +2839,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b055f36643be0b44fa710b8e42ff2cd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogue: {fileID: 1479523608}
-  Text: {fileID: 1680884180}
-  words: "\u610F\u5473\u306E\u306A\u3044\u65E5\u3005"
+  dialogue: {fileID: 0}
+  Text: {fileID: 0}
+  words: "\u82E5\u8005\u3092\u30CF\u30C3\u30D4\u30FC\u306B\uFF01\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC"
 --- !u!50 &1088249611
 Rigidbody2D:
   serializedVersion: 4
@@ -6733,7 +6733,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u3042\u3042\u3042\u3042\u3042\u3042"
+  m_Text: "\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F\u30CF\u30C3\u30D4\u30FC\u304B\uFF1F"
 --- !u!222 &1680884181
 CanvasRenderer:
   m_ObjectHideFlags: 0
