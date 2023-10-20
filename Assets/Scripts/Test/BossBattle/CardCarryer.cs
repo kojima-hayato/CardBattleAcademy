@@ -5,9 +5,9 @@ using UnityEngine;
 public class CardCarryer : MonoBehaviour
 {
     Vector3 cardPos, mousePos;
-    GameObject framePrefab, nowFrame, nextFrame;
-    public static List<GameObject> frameList;
-    bool isEnterAlgo, isOnFrame, isInFrameList;
+    GameObject framePrefab, nowFrame, nextFrame, childFrame, trueFrame, falseFrame;
+    public static List<GameObject> frameList, childFrameList;
+    bool isEnterAlgo, isOnFrame, isInFrameList, isInChildFrameList;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +17,9 @@ public class CardCarryer : MonoBehaviour
 
         //既に使用されているフレームのリスト
         frameList = new List<GameObject>();
+
+        //if文やループ文に直結するフレームのリスト
+        childFrameList = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -48,13 +51,22 @@ public class CardCarryer : MonoBehaviour
         //待機状態のフレームの上かつアルゴリズムに組み込まれている場合、解除する
         if (collision.gameObject == nowFrame && isEnterAlgo)
         {
-            if (transform.tag == "Roop")
+            if (!isInChildFrameList)
             {
-                nowFrame.transform.Translate(0.0f, -1.0f, 0.0f);
-            }
+                if (tag == "Roop")
+                {
+                    nowFrame.transform.Translate(0.0f, -1.0f, 0.0f);
+                    Destroy(childFrame);
+                }
+                else if (tag == "If")
+                {
+                    Destroy(trueFrame);
+                    Destroy(falseFrame);
+                }
+                Destroy(nextFrame);
 
-            Destroy(nextFrame);
-            frameList.Remove(nowFrame);
+                frameList.Remove(nowFrame);
+            }
 
             nowFrame = null;
             isEnterAlgo = false;
@@ -82,22 +94,16 @@ public class CardCarryer : MonoBehaviour
 
     public void OnMouseUp()
     {
-
-        //重複検知トークンの初期化
-        isInFrameList = false;
-
         //同じフレームに置こうとすると配置を止める
         if (frameList != null && !isOnFrame)
         {
-            foreach (GameObject f in frameList)
-            {
-                if (f == nowFrame)
-                {
-                    Debug.Log("同じframeへの配置");
-                    isInFrameList = true;
-                    break;
-                }
-            }
+            isInFrameList = CheckDuplicate(frameList, nowFrame);
+        }
+
+        //多重ループを止める
+        if (childFrameList != null && !isOnFrame)
+        {
+            isInChildFrameList = CheckDuplicate(childFrameList, nowFrame);
         }
 
         //次のフレームを作成し、今のフレームの位置を調整する
@@ -108,32 +114,98 @@ public class CardCarryer : MonoBehaviour
                 isEnterAlgo = true;
 
                 Vector3 nextPos = nowFrame.transform.position;
+                Vector3 childPos = nowFrame.transform.position;
+                Vector3 truePos = nowFrame.transform.position;
+                Vector3 falsePos = nowFrame.transform.position;
 
-                if (tag == "Roop")
+                //ループや分岐の対象でなければ次のフレームを配置する
+                if (!isInChildFrameList)
                 {
-                    nowFrame.transform.Translate(0.0f, 1.0f, 0.0f);
-                    nextPos.y -= 1.0f;
+                    if (tag == "Roop")
+                    {
+                        nowFrame.transform.Translate(0.0f, 1.0f, 0.0f);
+                        nextPos.x += 1.5f;
+
+                        childPos.y -= 1.0f;
+
+                        childFrame = Instantiate(framePrefab, childPos, Quaternion.identity);
+                        childFrame.transform.SetParent(nowFrame.transform.parent);
+
+                        childFrameList.Add(childFrame);
+
+                    }
+                    else if (tag == "If")
+                    {
+                        nextPos.x += 3.0f;
+
+                        //true分岐のフレーム
+                        truePos.x += 1.5f;
+                        truePos.y += 1.0f;
+
+                        trueFrame = Instantiate(framePrefab, truePos, Quaternion.identity);
+                        trueFrame.transform.SetParent(nowFrame.transform.parent);
+
+                        //false分岐のフレーム
+                        falsePos.x += 1.5f;
+                        falsePos.y -= 1.0f;
+
+                        falseFrame = Instantiate(framePrefab, falsePos, Quaternion.identity);
+                        falseFrame.transform.SetParent(nowFrame.transform.parent);
+
+                        childFrameList.Add(trueFrame);
+                        childFrameList.Add(falseFrame);
+                    }
+                    else
+                    {
+                        nextPos.x += 1.5f;
+                    }
+
+                    nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity);
+                    nextFrame.transform.SetParent(nowFrame.transform.parent);
+
+                    //カードの位置をフレームに合わせ、前に表示させる
+                    transform.position = nowFrame.transform.position;
+                    transform.Translate(0.0f, 0.0f, -1.0f);
+
+                    frameList.Add(nowFrame);
                 }
                 else
                 {
-                    nextPos.x += 1.5f;
+                    if(!(tag == "Roop" || tag == "If"))
+                    {
+                        frameList.Add(nowFrame);
+
+                        //カードの位置をフレームに合わせ、前に表示させる
+                        transform.position = nowFrame.transform.position;
+                        transform.Translate(0.0f, 0.0f, -1.0f);
+                    } else
+                    {
+                        Debug.Log("多重ループ・多重分岐の発生");
+                    }
                 }
-
-                nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity);
-                nextFrame.transform.SetParent(nowFrame.transform.parent);
-
-                transform.position = nowFrame.transform.position;
-                transform.Translate(0.0f, 0.0f, -1.0f);
-
-                frameList.Add(nowFrame);
 
             }
             else if (isOnFrame)
             {
+                //カードの位置をフレームに合わせ、前に表示させる
                 transform.position = nowFrame.transform.position;
                 transform.Translate(0.0f, 0.0f, -1.0f);
             }
         }
     }
 
+    private bool CheckDuplicate(List<GameObject> gameObjects, GameObject target)    //重複チェック
+    {
+        bool result = false;
+
+        foreach(GameObject g in gameObjects)
+        {
+            if(g == target)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
 }

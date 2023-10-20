@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Frame
   - Roop
+  - If
   layers:
   - Default
   - TransparentFX
