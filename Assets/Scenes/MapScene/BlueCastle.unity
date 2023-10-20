@@ -1568,7 +1568,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0020409, y: -260.5288}
+  m_AnchoredPosition: {x: -0.0020409, y: -215}
   m_SizeDelta: {x: 215.84, y: 28.779}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1007259585
@@ -2839,9 +2839,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b055f36643be0b44fa710b8e42ff2cd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogue: {fileID: 0}
-  Text: {fileID: 0}
-  words: "\u82E5\u8005\u3092\u30CF\u30C3\u30D4\u30FC\u306B\uFF01\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC\u30CF\u30C3\u30D4\u30FC"
+  dialogue: {fileID: 1479523608}
+  Text: {fileID: 1680884180}
+  words: "\u5E78\u798F\u3068\u306F"
 --- !u!50 &1088249611
 Rigidbody2D:
   serializedVersion: 4
@@ -6483,7 +6483,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1479523609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6697,7 +6697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00076293945, y: -262.8376}
+  m_AnchoredPosition: {x: 0.00076293945, y: -217.30878}
   m_SizeDelta: {x: 592.01, y: 88.5481}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1680884180
