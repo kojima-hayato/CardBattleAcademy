@@ -6,7 +6,12 @@ TagManager:
   tags:
   - Frame
   - Roop
+<<<<<<< Updated upstream
   - If
+=======
+  - true
+  - false
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX

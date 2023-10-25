@@ -22,16 +22,24 @@ public class MonsterModel : MonoBehaviour
                 m.hp = 5;
                 m.atk = 4;
                 m.def = 2;
-                return m;
-
+                m.image = Resources.Load<Sprite>("MonsterImages/monster01");
+                break;
             case 2:
-                m.name = "‚½‚¿‚Î‚È‚Î‚¿‚È";
+                m.name = "‚½‚¿‚Î‚È‚Î‚¿‚½";
                 m.hp = 20;
                 m.atk = 7;
                 m.def = 4;
-                return m;
+                m.image = Resources.Load<Sprite>("MonsterImages/monster02");
+                break;
+            case 3:
+                m.name = "–‚l";
+                m.hp = 100;
+                m.atk = 30;
+                m.def = 15;
+                m.image = Resources.Load<Sprite>("MonsterImages/monster03");
+                break;
         }
-        return null;
+        return m;
     }
 }
 public class MonsterDB
@@ -41,5 +49,6 @@ public class MonsterDB
     public int hp;
     public int atk;
     public int def;
+    public Sprite image;
     public List<int> skillID = new List<int>();
 }
