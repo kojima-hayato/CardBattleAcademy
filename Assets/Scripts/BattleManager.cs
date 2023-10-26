@@ -118,14 +118,15 @@ public class BattleManager : MonoBehaviour
     //バトル初期設定
     IEnumerator StartBattle()
     {
+
         //プレイヤー情報
         p = pm.PlayerSet();
 
         //モンスター情報
-        m = mm.MonsterDB(3);
+        m = mm.MonsterDB(1);
 
-        monsterImage = GetComponent<Image>();
-        monsterImage.sprite = m.image;
+        //monsterImage = GetComponent<Image>();
+        //monsterImage.sprite = m.image;
 
         monsterText.GetComponent<Text>().text = m.name;
         messageText.GetComponent<Text>().text = m.name + "があらわれた！";
@@ -160,7 +161,6 @@ public class BattleManager : MonoBehaviour
         skillText3.GetComponent<Text>().text = skills[2].name;
         skillText4.GetComponent<Text>().text = skills[3].name;
 
-        //2秒待つ
         yield return new WaitForSeconds(battleSpeed);
         
         //行動ターンにする
@@ -477,7 +477,7 @@ public class BattleManager : MonoBehaviour
     {
         //問題文と選択肢
         questionText.GetComponent<Text>().text = "人の不注意に付け込んで機密情報などを不正に入手する手法は？";
-        choiceText1.GetComponent<Text>().text = "SQLインジェクション";
+        choiceText1.GetComponent<Text>().text = "プログラミング言語を使ってソースコードをかくこと。";
         choiceText2.GetComponent<Text>().text = "ソーシャルエンジニアリング";
         choiceText3.GetComponent<Text>().text = "DDOS攻撃";
         choiceText4.GetComponent<Text>().text = "バッファオーバーフロー";
