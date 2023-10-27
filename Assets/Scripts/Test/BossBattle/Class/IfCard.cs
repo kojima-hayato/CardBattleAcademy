@@ -7,7 +7,6 @@ public class IfCard : Card
     private int trueIndex, falseIndex;  //判定成功時の処理, 判定失敗時の処理(こっちは消すかも)
     private string judgePattern;        //判定基準(一致・以上・以下など)
 
-    //コンストラクタ(: base()で親のコンストラクタを呼び出す)
     public IfCard(GameObject card, int value, string cardType, int trueIndex, int falseIndex, string judgePattern) : base(card, value, cardType)
     {
         SetTrueIndex(trueIndex);
