@@ -12,7 +12,10 @@ public class BattleManager : MonoBehaviour
     MonsterModel mm;
     PlayerDB p;
     MonsterDB m;
-   
+    List<Skill> skills = new List<Skill>();
+
+    Image monsterImage;
+
     //選択肢ウィンドウ
     public GameObject choiceWindow1;
     public GameObject choiceWindow2;
@@ -44,6 +47,7 @@ public class BattleManager : MonoBehaviour
     public GameObject itemText;
     public GameObject escapeText;
     int skillAct = 1;
+    int skillActMax;
 
     //スキルウィンドウ
     public GameObject skillWindow;
@@ -98,6 +102,7 @@ public class BattleManager : MonoBehaviour
     public float timeRate;
     public float playerAtkRate;
     public float playerDefRate;
+    public int addDamage;
 
     int battleSpeed = 1;
 
@@ -117,7 +122,10 @@ public class BattleManager : MonoBehaviour
         p = pm.PlayerSet();
 
         //モンスター情報
-        m = mm.MonsterDB(2);
+        m = mm.MonsterDB(3);
+
+        monsterImage = GetComponent<Image>();
+        monsterImage.sprite = m.image;
 
         monsterText.GetComponent<Text>().text = m.name;
         messageText.GetComponent<Text>().text = m.name + "があらわれた！";
@@ -138,6 +146,19 @@ public class BattleManager : MonoBehaviour
         playerDefRate = 1;
         timeRate = 1;
         remainTime = 15;
+
+        sm.Set();
+        foreach(int x in p.skillID)
+        {
+            skills.Add(sm.SkillSet(x));
+        }
+
+        skillActMax = skills.Count;
+
+        skillText1.GetComponent<Text>().text = skills[0].name;
+        skillText2.GetComponent<Text>().text = skills[1].name;
+        skillText3.GetComponent<Text>().text = skills[2].name;
+        skillText4.GetComponent<Text>().text = skills[3].name;
 
         //2秒待つ
         yield return new WaitForSeconds(battleSpeed);
@@ -179,9 +200,8 @@ public class BattleManager : MonoBehaviour
                 //スキル
                 else if(act == 2 || act == 3)
                 {
-                    isSkillTurn = true;
-                    isActTurn = false;
-                    SkillActive();   
+                    Invoke("SkillActive", 0.1f);
+                    
                 }
                 //逃げる
                 else if(act == 4)
@@ -202,7 +222,7 @@ public class BattleManager : MonoBehaviour
                 skillAct--;
                 actSelect.transform.Translate(-0.8f, 0, 0);
             }
-            if (Input.GetKeyDown(KeyCode.S) && skillAct != 3 && skillAct != 6)
+            if (Input.GetKeyDown(KeyCode.S) && skillAct != 3 && skillAct != 6 && skillAct < skillActMax)
             {
                 //矢印を動かす
                 skillAct++;
@@ -214,7 +234,7 @@ public class BattleManager : MonoBehaviour
                 skillAct -= 3;
                 actSelect.transform.Translate(0, -5.25f, 0);
             }
-            if (Input.GetKeyDown(KeyCode.D) && skillAct != 4 && skillAct != 5 && skillAct != 6)
+            if (Input.GetKeyDown(KeyCode.D) && skillAct != 4 && skillAct != 5 && skillAct != 6 && skillAct + 2 < skillActMax)
             {
                 //矢印を動かす
                 skillAct += 3;
@@ -227,9 +247,9 @@ public class BattleManager : MonoBehaviour
                 isSkillTurn = false;
                 ActActive();
             }
-            if (Input.GetKeyDown(KeyCode.F) && act == 2)
+            if (Input.GetKeyDown(KeyCode.Return) && act == 2)
             {
-               StartCoroutine("SkillUse");
+                StartCoroutine("SkillUse");
             }
             if (Input.GetKeyDown(KeyCode.F) && act == 3)
             {
@@ -298,10 +318,9 @@ public class BattleManager : MonoBehaviour
     {
         //スキル
         isSkillTurn = false;
-        sm.SkillUse(skillAct, p.nowSp);
         MessageActive();
 
-        if(0 > p.nowSp - costSp)
+        if(0 > p.nowSp - skills[skillAct].cost)
         {
             messageText.GetComponent<Text>().text = "SPが足りない！";
             yield return new WaitForSeconds(battleSpeed);
@@ -310,11 +329,15 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(battleSpeed);
+            messageText.GetComponent<Text>().text = "主人公の" + skills[skillAct].name + "!\n" + skills[skillAct].message;
+            sm.SkillUse(skillAct);
+            p.nowSp -= skills[skillAct].cost;
             //SPバー反映
-            p.nowSp -= costSp;
             playerSpBar.GetComponent<Slider>().value = p.nowSp;
             nowSp.GetComponent<Text>().text = p.nowSp.ToString();
+
+            yield return new WaitForSeconds(battleSpeed);
+            
             isQuestionTurn = true;
             SetQuestion();
             QuestionActive();
@@ -337,11 +360,22 @@ public class BattleManager : MonoBehaviour
                 messageText.GetComponent<Text>().text = m.name + "に" + damage + "のダメージを与えた";
                 //HPバー反映
                 monsterHpBar.GetComponent<Slider>().value = m.hp;
+                if(addDamage != 0)
+                {
+                    yield return new WaitForSeconds(battleSpeed);
+                    m.hp -= addDamage;
+                    messageText.GetComponent<Text>().text = m.name + "に追加で" + addDamage + "のダメージを与えた";
+                    //HPバー反映
+                    monsterHpBar.GetComponent<Slider>().value = m.hp;
+                }
             }
             else
             {
                 messageText.GetComponent<Text>().text = "ミス！ダメージを与えられなかった！";
             }
+
+            //2秒待つ
+            yield return new WaitForSeconds(battleSpeed);
 
             //戦闘終了判定
             if (m.hp <= 0)
@@ -422,7 +456,6 @@ public class BattleManager : MonoBehaviour
     {
         //2秒待つ
         isQuestionTurn = false;
-        yield return new WaitForSeconds(battleSpeed);
         if (m.hp <= 0)
         {
             messageText.GetComponent<Text>().text = "敵を倒した！";
@@ -462,7 +495,7 @@ public class BattleManager : MonoBehaviour
         playerAtkRate = 1;
         playerDefRate = 1;
         timeRate = 1;
-
+        addDamage = 0;
     }
 
     //問題出す
@@ -543,6 +576,9 @@ public class BattleManager : MonoBehaviour
         skillText.SetActive(false);
         itemText.SetActive(false);
         escapeText.SetActive(false);
+
+        isSkillTurn = true;
+        isActTurn = false;
     }
 
     //メッセージウィンドウを出す

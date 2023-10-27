@@ -14,16 +14,31 @@ public class PlayerModel : MonoBehaviour
     public PlayerDB PlayerSet()
     {
         player.name = "‚ ‚ ‚ ‚ ";
-        player.lv = 1;
-        player.maxHp = 15;
-        player.nowHp = 12;
-        player.maxSp = 10;
-        player.nowSp = 10;
-        player.atk = 5;
-        player.def = 2;
+        player.lv = 10;
+        player.maxHp = 50;
+        player.nowHp = 42;
+        player.maxSp = 30;
+        player.nowSp = 2;
+        player.atk = 25;
+        player.def = 15;
+
         player.skillID.Add(1);
-        player.skillID.Add(2);
-        player.skillID.Add(3);
+        if(player.lv >= 3)
+        {
+            player.skillID.Add(2);
+        }
+        if(player.lv >= 6)
+        {
+            player.skillID.Add(3);
+        }
+        if(player.lv >= 9)
+        {
+            player.skillID.Add(4);
+        }
+        if(player.lv >= 12)
+        {
+            player.skillID.Add(5);
+        }
         return player;
     }
 

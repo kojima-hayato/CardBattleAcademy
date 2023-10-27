@@ -3,10 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Frame
-  - Roop
-  - If
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -43,13 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Background
-    uniqueID: 1552801971
-    locked: 0
-  - name: Image
-    uniqueID: 2043157801
-    locked: 0
-  - name: character
-    uniqueID: 2135505957
     locked: 0

@@ -8,14 +8,46 @@ public class SkillModel : MonoBehaviour
     BattleManager bm;
     string skillName;
     string skillMessage;
-    Skill[] skills = new Skill[99];
+    Skill[] skills = new Skill[6];
 
     // Start is called before the first frame update
     void Start()
     {
-
         bm = GetComponent<BattleManager>();   
-        for(int i = 1; i < skills.Length; i++)
+    }
+    
+    public void SkillUse(int skillAct)
+    {
+        switch (skillAct)
+        {
+            case 1:
+                bm.timeRate = 0.5f;
+                break;
+
+            case 2:
+                bm.playerDefRate = 3;
+                break;
+
+            case 3:
+                bm.playerAtkRate = 1.5f;
+                break; 
+
+            case 4:
+                bm.addDamage = 10;
+                break;
+
+            case 5:
+
+                break;
+            case 6:
+
+                break;
+        }
+    }
+
+    public void Set()
+    {
+        for (int i = 1; i < skills.Length; i++)
         {
             skills[i] = new Skill();
         }
@@ -28,36 +60,18 @@ public class SkillModel : MonoBehaviour
         skills[3].name = "•ªÍ";
         skills[3].cost = 4;
         skills[3].message = "“G‚Ì‹}Š‚ğŒ©•ª‚¯‚½I";
+        skills[4].name = "’Ç”ö’e";
+        skills[4].cost = 6;
+        skills[4].message = "“G‚É10‚Ì’Ç‰ÁŒÅ’èƒ_ƒ[ƒWI";
+
+
     }
-    
-    public void SkillUse(int skillAct, int playerSp)
+
+    public Skill SkillSet(int skillID)
     {
-
-        switch (skillAct)
-        {
-            case 1:
-                bm.timeRate = 0.5f;
-                bm.costSp = 2;
-                skillName = "’´W’†";
-                skillMessage = "–â‘è‚Ìvl‚ª‘‚­‚È‚éI";
-                break;
-            case 2:
-                bm.playerDefRate = 3;
-                bm.costSp = 4;
-                skillName = "Oí";
-                skillMessage = "‹óè“¹‚ÉŒÃ‚­‚©‚ç“`‚í‚éç‚è‚ÌŒ^I";
-                break;
-            case 3:
-                bm.playerAtkRate = 1.5f;
-                bm.costSp = 4;
-                skillName = "•ªÍ";
-                skillMessage = "“G‚Ì‹}Š‚ğŒ©•ª‚¯‚½I";
-                break; 
-        }
-        bm.messageText.GetComponent<Text>().text = "ålŒö‚Ì" + skillName + "!\n" + skillMessage;
+        return skills[skillID];
     }
 
-    
 }
 
 public class Skill
