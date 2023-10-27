@@ -17,13 +17,14 @@ public class ResetCard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            //レイアウトグループの再更新を行う
-            layoutGroup.CalculateLayoutInputHorizontal();
-            layoutGroup.CalculateLayoutInputVertical();
-            layoutGroup.SetLayoutHorizontal();
-            layoutGroup.SetLayoutVertical();
-        }
+    }
+
+    public void OnClick()
+    {
+        //レイアウトグループの再更新を行う
+        layoutGroup.CalculateLayoutInputHorizontal();
+        layoutGroup.CalculateLayoutInputVertical();
+        layoutGroup.SetLayoutHorizontal();
+        layoutGroup.SetLayoutVertical();
     }
 }
