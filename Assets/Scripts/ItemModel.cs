@@ -19,17 +19,17 @@ public class ItemModel : MonoBehaviour
         {
             items[i] = new Item();
         }
-        Items[1].name = "A";
+        items[1].name = "A";
         items[1].message = "HPが30回復した！";
-        Items[2].name = "B";
+        items[2].name = "B";
         items[2].message = "HPが90回復した！";
-        Items[3].name = "アロナイン";
+        items[3].name = "アロナイン";
         items[3].message = "HPが200回復した！";
-        Items[4].name = "プロテイン";
+        items[4].name = "プロテイン";
         items[4].message = "攻撃力が1.5倍になった！";
-        Items[5].name = "E";
+        items[5].name = "E";
         items[5].message = "防御力が1.5倍になった！";
-        Items[6].name = "F";
+        items[6].name = "F";
         items[6].message = "状態異常がすべて回復した！";
 
     }
@@ -39,7 +39,7 @@ public class ItemModel : MonoBehaviour
         switch (skillAct)
         {
             case 0:
-                bm.
+
                 break;
 
             case 1:
