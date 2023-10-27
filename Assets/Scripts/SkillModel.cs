@@ -6,9 +6,7 @@ using UnityEngine.UI;
 public class SkillModel : MonoBehaviour
 {
     BattleManager bm;
-    string skillName;
-    string skillMessage;
-    Skill[] skills = new Skill[6];
+    Skill[] skills = new Skill[7];
 
     // Start is called before the first frame update
     void Start()
@@ -20,26 +18,26 @@ public class SkillModel : MonoBehaviour
     {
         switch (skillAct)
         {
-            case 1:
+            case 0:
                 bm.timeRate = 0.5f;
                 break;
 
-            case 2:
+            case 1:
                 bm.playerDefRate = 3;
                 break;
 
-            case 3:
+            case 2:
                 bm.playerAtkRate = 1.5f;
                 break; 
 
-            case 4:
+            case 3:
                 bm.addDamage = 10;
                 break;
 
-            case 5:
+            case 4:
 
                 break;
-            case 6:
+            case 5:
 
                 break;
         }

@@ -18,7 +18,7 @@ public class PlayerModel : MonoBehaviour
         player.maxHp = 50;
         player.nowHp = 42;
         player.maxSp = 30;
-        player.nowSp = 2;
+        player.nowSp = 3;
         player.atk = 25;
         player.def = 15;
 
@@ -39,6 +39,11 @@ public class PlayerModel : MonoBehaviour
         {
             player.skillID.Add(5);
         }
+
+        player.itemID.Add(1);
+        player.itemID.Add(3);
+        player.itemID.Add(5);
+
         return player;
     }
 
@@ -54,4 +59,5 @@ public class PlayerDB
     public int atk;
     public int def;
     public List<int> skillID = new List<int>();
+    public List<int> itemID = new List<int>();
 }

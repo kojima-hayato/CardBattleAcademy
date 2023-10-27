@@ -161,6 +161,8 @@ public class BattleManager : MonoBehaviour
         skillText3.GetComponent<Text>().text = skills[2].name;
         skillText4.GetComponent<Text>().text = skills[3].name;
 
+        im.Set();
+
         yield return new WaitForSeconds(battleSpeed);
         
         //行動ターンにする
@@ -319,8 +321,9 @@ public class BattleManager : MonoBehaviour
         //スキル
         isSkillTurn = false;
         MessageActive();
+        skillAct--;
 
-        if(0 > p.nowSp - skills[skillAct].cost)
+        if (0 > p.nowSp - skills[skillAct].cost)
         {
             messageText.GetComponent<Text>().text = "SPが足りない！";
             yield return new WaitForSeconds(battleSpeed);
