@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Animator animator;
-    float moveSpeed = 0.001f;
+    float moveSpeed = 0.01f;
 
     private void Start()
     {
