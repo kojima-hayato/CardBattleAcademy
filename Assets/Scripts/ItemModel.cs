@@ -34,7 +34,12 @@ public class ItemModel : MonoBehaviour
 
     }
 
-        public void ItemUse(int skillAct)
+    public Item ItemSet(int itemID)
+    {
+        return items[itemID];
+    }
+
+    public void ItemUse(int skillAct)
     {
         switch (skillAct)
         {
