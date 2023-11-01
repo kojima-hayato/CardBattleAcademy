@@ -13,6 +13,7 @@ public class BattleManager : MonoBehaviour
     PlayerDB p;
     MonsterDB m;
     List<Skill> skills = new List<Skill>();
+    List<Item> items = new List<Item>();
 
     Image monsterImage;
 
@@ -48,6 +49,7 @@ public class BattleManager : MonoBehaviour
     public GameObject escapeText;
     int skillAct = 1;
     int skillActMax;
+    int itemActMax;
 
     //スキルウィンドウ
     public GameObject skillWindow;
@@ -59,6 +61,14 @@ public class BattleManager : MonoBehaviour
     public GameObject skillText4;
     public GameObject skillText5;
     public GameObject skillText6;
+
+    //アイテムテキスト
+    public GameObject itemText1;
+    public GameObject itemText2;
+    public GameObject itemText3;
+    public GameObject itemText4;
+    public GameObject itemText5;
+    public GameObject itemText6;
 
     //サウンド
     public GameObject BGM;
@@ -123,7 +133,7 @@ public class BattleManager : MonoBehaviour
         p = pm.PlayerSet();
 
         //モンスター情報
-        m = mm.MonsterDB(1);
+        m = mm.MonsterDB(3);
 
         //monsterImage = GetComponent<Image>();
         //monsterImage.sprite = m.image;
@@ -162,6 +172,16 @@ public class BattleManager : MonoBehaviour
         skillText4.GetComponent<Text>().text = skills[3].name;
 
         im.Set();
+        foreach (int x in p.itemID)
+        {
+            items.Add(im.ItemSet(x));
+        }
+
+        itemActMax = items.Count;
+
+        itemText1.GetComponent<Text>().text = items[0].name;
+        itemText2.GetComponent<Text>().text = items[1].name;
+        itemText3.GetComponent<Text>().text = items[2].name;
 
         yield return new WaitForSeconds(battleSpeed);
         
@@ -200,10 +220,14 @@ public class BattleManager : MonoBehaviour
                     QuestionActive();
                 }
                 //スキル
-                else if(act == 2 || act == 3)
+                else if(act == 2)
                 {
                     Invoke("SkillActive", 0.1f);
                     
+                }
+                else if(act == 3)
+                {
+                    Invoke("ItemActive", 0.1f);
                 }
                 //逃げる
                 else if(act == 4)
@@ -571,6 +595,29 @@ public class BattleManager : MonoBehaviour
         skillText4.SetActive(true);
         skillText5.SetActive(true);
         skillText6.SetActive(true);
+        actSelect.transform.position = new Vector3(-5, -1.9f, 0);
+
+        //行動消す
+        actWindow.SetActive(false);
+        fightText.SetActive(false);
+        skillText.SetActive(false);
+        itemText.SetActive(false);
+        escapeText.SetActive(false);
+
+        isSkillTurn = true;
+        isActTurn = false;
+    }
+
+    void ItemActive()
+    {
+        //スキル出す
+        skillWindow.SetActive(true);
+        itemText1.SetActive(true);
+        itemText2.SetActive(true);
+        itemText3.SetActive(true);
+        itemText4.SetActive(true);
+        itemText5.SetActive(true);
+        itemText6.SetActive(true);
         actSelect.transform.position = new Vector3(-5, -1.9f, 0);
 
         //行動消す

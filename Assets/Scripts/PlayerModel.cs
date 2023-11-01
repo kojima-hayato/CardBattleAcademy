@@ -18,7 +18,7 @@ public class PlayerModel : MonoBehaviour
         player.maxHp = 50;
         player.nowHp = 42;
         player.maxSp = 30;
-        player.nowSp = 3;
+        player.nowSp = 30;
         player.atk = 25;
         player.def = 15;
 
