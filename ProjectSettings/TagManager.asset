@@ -6,6 +6,7 @@ TagManager:
   tags:
   - true
   - false
+  - FollowCamera
   layers:
   - Default
   - TransparentFX
