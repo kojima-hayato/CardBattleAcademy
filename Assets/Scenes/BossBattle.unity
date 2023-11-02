@@ -409,18 +409,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!1 &283838648
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,18 +800,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!50 &439688045
 Rigidbody2D:
   serializedVersion: 4
@@ -1858,18 +1834,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!1 &733476895
 GameObject:
   m_ObjectHideFlags: 0
@@ -2264,18 +2228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!1 &930745399
 GameObject:
   m_ObjectHideFlags: 0
@@ -2427,18 +2379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!1 &973693128
 GameObject:
   m_ObjectHideFlags: 0
@@ -2452,6 +2392,7 @@ GameObject:
   - component: {fileID: 973693130}
   - component: {fileID: 973693132}
   - component: {fileID: 973693133}
+  - component: {fileID: 973693134}
   m_Layer: 5
   m_Name: EventSystem
   m_TagString: Untagged
@@ -2525,8 +2466,6 @@ MonoBehaviour:
   BossHP: {fileID: 327922043}
   maxHP: {fileID: 1563378195}
   nowHP: {fileID: 1204771055}
-  maxHPValue: 0
-  nowHPValue: 0
 --- !u!114 &973693133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2540,7 +2479,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardsParent: {fileID: 2092502363}
-  layoutGroup: {fileID: 0}
+--- !u!114 &973693134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973693128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa34758fdc2ec84b8936330a3e1f568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1007817445
 GameObject:
   m_ObjectHideFlags: 0
@@ -4010,18 +3960,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!1 &1683838882
 GameObject:
   m_ObjectHideFlags: 0
@@ -4307,18 +4245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!1 &2092502363
 GameObject:
   m_ObjectHideFlags: 0
@@ -4402,7 +4328,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardsParent: {fileID: 2092502363}
-  layoutGroup: {fileID: 0}
 --- !u!1 &2134459439
 GameObject:
   m_ObjectHideFlags: 0
@@ -4455,18 +4380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPos: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
-  framePrefab: {fileID: 0}
-  nowFrame: {fileID: 0}
-  nextFrame: {fileID: 0}
-  childFrame: {fileID: 0}
-  trueFrame: {fileID: 0}
-  falseFrame: {fileID: 0}
-  isEnterAlgo: 0
-  isOnFrame: 0
-  isInFrameList: 0
-  isInChildFrameList: 0
 --- !u!50 &2134459442
 Rigidbody2D:
   serializedVersion: 4
