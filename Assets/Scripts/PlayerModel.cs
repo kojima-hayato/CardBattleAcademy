@@ -13,6 +13,7 @@ public class PlayerModel : MonoBehaviour
 
     public PlayerDB PlayerSet()
     {
+        //ステータス
         player.name = "ああああ";
         player.lv = 10;
         player.maxHp = 50;
@@ -22,6 +23,7 @@ public class PlayerModel : MonoBehaviour
         player.atk = 25;
         player.def = 15;
 
+        //覚えてるスキル
         player.skillID.Add(1);
         if(player.lv >= 3)
         {
@@ -40,9 +42,13 @@ public class PlayerModel : MonoBehaviour
             player.skillID.Add(5);
         }
 
-        player.itemID.Add(1);
-        player.itemID.Add(3);
-        player.itemID.Add(5);
+        //アイテム所持数
+        player.haveItem.Add(2);
+        player.haveItem.Add(1);
+        player.haveItem.Add(0);
+        player.haveItem.Add(0);
+        player.haveItem.Add(5);
+        player.haveItem.Add(0);
 
         return player;
     }
@@ -59,5 +65,5 @@ public class PlayerDB
     public int atk;
     public int def;
     public List<int> skillID = new List<int>();
-    public List<int> itemID = new List<int>();
+    public List<int> haveItem = new List<int>();
 }
