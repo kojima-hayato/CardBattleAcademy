@@ -1545,6 +1545,7 @@ GameObject:
   - component: {fileID: 614497429}
   - component: {fileID: 614497428}
   - component: {fileID: 614497427}
+  - component: {fileID: 614497431}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1602,7 +1603,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1643386069}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1637,6 +1638,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &614497431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614497426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0386c7800a90e42b3073b40308ea8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &615137646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2379,6 +2392,7 @@ GameObject:
   - component: {fileID: 973693130}
   - component: {fileID: 973693132}
   - component: {fileID: 973693133}
+  - component: {fileID: 973693134}
   m_Layer: 5
   m_Name: EventSystem
   m_TagString: Untagged
@@ -2465,6 +2479,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardsParent: {fileID: 2092502363}
+--- !u!114 &973693134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973693128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa34758fdc2ec84b8936330a3e1f568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1007817445
 GameObject:
   m_ObjectHideFlags: 0
