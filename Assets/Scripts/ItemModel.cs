@@ -40,9 +40,17 @@ public class ItemModel : MonoBehaviour
 
     }
 
-    public Item ItemSet(int itemID)
+    public Item ItemSet(int haveItem, int itemId)
     {
-        return items[itemID];
+        if(haveItem != 0)
+        {
+            return items[itemId];
+        }
+        else
+        {
+            return null;
+        }
+        
     }
 
     public void ItemUse(int itemId)
@@ -77,5 +85,6 @@ public class Item
 {
     public int id;
     public string name;
+    public int have;
     public string message;
 }

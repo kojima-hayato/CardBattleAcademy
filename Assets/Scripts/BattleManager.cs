@@ -61,6 +61,7 @@ public class BattleManager : MonoBehaviour
     public GameObject skillText4;
     public GameObject skillText5;
     public GameObject skillText6;
+    List<GameObject> skillTextList = new List<GameObject>();
 
     //アイテムテキスト
     public GameObject itemText1;
@@ -69,6 +70,7 @@ public class BattleManager : MonoBehaviour
     public GameObject itemText4;
     public GameObject itemText5;
     public GameObject itemText6;
+    List<GameObject> itemTextList = new List<GameObject>();
 
     //サウンド
     public GameObject BGM;
@@ -136,6 +138,7 @@ public class BattleManager : MonoBehaviour
         //モンスター情報
         m = mm.MonsterDB(3);
 
+        //画像
         //monsterImage = GetComponent<Image>();
         //monsterImage.sprite = m.image;
 
@@ -159,30 +162,46 @@ public class BattleManager : MonoBehaviour
         timeRate = 1;
         remainTime = 15;
 
+        skillTextList.Add(skillText1);
+        skillTextList.Add(skillText2);
+        skillTextList.Add(skillText3);
+        skillTextList.Add(skillText4);
+        skillTextList.Add(skillText5);
+        skillTextList.Add(skillText6);
+        itemTextList.Add(itemText1);
+        itemTextList.Add(itemText2);
+        itemTextList.Add(itemText3);
+        itemTextList.Add(itemText4);
+        itemTextList.Add(itemText5);
+        itemTextList.Add(itemText6);
+
         sm.Set();
+        int a = 0;
         foreach(int x in p.skillID)
         {
             skills.Add(sm.SkillSet(x));
+            skillTextList[a].GetComponent<Text>().text = skills[a].name;
+            a++;
         }
 
         skillActMax = skills.Count;
 
-        skillText1.GetComponent<Text>().text = skills[0].name;
-        skillText2.GetComponent<Text>().text = skills[1].name;
-        skillText3.GetComponent<Text>().text = skills[2].name;
-        skillText4.GetComponent<Text>().text = skills[3].name;
-
         im.Set();
-        foreach (int x in p.itemID)
+        int itemId = 1;
+        a = 0;
+        foreach (int x in p.haveItem)
         {
-            items.Add(im.ItemSet(x));
+            Item i = im.ItemSet(x, itemId);
+            if(i != null)
+            {
+                items.Add(i);
+                itemTextList[itemId - 1].GetComponent<Text>().text = items[itemId - 1].name;
+                Debug.Log(items[itemId - 1].name);
+            }
+            itemId++;
         }
 
         itemActMax = items.Count;
-
-        itemText1.GetComponent<Text>().text = items[0].name;
-        itemText2.GetComponent<Text>().text = items[1].name;
-        itemText3.GetComponent<Text>().text = items[2].name;
 
         yield return new WaitForSeconds(battleSpeed);
         
@@ -274,7 +293,7 @@ public class BattleManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                StartCoroutine("SkillUse");
+                StartCoroutine("SkillUse", skills[skillAct - 1]);
             }
         }
 
@@ -372,14 +391,13 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    IEnumerator SkillUse()
+    IEnumerator SkillUse(Skill skill)
     {
         //スキル
         isSkillTurn = false;
         MessageActive();
-        skillAct--;
 
-        if (0 > p.nowSp - skills[skillAct].cost)
+        if (0 > p.nowSp - skill.cost)
         {
             messageText.GetComponent<Text>().text = "SPが足りない！";
             yield return new WaitForSeconds(battleSpeed);
@@ -388,9 +406,9 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            messageText.GetComponent<Text>().text = "主人公の" + skills[skillAct].name + "!\n" + skills[skillAct].message;
-            sm.SkillUse(skillAct);
-            p.nowSp -= skills[skillAct].cost;
+            messageText.GetComponent<Text>().text = p.name + "の" + skill.name + "!\n" + skill.message;
+            sm.SkillUse(skill.id);
+            p.nowSp -= skill.cost;
             //SPバー反映
             playerSpBar.GetComponent<Slider>().value = p.nowSp;
             nowSp.GetComponent<Text>().text = p.nowSp.ToString();
@@ -407,7 +425,7 @@ public class BattleManager : MonoBehaviour
     {
         isItemTurn = false;
         MessageActive();
-        messageText.GetComponent<Text>().text = "主人公は" + item.name + "使った！";
+        messageText.GetComponent<Text>().text = p.name + "は" + item.name + "使った！";
         yield return new WaitForSeconds(battleSpeed);
 
         //アイテムの個数減らす
