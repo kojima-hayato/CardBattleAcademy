@@ -18,26 +18,26 @@ public class SkillModel : MonoBehaviour
     {
         switch (skillAct)
         {
-            case 0:
+            case 1:
                 bm.timeRate = 0.5f;
                 break;
 
-            case 1:
+            case 2:
                 bm.playerDefRate = 3;
                 break;
 
-            case 2:
+            case 3:
                 bm.playerAtkRate = 1.5f;
                 break; 
 
-            case 3:
+            case 4:
                 bm.addDamage = 10;
                 break;
 
-            case 4:
+            case 5:
 
                 break;
-            case 5:
+            case 6:
 
                 break;
         }
@@ -49,15 +49,19 @@ public class SkillModel : MonoBehaviour
         {
             skills[i] = new Skill();
         }
+        skills[1].id = 1;
         skills[1].name = "超集中";
         skills[1].cost = 2;
         skills[1].message = "問題の思考が早くなる！";
+        skills[2].id = 2;
         skills[2].name = "三戦";
         skills[2].cost = 4;
         skills[2].message = "空手道に古くから伝わる守りの型！";
+        skills[3].id = 3;
         skills[3].name = "分析";
         skills[3].cost = 4;
         skills[3].message = "敵の急所を見分けた！";
+        skills[4].id = 4;
         skills[4].name = "追尾弾";
         skills[4].cost = 6;
         skills[4].message = "敵に10の追加固定ダメージ！";
@@ -74,6 +78,7 @@ public class SkillModel : MonoBehaviour
 
 public class Skill
 {
+    public int id;
     public string name;
     public int cost;
     public string message;

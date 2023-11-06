@@ -61,6 +61,7 @@ public class BattleManager : MonoBehaviour
     public GameObject skillText4;
     public GameObject skillText5;
     public GameObject skillText6;
+    List<GameObject> skillTextList = new List<GameObject>();
 
     //アイテムテキスト
     public GameObject itemText1;
@@ -69,6 +70,7 @@ public class BattleManager : MonoBehaviour
     public GameObject itemText4;
     public GameObject itemText5;
     public GameObject itemText6;
+    List<GameObject> itemTextList = new List<GameObject>();
 
     //サウンド
     public GameObject BGM;
@@ -99,6 +101,7 @@ public class BattleManager : MonoBehaviour
     bool isQuestionTurn;
     bool isActTurn;
     bool isSkillTurn;
+    bool isItemTurn;
 
     //タイマー
     float remainTime;
@@ -107,7 +110,7 @@ public class BattleManager : MonoBehaviour
     //選んだ選択肢
     GameObject playerChoice;
 
-    //倍率
+    //スキル、アイテム
     public int costSp;
     public float timeRate;
     public float playerAtkRate;
@@ -135,6 +138,7 @@ public class BattleManager : MonoBehaviour
         //モンスター情報
         m = mm.MonsterDB(3);
 
+        //画像
         //monsterImage = GetComponent<Image>();
         //monsterImage.sprite = m.image;
 
@@ -158,30 +162,46 @@ public class BattleManager : MonoBehaviour
         timeRate = 1;
         remainTime = 15;
 
+        skillTextList.Add(skillText1);
+        skillTextList.Add(skillText2);
+        skillTextList.Add(skillText3);
+        skillTextList.Add(skillText4);
+        skillTextList.Add(skillText5);
+        skillTextList.Add(skillText6);
+        itemTextList.Add(itemText1);
+        itemTextList.Add(itemText2);
+        itemTextList.Add(itemText3);
+        itemTextList.Add(itemText4);
+        itemTextList.Add(itemText5);
+        itemTextList.Add(itemText6);
+
         sm.Set();
+        int a = 0;
         foreach(int x in p.skillID)
         {
             skills.Add(sm.SkillSet(x));
+            skillTextList[a].GetComponent<Text>().text = skills[a].name;
+            a++;
         }
 
         skillActMax = skills.Count;
 
-        skillText1.GetComponent<Text>().text = skills[0].name;
-        skillText2.GetComponent<Text>().text = skills[1].name;
-        skillText3.GetComponent<Text>().text = skills[2].name;
-        skillText4.GetComponent<Text>().text = skills[3].name;
-
         im.Set();
-        foreach (int x in p.itemID)
+        int itemId = 1;
+        a = 0;
+        foreach (int x in p.haveItem)
         {
-            items.Add(im.ItemSet(x));
+            Item i = im.ItemSet(x, itemId);
+            if(i != null)
+            {
+                items.Add(i);
+                itemTextList[itemId - 1].GetComponent<Text>().text = items[itemId - 1].name;
+                Debug.Log(items[itemId - 1].name);
+            }
+            itemId++;
         }
 
         itemActMax = items.Count;
-
-        itemText1.GetComponent<Text>().text = items[0].name;
-        itemText2.GetComponent<Text>().text = items[1].name;
-        itemText3.GetComponent<Text>().text = items[2].name;
 
         yield return new WaitForSeconds(battleSpeed);
         
@@ -269,17 +289,48 @@ public class BattleManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //矢印を動かす
-                isActTurn = true;
-                isSkillTurn = false;
                 ActActive();
             }
-            if (Input.GetKeyDown(KeyCode.Return) && act == 2)
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                StartCoroutine("SkillUse");
+                StartCoroutine("SkillUse", skills[skillAct - 1]);
             }
-            if (Input.GetKeyDown(KeyCode.F) && act == 3)
+        }
+
+        //アイテム
+        if (isItemTurn)
+        {
+            if (Input.GetKeyDown(KeyCode.W) && skillAct != 1 && skillAct != 4)
             {
-                StartCoroutine("PlayerTurn");
+                //矢印を動かす
+                skillAct--;
+                actSelect.transform.Translate(-0.8f, 0, 0);
+            }
+            if (Input.GetKeyDown(KeyCode.S) && skillAct != 3 && skillAct != 6 && skillAct < itemActMax)
+            {
+                //矢印を動かす
+                skillAct++;
+                actSelect.transform.Translate(0.8f, 0, 0);
+            }
+            if (Input.GetKeyDown(KeyCode.A) && skillAct != 1 && skillAct != 2 && skillAct != 3)
+            {
+                //矢印を動かす
+                skillAct -= 3;
+                actSelect.transform.Translate(0, -5.25f, 0);
+            }
+            if (Input.GetKeyDown(KeyCode.D) && skillAct != 4 && skillAct != 5 && skillAct != 6 && skillAct + 2 < itemActMax)
+            {
+                //矢印を動かす
+                skillAct += 3;
+                actSelect.transform.Translate(0, 5.25f, 0);
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ActActive();
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                StartCoroutine("ItemUse", items[skillAct - 1]);
             }
         }
 
@@ -340,14 +391,13 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    IEnumerator SkillUse()
+    IEnumerator SkillUse(Skill skill)
     {
         //スキル
         isSkillTurn = false;
         MessageActive();
-        skillAct--;
 
-        if (0 > p.nowSp - skills[skillAct].cost)
+        if (0 > p.nowSp - skill.cost)
         {
             messageText.GetComponent<Text>().text = "SPが足りない！";
             yield return new WaitForSeconds(battleSpeed);
@@ -356,9 +406,9 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            messageText.GetComponent<Text>().text = "主人公の" + skills[skillAct].name + "!\n" + skills[skillAct].message;
-            sm.SkillUse(skillAct);
-            p.nowSp -= skills[skillAct].cost;
+            messageText.GetComponent<Text>().text = p.name + "の" + skill.name + "!\n" + skill.message;
+            sm.SkillUse(skill.id);
+            p.nowSp -= skill.cost;
             //SPバー反映
             playerSpBar.GetComponent<Slider>().value = p.nowSp;
             nowSp.GetComponent<Text>().text = p.nowSp.ToString();
@@ -371,59 +421,84 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    IEnumerator ItemUse(Item item)
+    {
+        isItemTurn = false;
+        MessageActive();
+        messageText.GetComponent<Text>().text = p.name + "は" + item.name + "使った！";
+        yield return new WaitForSeconds(battleSpeed);
+
+        //アイテムの個数減らす
+
+        im.ItemUse(item.id);
+        yield return new WaitForSeconds(battleSpeed);
+
+        isQuestionTurn = true;
+        SetQuestion();
+        QuestionActive();
+    }
+
+    public void Heal(int heal)
+    {
+        int healValue;
+        if (p.nowHp + heal > p.maxHp)
+        {
+            healValue = p.maxHp - p.nowHp;
+            p.nowHp = p.maxHp;
+        }
+        else
+        {
+            healValue = heal;
+            p.nowHp += heal;
+        }
+        playerHpBar.GetComponent<Slider>().value = p.nowHp;
+        nowHp.GetComponent<Text>().text = p.nowHp.ToString();
+        messageText.GetComponent<Text>().text = p.name + "は" + healValue + "回復した！";
+    }
+
     IEnumerator PlayerTurn()
     {
-        if(act == 1 || act == 2)
-        {
-            //2秒待つ
-            yield return new WaitForSeconds(battleSpeed);
-            //ダメージ計算
-            int damage = (int)Mathf.Floor(p.atk * playerAtkRate - m.def);
+        //2秒待つ
+        yield return new WaitForSeconds(battleSpeed);
+        //ダメージ計算
+        int damage = (int)Mathf.Floor(p.atk * playerAtkRate - m.def);
 
-            //HP反映
-            if (damage >= 1)
+        //HP反映
+        if (damage >= 1)
+        {
+            m.hp -= damage;
+            messageText.GetComponent<Text>().text = m.name + "に" + damage + "のダメージを与えた";
+            //HPバー反映
+            monsterHpBar.GetComponent<Slider>().value = m.hp;
+            if (addDamage != 0)
             {
-                m.hp -= damage;
-                messageText.GetComponent<Text>().text = m.name + "に" + damage + "のダメージを与えた";
+                yield return new WaitForSeconds(battleSpeed);
+                m.hp -= addDamage;
+                messageText.GetComponent<Text>().text = m.name + "に追加で" + addDamage + "のダメージを与えた";
                 //HPバー反映
                 monsterHpBar.GetComponent<Slider>().value = m.hp;
-                if(addDamage != 0)
-                {
-                    yield return new WaitForSeconds(battleSpeed);
-                    m.hp -= addDamage;
-                    messageText.GetComponent<Text>().text = m.name + "に追加で" + addDamage + "のダメージを与えた";
-                    //HPバー反映
-                    monsterHpBar.GetComponent<Slider>().value = m.hp;
-                }
-            }
-            else
-            {
-                messageText.GetComponent<Text>().text = "ミス！ダメージを与えられなかった！";
-            }
-
-            //2秒待つ
-            yield return new WaitForSeconds(battleSpeed);
-
-            //戦闘終了判定
-            if (m.hp <= 0)
-            {
-                //プレイヤーの勝ち
-                StartCoroutine("EndBattle");
-            }
-            else
-            {
-                //敵のターン
-                StartCoroutine("MonsterTurn");
             }
         }
-        else if(act == 3)
+        else
         {
-            isSkillTurn = false;
-            im.ItemUse(skillAct);
-            MessageActive();
+            messageText.GetComponent<Text>().text = "ミス！ダメージを与えられなかった！";
+        }
+
+        //2秒待つ
+        yield return new WaitForSeconds(battleSpeed);
+
+        //戦闘終了判定
+        if (m.hp <= 0)
+        {
+            //プレイヤーの勝ち
+            StartCoroutine("EndBattle");
+        }
+        else
+        {
             //敵のターン
             StartCoroutine("MonsterTurn");
         }
+
     }
 
     //敵のターン
@@ -499,6 +574,7 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(battleSpeed);
     }
 
+    
     //問題セット
     void SetQuestion()
     {
@@ -559,6 +635,9 @@ public class BattleManager : MonoBehaviour
     //行動出す
     void ActActive()
     {
+        isActTurn = true;
+        isSkillTurn = false;
+        isItemTurn = false;
         //行動出す
         actSelect.SetActive(true);
         actWindow.SetActive(true);
@@ -578,6 +657,13 @@ public class BattleManager : MonoBehaviour
         skillText4.SetActive(false);
         skillText5.SetActive(false);
         skillText6.SetActive(false);
+
+        itemText1.SetActive(false);
+        itemText2.SetActive(false);
+        itemText3.SetActive(false);
+        itemText4.SetActive(false);
+        itemText5.SetActive(false);
+        itemText6.SetActive(false);
 
         //メッセージウィンドウを消す
         messageText.SetActive(false);
@@ -627,7 +713,7 @@ public class BattleManager : MonoBehaviour
         itemText.SetActive(false);
         escapeText.SetActive(false);
 
-        isSkillTurn = true;
+        isItemTurn = true;
         isActTurn = false;
     }
 
@@ -647,6 +733,13 @@ public class BattleManager : MonoBehaviour
         skillText5.SetActive(false);
         skillText6.SetActive(false);
         actSelect.SetActive(false);
+
+        itemText1.SetActive(false);
+        itemText2.SetActive(false);
+        itemText3.SetActive(false);
+        itemText4.SetActive(false);
+        itemText5.SetActive(false);
+        itemText6.SetActive(false);
 
         //行動消す
         actSelect.SetActive(false);
