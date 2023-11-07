@@ -3,19 +3,40 @@ using UnityEngine.SceneManagement;
 
 public class RandomEncount : MonoBehaviour
 {
-    public float encounterRate = 0.05f; // ランダムエンカウントの発生率 (0から1の間で設定)
+    public float encountChance = 0.2f;
+
+    private move_chara playerMovement; // move_charaスクリプトを参照するための変数
+
+    void Start()
+    {
+        playerMovement = GetComponent<move_chara>(); // move_charaスクリプトを取得
+        
+    }
 
     void Update()
     {
-        if (Random.value < encounterRate)
+        if (playerMovement != null && playerMovement.IsMoving()) // move_charaスクリプトから移動状態を取得
         {
-            StartEncounter();
+            TryEncount();
+            Debug.Log("ここ");
         }
     }
 
-    void StartEncounter()
+    void TryEncount()
     {
-        // バトルシーンに遷移
+        if (ShouldEncountOccur())
+        {
+            StartBattleScene();
+        }
+    }
+
+    bool ShouldEncountOccur()
+    {
+        return Random.value < encountChance;
+    }
+
+    void StartBattleScene()
+    {
         SceneManager.LoadScene("BattleScene");
     }
 }
