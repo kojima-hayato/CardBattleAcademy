@@ -1,19 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine;
-
-public class move_chara: MonoBehaviour
+public class move_chara : MonoBehaviour
 {
-    private float speed = 0.011f; //float‚Í¬”“_
+    private float speed = 0.011f;
     private Animator animator;
+
+    public RandomEncount randomEncount;
 
     private void Start()
     {
-        animator = GetComponent<Animator>();//¦g‚¤‚Æ‚«‚Íƒ„‚ğ”¼Šp‚É‚µ‚Ä‚­‚¾‚³‚¢
+        animator = GetComponent<Animator>();
+        randomEncount = GetComponent<RandomEncount>();
     }
-
 
     void Update()
     {
@@ -21,7 +19,7 @@ public class move_chara: MonoBehaviour
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            pos.x += speed;//‰E‚ÉˆÚ“®
+            pos.x += speed;
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -37,9 +35,12 @@ public class move_chara: MonoBehaviour
         }
 
         transform.position = pos;
- 
-    }
 
+        if (randomEncount != null)
+        {
+            randomEncount.playerMovement = this;
+        }
+    }
 
     public bool IsMoving()
     {
@@ -53,6 +54,4 @@ public class move_chara: MonoBehaviour
             return false;
         }
     }
-
-
 }

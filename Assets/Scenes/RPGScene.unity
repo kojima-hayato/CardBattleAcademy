@@ -494,7 +494,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5896222299929635689, guid: 6c5668fcde5f8d54a9abb46eb71ef06d, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5896222299929635693, guid: 6c5668fcde5f8d54a9abb46eb71ef06d, type: 3}
       propertyPath: m_Enabled
@@ -775,14 +775,14 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7849184243200850876
+--- !u!114 &7849184243200850880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7849184243200850867}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02f360e6d23be4c4a849aa21fd833581, type: 3}
   m_Name: 
