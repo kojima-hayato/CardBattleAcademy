@@ -44,6 +44,7 @@ public class ItemModel : MonoBehaviour
     {
         if(haveItem != 0)
         {
+            items[itemId].have = haveItem;
             return items[itemId];
         }
         else

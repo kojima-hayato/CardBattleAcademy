@@ -191,7 +191,6 @@ public class BattleManager : MonoBehaviour
         a = 0;
         foreach (int x in p.haveItem)
         {
-            Debug.Log(x + ":" + itemId);
             Item i = im.ItemSet(x, itemId);
             if(i != null)
             {
@@ -421,6 +420,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    //アイテム
     IEnumerator ItemUse(Item item)
     {
         isItemTurn = false;
@@ -429,6 +429,17 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(battleSpeed);
 
         //アイテムの個数減らす
+        items[skillAct - 1].have--;
+        if(items[skillAct - 1].have == 0)
+        {
+            items.RemoveAt(skillAct - 1);
+            for(int i = 0; i < items.Count; i++)
+            {
+                itemTextList[i].GetComponent<Text>().text = items[i].name;
+            }
+            itemActMax = items.Count;
+            itemTextList[itemActMax].GetComponent<Text>().text = "";
+        }
 
         im.ItemUse(item.id);
         yield return new WaitForSeconds(battleSpeed);
@@ -438,6 +449,7 @@ public class BattleManager : MonoBehaviour
         QuestionActive();
     }
 
+    //回復
     public void Heal(int heal)
     {
         int healValue;
