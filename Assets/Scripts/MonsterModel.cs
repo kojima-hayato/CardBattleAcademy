@@ -41,6 +41,11 @@ public class MonsterModel : MonoBehaviour
         }
         return m;
     }
+
+    public void MonsterTurn()
+    {
+
+    }
 }
 public class MonsterDB
 {
