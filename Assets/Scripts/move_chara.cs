@@ -37,5 +37,22 @@ public class move_chara: MonoBehaviour
         }
 
         transform.position = pos;
+ 
     }
+
+
+    public bool IsMoving()
+    {
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow) ||
+            Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
 }

@@ -191,12 +191,12 @@ public class BattleManager : MonoBehaviour
         a = 0;
         foreach (int x in p.haveItem)
         {
+            Debug.Log(x + ":" + itemId);
             Item i = im.ItemSet(x, itemId);
             if(i != null)
             {
                 items.Add(i);
-                itemTextList[itemId - 1].GetComponent<Text>().text = items[itemId - 1].name;
-                Debug.Log(items[itemId - 1].name);
+                itemTextList[items.Count - 1].GetComponent<Text>().text = items[items.Count - 1].name;
             }
             itemId++;
         }
@@ -483,9 +483,6 @@ public class BattleManager : MonoBehaviour
         {
             messageText.GetComponent<Text>().text = "ミス！ダメージを与えられなかった！";
         }
-
-        //2秒待つ
-        yield return new WaitForSeconds(battleSpeed);
 
         //戦闘終了判定
         if (m.hp <= 0)

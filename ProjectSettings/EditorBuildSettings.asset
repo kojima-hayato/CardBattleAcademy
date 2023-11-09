@@ -11,15 +11,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MapScene/BlueCastle.unity
     guid: 3bb99c2125cc07949a3bfc3a6e200f65
-  - enabled: 0
-    path: Assets/Scenes/before.unity
-    guid: 0ebaab2d3fb920c45bffac6754eff001
-  - enabled: 0
-    path: Assets/Scenes/after.unity
-    guid: 9ea4f48af07d84f49ad15802aa1b69ff
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/RPGScene.unity
     guid: f942bddd53af8f94e8252fc139e58ee9
+  - enabled: 1
+    path: Assets/Scenes/BattleScene.unity
+    guid: 2d04d10f05dd82645a8c0c2f5b6870f9
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
