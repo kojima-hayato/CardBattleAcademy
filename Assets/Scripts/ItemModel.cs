@@ -22,21 +22,27 @@ public class ItemModel : MonoBehaviour
         items[1].id = 1;
         items[1].name = "A";
         items[1].message = "HPが30回復した！";
+        items[1].expo = "HPを30回復する";
         items[2].id = 2;
         items[2].name = "B";
         items[2].message = "HPが90回復した！";
+        items[2].expo = "HPを90回復する";
         items[3].id = 3;
         items[3].name = "アロナイン";
         items[3].message = "HPが200回復した！";
+        items[3].expo = "HPを200回復する";
         items[4].id = 4;
         items[4].name = "プロテイン";
         items[4].message = "攻撃力が1.5倍になった！";
+        items[4].expo = "攻撃力を1.5倍にする";
         items[5].id = 5;
         items[5].name = "E";
         items[5].message = "防御力が1.5倍になった！";
+        items[5].expo = "防御力を1.5倍にする";
         items[6].id = 6;
         items[6].name = "F";
         items[6].message = "状態異常がすべて回復した！";
+        items[6].expo = "状態異常を回復する";
 
     }
 
@@ -88,4 +94,5 @@ public class Item
     public string name;
     public int have;
     public string message;
+    public string expo;
 }

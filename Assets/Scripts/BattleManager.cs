@@ -53,6 +53,7 @@ public class BattleManager : MonoBehaviour
 
     //スキルウィンドウ
     public GameObject skillWindow;
+    public GameObject expoWindow;
 
     //スキルテキスト
     public GameObject skillText1;
@@ -71,6 +72,9 @@ public class BattleManager : MonoBehaviour
     public GameObject itemText5;
     public GameObject itemText6;
     List<GameObject> itemTextList = new List<GameObject>();
+
+    public GameObject costText;
+    public GameObject expoText;
 
     //サウンド
     public GameObject BGM;
@@ -261,6 +265,9 @@ public class BattleManager : MonoBehaviour
         //スキルターンか
         if (isSkillTurn)
         {
+            costText.GetComponent<Text>().text = skills[skillAct - 1].cost.ToString() + " SP";
+            expoText.GetComponent<Text>().text = skills[skillAct - 1].expo;
+
             if (Input.GetKeyDown(KeyCode.W) && skillAct != 1 && skillAct != 4)
             {
                 //矢印を動かす
@@ -299,6 +306,9 @@ public class BattleManager : MonoBehaviour
         //アイテム
         if (isItemTurn)
         {
+            costText.GetComponent<Text>().text = items[skillAct - 1].have.ToString() + " 個";
+            expoText.GetComponent<Text>().text = items[skillAct - 1].expo;
+
             if (Input.GetKeyDown(KeyCode.W) && skillAct != 1 && skillAct != 4)
             {
                 //矢印を動かす
@@ -674,6 +684,10 @@ public class BattleManager : MonoBehaviour
         itemText5.SetActive(false);
         itemText6.SetActive(false);
 
+        expoWindow.SetActive(false);
+        expoText.SetActive(false);
+        costText.SetActive(false);
+
         //メッセージウィンドウを消す
         messageText.SetActive(false);
         messageWindow.SetActive(false);
@@ -691,6 +705,10 @@ public class BattleManager : MonoBehaviour
         skillText5.SetActive(true);
         skillText6.SetActive(true);
         actSelect.transform.position = new Vector3(-5, -1.9f, 0);
+
+        expoWindow.SetActive(true);
+        expoText.SetActive(true);
+        costText.SetActive(true);
 
         //行動消す
         actWindow.SetActive(false);
@@ -714,6 +732,10 @@ public class BattleManager : MonoBehaviour
         itemText5.SetActive(true);
         itemText6.SetActive(true);
         actSelect.transform.position = new Vector3(-5, -1.9f, 0);
+
+        expoWindow.SetActive(true);
+        expoText.SetActive(true);
+        costText.SetActive(true);
 
         //行動消す
         actWindow.SetActive(false);
