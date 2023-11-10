@@ -4,13 +4,15 @@ public class move_chara : MonoBehaviour
 {
     private float speed = 0.011f;
     private Animator animator;
-
+    private Rigidbody2D rb;
     public RandomEncount randomEncount;
+    public float speedThreshold = 0.5f;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        randomEncount = GetComponent<RandomEncount>();
+        rb = GetComponent<Rigidbody2D>();
+        randomEncount = FindObjectOfType<RandomEncount>(); // RandomEncountのインスタンスを取得する
     }
 
     void Update()
@@ -34,12 +36,18 @@ public class move_chara : MonoBehaviour
             pos.y -= speed;
         }
 
-        transform.position = pos;
+        float playerSpeed = rb.velocity.magnitude;
 
-        if (randomEncount != null)
+        if (playerSpeed > speedThreshold && randomEncount != null)
         {
-            randomEncount.playerMovement = this;
+            randomEncount.PlayerIsMoving(true);
         }
+        else if (randomEncount != null)
+        {
+            randomEncount.PlayerIsMoving(false);
+        }
+
+        transform.position = pos;
     }
 
     public bool IsMoving()
@@ -54,4 +62,6 @@ public class move_chara : MonoBehaviour
             return false;
         }
     }
+
+    // 他のメソッド（省略）
 }
