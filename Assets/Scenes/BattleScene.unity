@@ -1060,7 +1060,7 @@ GameObject:
   - component: {fileID: 392198338}
   - component: {fileID: 392198337}
   m_Layer: 5
-  m_Name: PlayerText
+  m_Name: PlayerName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4197,7 +4197,7 @@ GameObject:
   - component: {fileID: 1468381888}
   - component: {fileID: 1468381887}
   m_Layer: 0
-  m_Name: slime
+  m_Name: monsterImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5477,6 +5477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aec57ae3c60666945998bf39e057fe05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monsterImage: {fileID: 1468381886}
   choiceWindow1: {fileID: 1930893436}
   choiceWindow2: {fileID: 1925856104}
   choiceWindow3: {fileID: 1274013225}
@@ -5522,7 +5523,7 @@ MonoBehaviour:
   maxSp: {fileID: 651549384}
   timeBar: {fileID: 439691476}
   timeText: {fileID: 458502320}
-  playerText: {fileID: 392198335}
+  playerName: {fileID: 392198335}
   monsterText: {fileID: 241798328}
   costSp: 0
   timeRate: 0
