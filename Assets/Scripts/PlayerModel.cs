@@ -45,10 +45,10 @@ public class PlayerModel : MonoBehaviour
         //ƒAƒCƒeƒ€Š”
         player.haveItem.Add(1);
         player.haveItem.Add(1);
+        player.haveItem.Add(5);
         player.haveItem.Add(0);
-        player.haveItem.Add(0);
-        player.haveItem.Add(0);
-        player.haveItem.Add(0);
+        player.haveItem.Add(3);
+        player.haveItem.Add(2);
 
         return player;
     }

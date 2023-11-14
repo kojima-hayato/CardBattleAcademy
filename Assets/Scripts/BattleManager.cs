@@ -15,7 +15,7 @@ public class BattleManager : MonoBehaviour
     List<Skill> skills = new List<Skill>();
     List<Item> items = new List<Item>();
 
-    Image monsterImage;
+    public GameObject monsterImage;
 
     //選択肢ウィンドウ
     public GameObject choiceWindow1;
@@ -53,6 +53,7 @@ public class BattleManager : MonoBehaviour
 
     //スキルウィンドウ
     public GameObject skillWindow;
+    public GameObject expoWindow;
 
     //スキルテキスト
     public GameObject skillText1;
@@ -72,6 +73,9 @@ public class BattleManager : MonoBehaviour
     public GameObject itemText6;
     List<GameObject> itemTextList = new List<GameObject>();
 
+    public GameObject costText;
+    public GameObject expoText;
+
     //サウンド
     public GameObject BGM;
     public GameObject AttackSound;
@@ -90,7 +94,7 @@ public class BattleManager : MonoBehaviour
     public GameObject timeText;
 
     //プレイヤー情報
-    public GameObject playerText;
+    public GameObject playerName;
 
     //モンスター情報
     public static int monsterID;
@@ -139,13 +143,14 @@ public class BattleManager : MonoBehaviour
         m = mm.MonsterDB(3);
 
         //画像
-        //monsterImage = GetComponent<Image>();
-        //monsterImage.sprite = m.image;
+        var monsterSprite = monsterImage.GetComponent<SpriteRenderer>();
+        monsterSprite.sprite = m.image;
 
         monsterText.GetComponent<Text>().text = m.name;
         messageText.GetComponent<Text>().text = m.name + "があらわれた！";
 
         //HP設定
+        playerName.GetComponent<Text>().text = p.name;
         playerHpBar.GetComponent<Slider>().maxValue = p.maxHp;
         playerHpBar.GetComponent<Slider>().value = p.nowHp;
         playerSpBar.GetComponent<Slider>().maxValue = p.maxSp;
@@ -261,6 +266,9 @@ public class BattleManager : MonoBehaviour
         //スキルターンか
         if (isSkillTurn)
         {
+            costText.GetComponent<Text>().text = skills[skillAct - 1].cost.ToString() + " SP";
+            expoText.GetComponent<Text>().text = skills[skillAct - 1].expo;
+
             if (Input.GetKeyDown(KeyCode.W) && skillAct != 1 && skillAct != 4)
             {
                 //矢印を動かす
@@ -299,6 +307,9 @@ public class BattleManager : MonoBehaviour
         //アイテム
         if (isItemTurn)
         {
+            costText.GetComponent<Text>().text = items[skillAct - 1].have.ToString() + " 個";
+            expoText.GetComponent<Text>().text = items[skillAct - 1].expo;
+
             if (Input.GetKeyDown(KeyCode.W) && skillAct != 1 && skillAct != 4)
             {
                 //矢印を動かす
@@ -674,6 +685,10 @@ public class BattleManager : MonoBehaviour
         itemText5.SetActive(false);
         itemText6.SetActive(false);
 
+        expoWindow.SetActive(false);
+        expoText.SetActive(false);
+        costText.SetActive(false);
+
         //メッセージウィンドウを消す
         messageText.SetActive(false);
         messageWindow.SetActive(false);
@@ -691,6 +706,10 @@ public class BattleManager : MonoBehaviour
         skillText5.SetActive(true);
         skillText6.SetActive(true);
         actSelect.transform.position = new Vector3(-5, -1.9f, 0);
+
+        expoWindow.SetActive(true);
+        expoText.SetActive(true);
+        costText.SetActive(true);
 
         //行動消す
         actWindow.SetActive(false);
@@ -714,6 +733,10 @@ public class BattleManager : MonoBehaviour
         itemText5.SetActive(true);
         itemText6.SetActive(true);
         actSelect.transform.position = new Vector3(-5, -1.9f, 0);
+
+        expoWindow.SetActive(true);
+        expoText.SetActive(true);
+        costText.SetActive(true);
 
         //行動消す
         actWindow.SetActive(false);
@@ -771,5 +794,9 @@ public class BattleManager : MonoBehaviour
         questionWindow.SetActive(false);
         timeText.SetActive(false);
         timeBar.SetActive(false);
+
+        expoWindow.SetActive(false);
+        expoText.SetActive(false);
+        costText.SetActive(false);
     }
 }

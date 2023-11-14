@@ -22,7 +22,8 @@ public class MonsterModel : MonoBehaviour
                 m.hp = 5;
                 m.atk = 4;
                 m.def = 2;
-                m.image = Resources.Load<Sprite>("Resources/Textures/monster01");
+                m.image = Resources.Load<Sprite>("Monster01");
+                
                 break;
             case 2:
                 m.name = "‚½‚¿‚Î‚È‚Î‚¿‚½";
@@ -37,6 +38,7 @@ public class MonsterModel : MonoBehaviour
                 m.atk = 30;
                 m.def = 15;
                 m.image = Resources.Load<Sprite>("MonsterImages/monster03");
+                Debug.Log(m.image);
                 break;
         }
         return m;

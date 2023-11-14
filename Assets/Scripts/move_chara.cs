@@ -4,41 +4,53 @@ public class move_chara : MonoBehaviour
 {
     private float speed = 0.011f;
     private Animator animator;
-
+    private Rigidbody2D rb;
     public RandomEncount randomEncount;
+    public float speedThreshold = 0.5f;
+    private bool canMove = true; // 入力を受け付けるかどうかのフラグ
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        randomEncount = GetComponent<RandomEncount>();
+        rb = GetComponent<Rigidbody2D>();
+        randomEncount = FindObjectOfType<RandomEncount>(); // RandomEncountのインスタンスを取得する
     }
 
     void Update()
     {
-        Vector2 pos = transform.position;
+        if (canMove)
+        {
+            Vector2 pos = transform.position;
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            pos.x += speed;
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            pos.x -= speed;
-        }
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            pos.y += speed;
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            pos.y -= speed;
-        }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                pos.x += speed;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                pos.x -= speed;
+            }
+            else if (Input.GetKey(KeyCode.UpArrow))
+            {
+                pos.y += speed;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                pos.y -= speed;
+            }
 
-        transform.position = pos;
+            float playerSpeed = rb.velocity.magnitude;
 
-        if (randomEncount != null)
-        {
-            randomEncount.playerMovement = this;
+            if (playerSpeed > speedThreshold && randomEncount != null)
+            {
+                randomEncount.PlayerIsMoving(true);
+            }
+            else if (randomEncount != null)
+            {
+                randomEncount.PlayerIsMoving(false);
+            }
+
+            transform.position = pos;
         }
     }
 
@@ -52,6 +64,26 @@ public class move_chara : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    // 他のメソッド（省略）
+
+    // バトルエリアに入ったときの処理
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("EncounterArea"))
+        {
+            canMove = false; // 入力を受け付けないようにフラグを設定
+        }
+    }
+
+    // バトルエリアから出たときの処理
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("EncounterArea"))
+        {
+            canMove = true; // 入力を受け付けるようにフラグを設定
         }
     }
 }
