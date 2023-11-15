@@ -53,18 +53,22 @@ public class SkillModel : MonoBehaviour
         skills[1].name = "’´W’†";
         skills[1].cost = 2;
         skills[1].message = "–â‘è‚Ìvl‚ª‘‚­‚È‚éI";
+        skills[1].expo = "§ŒÀŠÔ‚ğ2”{‚É‚·‚é";
         skills[2].id = 2;
         skills[2].name = "Oí";
         skills[2].cost = 4;
         skills[2].message = "‹óè“¹‚ÉŒÃ‚­‚©‚ç“`‚í‚éç‚è‚ÌŒ^I";
+        skills[2].expo = "–hŒä—Í‚ğ1ƒ^[ƒ“3”{‚É‚·‚é";
         skills[3].id = 3;
         skills[3].name = "•ªÍ";
         skills[3].cost = 4;
         skills[3].message = "“G‚Ì‹}Š‚ğŒ©•ª‚¯‚½I";
+        skills[3].expo = "Ÿ‚ÌUŒ‚—Í‚ª1.5”{‚É‚·‚é";
         skills[4].id = 4;
         skills[4].name = "’Ç”ö’e";
         skills[4].cost = 6;
         skills[4].message = "“G‚É10‚Ì’Ç‰ÁŒÅ’èƒ_ƒ[ƒWI";
+        skills[4].expo = "Ÿ‚ÌUŒ‚‚ÌŒã’Ç‰Á‚Å10‚ÌŒÅ’èƒ_ƒ[ƒW";
 
 
     }
@@ -82,4 +86,5 @@ public class Skill
     public string name;
     public int cost;
     public string message;
+    public string expo;
 }

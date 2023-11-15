@@ -3,31 +3,42 @@ using UnityEngine.SceneManagement;
 
 public class RandomEncount : MonoBehaviour
 {
+    public float encountInterval = 0.1f; // ランダムエンカウントの間隔（秒）
     public float encountChance = 0.2f;
     public move_chara playerMovement;
 
-    void Update()
+    void Start()
     {
-        Debug.Log("たぶんここ");
-        Encount();
+        InvokeRepeating("Encount", 0f, encountInterval);
+    }
+
+    public void PlayerIsMoving(bool isMoving)
+    {
+        if (isMoving)
+        {
+            float RateEncount = Random.Range(0f, 1f);
+
+            if (RateEncount < encountChance)
+            {
+                SceneManager.LoadScene("BattleScene");
+            }
+        }
     }
 
     private void Encount()
     {
-        Debug.Log("playerMovement の値: " + playerMovement);// playerMovement 変数の値を表示
         if (playerMovement != null)
         {
-            Debug.Log("プレイヤーが動いているときの処理");
+            bool isMoving = playerMovement.IsMoving();
 
-            Rigidbody2D rb = playerMovement.GetComponent<Rigidbody2D>();
-            var PlayerSpeed = rb.velocity.magnitude;
-            var RateEncount = Random.Range(0f, 1f); // 0から1の間でランダムな値を取得
-            Debug.Log(PlayerSpeed);
-            Debug.Log(RateEncount);
-
-            if (PlayerSpeed > 0.5 && RateEncount < encountChance) // encountChanceを利用して確率を設定
+            if (isMoving)
             {
-                SceneManager.LoadScene("BattleScene");
+                float RateEncount = Random.Range(0f, 1f);
+
+                if (RateEncount < encountChance)
+                {
+                    SceneManager.LoadScene("BattleScene");
+                }
             }
         }
     }

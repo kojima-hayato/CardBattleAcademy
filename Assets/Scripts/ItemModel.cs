@@ -22,21 +22,27 @@ public class ItemModel : MonoBehaviour
         items[1].id = 1;
         items[1].name = "A";
         items[1].message = "HP‚ª30‰ñ•œ‚µ‚½I";
+        items[1].expo = "HP‚ğ30‰ñ•œ‚·‚é";
         items[2].id = 2;
         items[2].name = "B";
         items[2].message = "HP‚ª90‰ñ•œ‚µ‚½I";
+        items[2].expo = "HP‚ğ90‰ñ•œ‚·‚é";
         items[3].id = 3;
         items[3].name = "ƒAƒƒiƒCƒ“";
         items[3].message = "HP‚ª200‰ñ•œ‚µ‚½I";
+        items[3].expo = "HP‚ğ200‰ñ•œ‚·‚é";
         items[4].id = 4;
         items[4].name = "ƒvƒƒeƒCƒ“";
         items[4].message = "UŒ‚—Í‚ª1.5”{‚É‚È‚Á‚½I";
+        items[4].expo = "UŒ‚—Í‚ğ1.5”{‚É‚·‚é";
         items[5].id = 5;
         items[5].name = "E";
         items[5].message = "–hŒä—Í‚ª1.5”{‚É‚È‚Á‚½I";
+        items[5].expo = "–hŒä—Í‚ğ1.5”{‚É‚·‚é";
         items[6].id = 6;
         items[6].name = "F";
         items[6].message = "ó‘ÔˆÙí‚ª‚·‚×‚Ä‰ñ•œ‚µ‚½I";
+        items[6].expo = "ó‘ÔˆÙí‚ğ‰ñ•œ‚·‚é";
 
     }
 
@@ -44,6 +50,7 @@ public class ItemModel : MonoBehaviour
     {
         if(haveItem != 0)
         {
+            items[itemId].have = haveItem;
             return items[itemId];
         }
         else
@@ -87,4 +94,5 @@ public class Item
     public string name;
     public int have;
     public string message;
+    public string expo;
 }

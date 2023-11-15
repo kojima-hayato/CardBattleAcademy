@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02f360e6d23be4c4a849aa21fd833581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  encountInterval: 0.5
   encountChance: 0.3
   playerMovement: {fileID: 1294316588}
 --- !u!1 &733656648
