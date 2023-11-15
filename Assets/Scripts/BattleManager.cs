@@ -140,7 +140,7 @@ public class BattleManager : MonoBehaviour
         p = pm.PlayerSet();
 
         //モンスター情報
-        m = mm.MonsterDB(3);
+        m = mm.MonsterDB(2);
 
         //画像
         var monsterSprite = monsterImage.GetComponent<SpriteRenderer>();
@@ -510,6 +510,7 @@ public class BattleManager : MonoBehaviour
         //戦闘終了判定
         if (m.hp <= 0)
         {
+            yield return new WaitForSeconds(battleSpeed);
             //プレイヤーの勝ち
             StartCoroutine("EndBattle");
         }
@@ -576,7 +577,6 @@ public class BattleManager : MonoBehaviour
     //戦闘終了
     IEnumerator EndBattle()
     {
-        //2秒待つ
         isQuestionTurn = false;
         if (m.hp <= 0)
         {
