@@ -15,7 +15,7 @@ public class BattleManager : MonoBehaviour
     List<Skill> skills = new List<Skill>();
     List<Item> items = new List<Item>();
 
-    Image monsterImage;
+    public GameObject monsterImage;
 
     //選択肢ウィンドウ
     public GameObject choiceWindow1;
@@ -94,7 +94,7 @@ public class BattleManager : MonoBehaviour
     public GameObject timeText;
 
     //プレイヤー情報
-    public GameObject playerText;
+    public GameObject playerName;
 
     //モンスター情報
     public static int monsterID;
@@ -140,16 +140,17 @@ public class BattleManager : MonoBehaviour
         p = pm.PlayerSet();
 
         //モンスター情報
-        m = mm.MonsterDB(3);
+        m = mm.MonsterDB(2);
 
         //画像
-        //monsterImage = GetComponent<Image>();
-        //monsterImage.sprite = m.image;
+        var monsterSprite = monsterImage.GetComponent<SpriteRenderer>();
+        monsterSprite.sprite = m.image;
 
         monsterText.GetComponent<Text>().text = m.name;
         messageText.GetComponent<Text>().text = m.name + "があらわれた！";
 
         //HP設定
+        playerName.GetComponent<Text>().text = p.name;
         playerHpBar.GetComponent<Slider>().maxValue = p.maxHp;
         playerHpBar.GetComponent<Slider>().value = p.nowHp;
         playerSpBar.GetComponent<Slider>().maxValue = p.maxSp;
@@ -509,6 +510,7 @@ public class BattleManager : MonoBehaviour
         //戦闘終了判定
         if (m.hp <= 0)
         {
+            yield return new WaitForSeconds(battleSpeed);
             //プレイヤーの勝ち
             StartCoroutine("EndBattle");
         }
@@ -575,7 +577,6 @@ public class BattleManager : MonoBehaviour
     //戦闘終了
     IEnumerator EndBattle()
     {
-        //2秒待つ
         isQuestionTurn = false;
         if (m.hp <= 0)
         {
@@ -793,5 +794,9 @@ public class BattleManager : MonoBehaviour
         questionWindow.SetActive(false);
         timeText.SetActive(false);
         timeBar.SetActive(false);
+
+        expoWindow.SetActive(false);
+        expoText.SetActive(false);
+        costText.SetActive(false);
     }
 }

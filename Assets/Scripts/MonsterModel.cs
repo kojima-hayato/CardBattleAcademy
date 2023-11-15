@@ -22,21 +22,23 @@ public class MonsterModel : MonoBehaviour
                 m.hp = 5;
                 m.atk = 4;
                 m.def = 2;
-                m.image = Resources.Load<Sprite>("Resources/Textures/monster01");
+                m.image = Resources.Load<Sprite>("monster01");
+                
                 break;
             case 2:
                 m.name = "ÇΩÇøÇŒÇ»ÇŒÇøÇΩ";
                 m.hp = 20;
                 m.atk = 7;
                 m.def = 4;
-                m.image = Resources.Load<Sprite>("MonsterImages/monster02");
+                m.image = Resources.Load<Sprite>("monster02");
                 break;
             case 3:
                 m.name = "ñÇêl";
                 m.hp = 100;
                 m.atk = 30;
                 m.def = 15;
-                m.image = Resources.Load<Sprite>("MonsterImages/monster03");
+                m.image = Resources.Load<Sprite>("monster04");
+                Debug.Log(m.image);
                 break;
         }
         return m;

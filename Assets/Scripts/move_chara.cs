@@ -7,6 +7,7 @@ public class move_chara : MonoBehaviour
     private Rigidbody2D rb;
     public RandomEncount randomEncount;
     public float speedThreshold = 0.5f;
+    private bool canMove = true; // 入力を受け付けるかどうかのフラグ
 
     private void Start()
     {
@@ -17,37 +18,40 @@ public class move_chara : MonoBehaviour
 
     void Update()
     {
-        Vector2 pos = transform.position;
+        if (canMove)
+        {
+            Vector2 pos = transform.position;
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            pos.x += speed;
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            pos.x -= speed;
-        }
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            pos.y += speed;
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            pos.y -= speed;
-        }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                pos.x += speed;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                pos.x -= speed;
+            }
+            else if (Input.GetKey(KeyCode.UpArrow))
+            {
+                pos.y += speed;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                pos.y -= speed;
+            }
 
-        float playerSpeed = rb.velocity.magnitude;
+            float playerSpeed = rb.velocity.magnitude;
 
-        if (playerSpeed > speedThreshold && randomEncount != null)
-        {
-            randomEncount.PlayerIsMoving(true);
-        }
-        else if (randomEncount != null)
-        {
-            randomEncount.PlayerIsMoving(false);
-        }
+            if (playerSpeed > speedThreshold && randomEncount != null)
+            {
+                randomEncount.PlayerIsMoving(true);
+            }
+            else if (randomEncount != null)
+            {
+                randomEncount.PlayerIsMoving(false);
+            }
 
-        transform.position = pos;
+            transform.position = pos;
+        }
     }
 
     public bool IsMoving()
@@ -64,4 +68,22 @@ public class move_chara : MonoBehaviour
     }
 
     // 他のメソッド（省略）
+
+    // バトルエリアに入ったときの処理
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("EncounterArea"))
+        {
+            canMove = false; // 入力を受け付けないようにフラグを設定
+        }
+    }
+
+    // バトルエリアから出たときの処理
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("EncounterArea"))
+        {
+            canMove = true; // 入力を受け付けるようにフラグを設定
+        }
+    }
 }
