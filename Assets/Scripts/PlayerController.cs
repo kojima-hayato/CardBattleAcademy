@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
 
             // バトルシーンに遷移
-            SceneManager.LoadScene("BossBattle");
+            //SceneManager.LoadScene("BossBattle");
         }
     }
 
