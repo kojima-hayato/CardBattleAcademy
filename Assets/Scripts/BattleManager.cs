@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -577,21 +578,26 @@ public class BattleManager : MonoBehaviour
     //戦闘終了
     IEnumerator EndBattle()
     {
+        string sceneName;
         isQuestionTurn = false;
         if (m.hp <= 0)
         {
             messageText.GetComponent<Text>().text = "敵を倒した！";
+            sceneName = "WorldMap";
         }
         else if(p.nowHp <= 0)
         {
             messageText.GetComponent<Text>().text = "全滅した...";
+            sceneName = "";
         }
         else
         {
             messageText.GetComponent<Text>().text = "逃げ出した！";
+            sceneName = "WorldMap";
         }
         //2秒待つ
         yield return new WaitForSeconds(battleSpeed);
+        SceneManager.LoadScene(sceneName);
     }
 
     
