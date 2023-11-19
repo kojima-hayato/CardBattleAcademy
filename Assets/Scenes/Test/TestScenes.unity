@@ -496,7 +496,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718718544}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02f360e6d23be4c4a849aa21fd833581, type: 3}
   m_Name: 
@@ -6167,6 +6167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1274893766}
   - component: {fileID: 1274893767}
+  - component: {fileID: 1274893768}
   m_Layer: 0
   m_Name: EncoutnerArea
   m_TagString: EncounterArea
@@ -6215,6 +6216,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1274893768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274893765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6457a334541932144a4188090727e966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BossBattle: BossBattle
 --- !u!1001 &1292341242
 PrefabInstance:
   m_ObjectHideFlags: 0
