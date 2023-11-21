@@ -6207,8 +6207,9 @@ GameObject:
   - component: {fileID: 985275110}
   - component: {fileID: 985275109}
   - component: {fileID: 985275112}
+  - component: {fileID: 985275113}
   m_Layer: 0
-  m_Name: pipo-etcchara001c_2
+  m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6379,7 +6380,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.5, y: 1.5}
   m_EdgeRadius: 0
 --- !u!114 &985275112
 MonoBehaviour:
@@ -6393,6 +6394,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04f2c8878f15e647a735cc1825eb6e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!111 &985275113
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985275105}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 663a42691110d3e4f9008e6e0f11394d, type: 2}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1189487266
 GameObject:
   m_ObjectHideFlags: 0
@@ -6408,13 +6424,14 @@ GameObject:
   - component: {fileID: 1189487269}
   - component: {fileID: 1189487274}
   - component: {fileID: 1189487275}
+  - component: {fileID: 1189487276}
   m_Layer: 0
   m_Name: chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1189487267
 Transform:
   m_ObjectHideFlags: 0
@@ -6625,6 +6642,21 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
+--- !u!111 &1189487276
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189487266}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 663a42691110d3e4f9008e6e0f11394d, type: 2}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &1218947396
 PrefabInstance:
   m_ObjectHideFlags: 0
