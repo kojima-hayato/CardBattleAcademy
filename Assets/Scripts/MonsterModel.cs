@@ -33,7 +33,7 @@ public class MonsterModel : MonoBehaviour
                 m.image = Resources.Load<Sprite>("monster02");
                 break;
             case 3:
-                m.name = "–‚l";
+                m.name = "–‚_";
                 m.hp = 100;
                 m.atk = 30;
                 m.def = 15;
@@ -53,6 +53,7 @@ public class MonsterDB
 {
     public int id;
     public string name;
+    public int exp;
     public int hp;
     public int atk;
     public int def;

@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private bool canMove = true;
     private Vector3 encounterDirection;
 
+    public static Vector3 playerPosition;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -61,6 +63,7 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene("BossBattle");
         }
     }
+
 
 
 }

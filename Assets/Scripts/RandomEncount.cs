@@ -37,6 +37,7 @@ public class RandomEncount : MonoBehaviour
 
                 if (RateEncount < encountChance)
                 {
+                    //バトルシーン位置渡す
                     SceneManager.LoadScene("BattleScene");
                 }
             }
