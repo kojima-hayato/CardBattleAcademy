@@ -124,6 +124,7 @@ public class BattleManager : MonoBehaviour
 
     int battleSpeed = 1;
 
+
     void Start()
     {
         sm = GetComponent<SkillModel>(); //ƒXƒLƒ‹î•ñ

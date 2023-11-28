@@ -18,11 +18,13 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        this.transform.position = playerPosition;
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        playerPosition = this.transform.position;
         if (canMove)
         {
             float x = Input.GetAxisRaw("Horizontal");
@@ -63,7 +65,5 @@ public class PlayerController : MonoBehaviour
             //SceneManager.LoadScene("BossBattle");
         }
     }
-
-
 
 }

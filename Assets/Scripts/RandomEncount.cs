@@ -37,7 +37,8 @@ public class RandomEncount : MonoBehaviour
 
                 if (RateEncount < encountChance)
                 {
-                    //バトルシーン位置渡す
+                    //PlayerController p = GameObject.Find("主人公").GetComponent <PlayerController>();
+                    //p.playerPosition = p.transform.position;
                     SceneManager.LoadScene("BattleScene");
                 }
             }
