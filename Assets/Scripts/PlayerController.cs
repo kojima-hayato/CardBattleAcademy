@@ -59,11 +59,8 @@ public class PlayerController : MonoBehaviour
             // プレイヤーの入力を止める
             canMove = false;
 
-
-
-            // バトルシーンに遷移
-            //SceneManager.LoadScene("BossBattle");
         }
+
     }
 
 }
