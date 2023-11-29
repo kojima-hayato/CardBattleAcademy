@@ -7,7 +7,7 @@ public class RoopCard : Card
     private int childIndex; //ループ対象の処理
 
     //コンストラクタ(: base()で親のコンストラクタを呼び出す)
-    public RoopCard(GameObject card, int value, string type, int childIndex) : base(card, value, type)
+    public RoopCard(string cardId, int value, string type, int childIndex) : base(cardId, value, type)
     {
         SetChildIndex(childIndex);
     }

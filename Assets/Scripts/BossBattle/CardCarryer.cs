@@ -6,8 +6,12 @@ public class CardCarryer : MonoBehaviour
 {
     Vector3 cardPos, mousePos;
     GameObject framePrefab, nowFrame, nextFrame, childFrame, trueFrame, falseFrame;
+
     public static List<GameObject> frameList, childFrameList;
+
     bool isEnterAlgo, isOnFrame, isInFrameList, isInChildFrameList;
+
+    public static AlgorithmBuilder ab = new();
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +37,7 @@ public class CardCarryer : MonoBehaviour
         //フレームに重なったら使用待機状態にする
         if (collision.gameObject.tag == "Frame" && !isEnterAlgo)
         {
+            Debug.Log("フレームに触れた");
             nowFrame = collision.gameObject;
         }
     }
@@ -49,23 +54,37 @@ public class CardCarryer : MonoBehaviour
     public void OnTriggerExit2D(Collider2D collision)
     {
         //待機状態のフレームの上かつアルゴリズムに組み込まれている場合、解除する
-        if (collision.gameObject == nowFrame && isEnterAlgo)
+        if (collision.gameObject == nowFrame)
         {
-            if (!isInChildFrameList)
+            Debug.Log("フレームから離れた");
+            if (isEnterAlgo)
             {
-                if (tag == "Roop")
+                if (!isInChildFrameList)
                 {
-                    nowFrame.transform.Translate(0.0f, -1.0f, 0.0f);
-                    Destroy(childFrame);
-                }
-                else if (tag == "If")
-                {
-                    Destroy(trueFrame);
-                    Destroy(falseFrame);
-                }
-                Destroy(nextFrame);
+                    ab.RemoveFromAlgo(gameObject);
 
-                frameList.Remove(nowFrame);
+                    if (tag == "Roop")
+                    {
+                        nowFrame.transform.Translate(0.0f, -1.0f, 0.0f);
+                        
+                        childFrameList.Remove(childFrame);
+                        Destroy(childFrame);
+                    }
+                    else if (tag == "If")
+                    {
+                        childFrameList.Remove(trueFrame);
+                        Destroy(trueFrame);
+
+                        childFrameList.Remove(falseFrame);
+                        Destroy(falseFrame);
+                    }
+                    Destroy(nextFrame);
+
+                    frameList.Remove(nowFrame);
+                } else
+                {
+                    frameList.Remove(nowFrame);
+                }
             }
 
             nowFrame = null;
@@ -94,6 +113,8 @@ public class CardCarryer : MonoBehaviour
 
     public void OnMouseUp()
     {
+        Debug.Log("カードを離した");
+
         //同じフレームに置こうとすると配置を止める
         if (frameList != null && !isOnFrame)
         {
@@ -111,6 +132,9 @@ public class CardCarryer : MonoBehaviour
         {
             if (nowFrame != null && !isEnterAlgo)
             {
+                Debug.Log("AddToAlgo実行");
+                ab.AddToAlgo(gameObject, isInChildFrameList);
+
                 isEnterAlgo = true;
 
                 Vector3 nextPos = nowFrame.transform.position;
@@ -160,8 +184,7 @@ public class CardCarryer : MonoBehaviour
                         nextPos.x += 1.5f;
                     }
 
-                    nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity);
-                    nextFrame.transform.SetParent(nowFrame.transform.parent);
+                    nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity, nowFrame.transform.parent);
 
                     //カードの位置をフレームに合わせ、前に表示させる
                     transform.position = nowFrame.transform.position;

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: dd22d301700b14e4b8d242a29d687447
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cardParent: {instanceID: 0}
+  - attackCard: {fileID: 9158960252695842359, guid: d7c976bf4b9c5864dadf59759a4602ce, type: 3}
+  - healCard: {fileID: 3632071408797013807, guid: 97b90a4a9fe6eee40a399ef9fc58fd90, type: 3}
+  - ifCard: {fileID: 7318616943746326236, guid: 644185dde4c47e44fb40d5ab157a83bb, type: 3}
+  - roopCard: {fileID: 8102843938916220431, guid: 556c4b6193b96584a80af1ad4c3e7c1e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
