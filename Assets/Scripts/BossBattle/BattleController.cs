@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour
 {
-    public Slider HeroHP;
-    public Slider BossHP;
+    public Slider heroHP;
+    public Slider bossHP;
 
     public TextMeshProUGUI maxHP;
     public TextMeshProUGUI nowHP;
@@ -18,15 +18,15 @@ public class BattleController : MonoBehaviour
     void Start()
     {
         //HPの最大値設定
-        HeroHP.maxValue = 100;
-        BossHP.maxValue = 100;
+        heroHP.maxValue = 100;
+        bossHP.maxValue = 100;
 
         //現在HPを最大値に合わせる
-        HeroHP.value = HeroHP.maxValue;
-        BossHP.value = BossHP.maxValue;
+        heroHP.value = heroHP.maxValue;
+        bossHP.value = bossHP.maxValue;
 
         //数字を合わせる
-        maxHPValue = (int)HeroHP.maxValue;
+        maxHPValue = (int)heroHP.maxValue;
         maxHP.text = maxHPValue.ToString();
         ChangeNowHP();
     }
@@ -44,9 +44,11 @@ public class BattleController : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("交戦した");
-        BossHP.value -= 50;
-        HeroHP.value -= 20;
+        Debug.Log("勇者の行動");
+        CardCarryer.ab.ExecuteAlgo(heroHP, bossHP);
+
+        Debug.Log("敵の行動");
+        heroHP.value -= 10;
 
         ChangeNowHP();
     }
@@ -54,7 +56,7 @@ public class BattleController : MonoBehaviour
     private void ChangeNowHP()
     {
         //現在HP(数字)の更新
-        nowHPValue = (int)HeroHP.value;
+        nowHPValue = (int)heroHP.value;
         nowHP.text = nowHPValue.ToString();
     }
 }
