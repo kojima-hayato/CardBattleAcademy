@@ -56,6 +56,34 @@ public class MenuController : MonoBehaviour
             }
         }
 
+<<<<<<< HEAD
+=======
+        //A‚Ü‚½‚Í©‚ğ‰Ÿ‚·‚Æ¶‚Ì—v‘f‚ÉˆÚ‚é
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            col--;
+        }
+
+        //D‚Ü‚½‚Í¨‚ğ‰Ÿ‚·‚Æ‰E‚Ì—v‘f‚ÉˆÚ‚é
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            col++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            row--;
+        }
+
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            row++;
+        }
+    }
+
+    void MenuActive()
+    {
+>>>>>>> 76cb0b3598c2b5a4fad2ce1f4ce24791549fcb17
         if (isMenu)
         {
             //‘å€–Ú‘€ì

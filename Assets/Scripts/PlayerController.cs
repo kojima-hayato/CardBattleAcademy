@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     {
         this.transform.position = playerPosition;
         animator = GetComponent<Animator>();
+
+   
     }
 
     void Update()
