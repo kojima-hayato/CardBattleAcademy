@@ -62,7 +62,7 @@ public class MenuController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            row++
+            row++;
         }
     }
 
