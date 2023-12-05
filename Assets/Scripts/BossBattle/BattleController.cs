@@ -14,6 +14,9 @@ public class BattleController : MonoBehaviour
 
     int maxHPValue, nowHPValue;
 
+    CardBuilder cb;
+
+    AlgorithmBuilder ab = new();
     // Start is called before the first frame update
     void Start()
     {
@@ -29,12 +32,13 @@ public class BattleController : MonoBehaviour
         maxHPValue = (int)heroHP.maxValue;
         maxHP.text = maxHPValue.ToString();
         ChangeNowHP();
+
+        cb = FindObjectOfType<CardBuilder>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void OnClick()
@@ -45,12 +49,23 @@ public class BattleController : MonoBehaviour
     private void Attack()
     {
         Debug.Log("óEé“ÇÃçsìÆ");
-        CardCarryer.ab.ExecuteAlgo(heroHP, bossHP);
+        ab.ExecuteAlgo(heroHP, bossHP);
 
         Debug.Log("ìGÇÃçsìÆ");
         heroHP.value -= 10;
 
         ChangeNowHP();
+
+        if(bossHP.value <= 0)
+        {
+            Debug.Log("ì|ÇµÇΩ");
+        }else
+        {
+            Debug.Log("éüÇÃÉ^Å[Éì");
+            cb.ReturnDeck();
+            cb.DrawCard(0,0,3);
+        }
+
     }
 
     private void ChangeNowHP()

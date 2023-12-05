@@ -19,7 +19,6 @@ public class DataBaseConnector
     MySqlDataReader rdr;
     DataTable dt = new();
 
-    // Start is called before the first frame update
     public void SetCommand()
     {
         string connCmd =
@@ -35,6 +34,7 @@ public class DataBaseConnector
 
     public DataTable ExecuteSQL(string sql)
     {
+        dt = new();
         try
         {
 

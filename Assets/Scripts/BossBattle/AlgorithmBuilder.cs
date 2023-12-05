@@ -9,130 +9,231 @@ public class AlgorithmBuilder
 
     List<Card> hand = CardBuilder.hand;
     List<ActCard> actList = CardBuilder.actList;
+    List<IfCard> ifList = CardBuilder.ifList;
 
-    List<int> reserveList = new();
+    ActCard ac;
+    IfCard ic;
 
-    public void AddToAlgo(GameObject g, bool isInChildFrame)
-    {
-        int index = algoList.Count;
-        Debug.Log(g.name);
+    bool isEnterIf, isEnterRoop;
+    int roopCount;
 
-        Card c = hand.Find(x => x.GetCardItem().name == g.name);
-        Debug.Log(c);
-        Debug.Log(c.GetCardType() + "," + c.GetCardId());
-
-        if(c != null)
-        {
-            if (c.GetCardType() == "roop" || c.GetCardType() == "if")
-            {
-                algoList.Insert(index, c);
-                reserveList.Add(index + 1);
-            }
-            else
-            {
-                int hitIndex = reserveList.Find(x => x == index);
-                if ((!isInChildFrame && hitIndex == 0) || isInChildFrame)
-                {
-                    algoList.Insert(index, c);
-                }
-            }
-        }
-    }
-
-    public void RemoveFromAlgo(GameObject g)
-    {
-        Card c = algoList.Find(x => x.GetCardItem() == g);
-
-        if (c.GetCardType() == "roop" || c.GetCardType() == "if")
-        {
-            int index = algoList.IndexOf(c);
-            if(index + 1 < algoList.Count)
-            {
-                algoList.RemoveAt(index + 1);
-            }
-        }
-        algoList.Remove(c);
-    }
+    int heroHPvalue, bossHPvalue;
 
     public void ExecuteAlgo(Slider heroHP, Slider bossHP)
     {
-        ActCard ac;
+        heroHPvalue = (int)heroHP.value;
+        bossHPvalue = (int)bossHP.value;
 
-        bool isEnterIf = false;
-        bool isEnterRoop = false;
+        //初期化
+        algoList.Clear();
 
-        int roopCount = 0;
-
-        foreach (Card c in algoList)
+        //GameObjectの配置順にCardを配置する
+        List<GameObject> cardItemList = CardCarryer.cardItemList;
+        foreach (GameObject g in cardItemList)
         {
-            if(c.GetCardType() == "act")
+            Debug.Log("cardItemList:" + g);
+            Card c = hand.Find(x => x.GetCardItem() == g);
+            if (c != null)
             {
-                ac = actList.Find(x => x.GetCardId() == c.GetCardId());
-                if(ac != null)
-                {
-                    int value = ac.GetValue();
-                    switch (ac.GetActType())
-                    {
-                        case "attack":
-                            Debug.Log("攻撃");
-                            if (isEnterIf)
-                            {
-
-                            } else if (isEnterRoop)
-                            {
-                                Debug.Log((roopCount - 1) + "連行動");
-                                for(int i = 0; i < roopCount; i++)
-                                {
-                                    bossHP.value -= value;
-                                }
-
-                            } else
-                            {
-                                Debug.Log(value + "のダメージ");
-                                bossHP.value -= value;
-                            }
-                            break;
-
-                        case "heal":
-                            Debug.Log("回復");
-                            if (isEnterIf)
-                            {
-
-                            }
-                            else if (isEnterRoop)
-                            {
-                                Debug.Log((roopCount - 1) + "連行動");
-                                for (int i = 0; i < roopCount; i++)
-                                {
-                                    heroHP.value += value;
-                                }
-
-                            }
-                            else
-                            {
-                                Debug.Log(value + "のHPを回復");
-                                heroHP.value += value;
-                            }
-                            break;
-                    }
-                }
+                algoList.Add(c);
             }
             else
             {
-                switch (c.GetCardType())
+                //仮置きのままなら専用のカード(何もしない)を生成
+                if (g.CompareTag("Frame"))
                 {
-                    case "if":
-                        isEnterIf = true;
-                        break;
-
-                    case "roop":
-                        isEnterRoop = true;
-                        roopCount = c.GetValue();
-                        break;
+                    c = new(0, "none");
+                    algoList.Add(c);
                 }
             }
         }
 
+        foreach (Card c in algoList)
+        {
+            Debug.Log("algoList:" + c.GetCardType());
+        }
+
+        //アルゴリズムを実行する
+
+        isEnterIf = false;
+        isEnterRoop = false;
+
+        roopCount = 0;
+
+        foreach (Card c in algoList)
+        {
+            //初期化処理
+            int value = c.GetValue();
+
+            switch (c.GetCardType())
+            {
+                case "act":
+                    ac = actList.Find(x => x.GetCardId() == c.GetCardId());
+                    if (ac != null)
+                    {
+
+                        switch (ac.GetActType())
+                        {
+                            case "attack":
+                                Debug.Log("攻撃");
+                                if (isEnterIf)
+                                {
+                                    if(ifCheck(ic))
+                                    {
+                                        Debug.Log("判定成功");
+                                        value = (int)(value * ic.GetRate());
+                                        Debug.Log(value + "のダメージ");
+                                        bossHP.value -= value;
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("判定失敗");
+                                    }
+                                }
+                                else if (isEnterRoop)
+                                {
+                                    Debug.Log((roopCount) + "連行動");
+                                    for (int i = 0; i < roopCount; i++)
+                                    {
+                                        Debug.Log(value + "のダメージ");
+                                        bossHP.value -= value;
+                                    }
+
+                                }
+                                else
+                                {
+                                    Debug.Log(value + "のダメージ");
+                                    bossHP.value -= value;
+                                }
+                                break;
+
+                            case "heal":
+                                Debug.Log("回復");
+                                if (isEnterIf)
+                                {
+                                    if (ifCheck(ic))
+                                    {
+                                        Debug.Log("判定成功");
+                                        value = (int)(value * ic.GetRate());
+
+                                        Debug.Log(value + "のHPを回復");
+                                        heroHP.value += value;
+                                    }
+                                    else
+                                    {
+                                        Debug.Log("判定失敗");
+                                    }
+                                }
+                                else if (isEnterRoop)
+                                {
+                                    Debug.Log((roopCount) + "連行動");
+                                    for (int i = 0; i < roopCount; i++)
+                                    {
+                                        Debug.Log(value + "のHPを回復");
+                                        heroHP.value += value;
+                                    }
+
+                                }
+                                else
+                                {
+                                    Debug.Log(value + "のHPを回復");
+                                    heroHP.value += value;
+                                }
+                                break;
+                        }
+                    }
+
+                    //初期化
+                    isEnterIf = false;
+                    isEnterRoop = false;
+                    ic = null;
+
+                    break;
+
+                case "if":
+                    isEnterIf = true;
+
+                    ic = ifList.Find(x => x.GetCardId() == c.GetCardId());
+                    if (ic == null)
+                    {
+                        Debug.LogError("ifCard取得失敗");
+                    }
+                    break;
+
+                case "roop":
+                    isEnterRoop = true;
+                    roopCount = value;
+                    break;
+
+                case "none":
+                    isEnterIf = false;
+                    isEnterRoop = false;
+                    break;
+            }
+        }
     }
 
+    private bool ifCheck(IfCard i)
+    {
+        bool result = false;
+        int targetValue = 0;
+
+        //判定対象を格納
+        switch (i.GetJudgeTarget())
+        {
+            case "hero_hp":
+                targetValue = heroHPvalue;
+                break;
+
+            case "boss_hp":
+                targetValue = bossHPvalue;
+                break;
+        }
+
+        Debug.Log("target:" + i.GetJudgeTarget());
+        Debug.Log("targetValue:" + targetValue);
+        Debug.Log("pattern:" + i.GetJudgePattern());
+        Debug.Log("checkValue:" + i.GetValue());
+
+
+        //判定実行
+        switch (i.GetJudgePattern())
+        {
+            case "==":
+                if(targetValue == i.GetValue())
+                {
+                    result = true;
+                }
+                break;
+
+            case "<=":
+                if (targetValue <= i.GetValue())
+                {
+                    result = true;
+                }
+                break;
+
+            case ">=":
+                if (targetValue >= i.GetValue())
+                {
+                    result = true;
+                }
+                break;
+
+            case "<":
+                if (targetValue < i.GetValue())
+                {
+                    result = true;
+                }
+                break;
+
+            case ">":
+                if (targetValue > i.GetValue())
+                {
+                    result = true;
+                }
+                break;
+        }
+        return result;
+    }
 }

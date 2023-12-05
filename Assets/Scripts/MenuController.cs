@@ -56,8 +56,6 @@ public class MenuController : MonoBehaviour
             }
         }
 
-<<<<<<< HEAD
-=======
         //A‚Ü‚½‚Í©‚ğ‰Ÿ‚·‚Æ¶‚Ì—v‘f‚ÉˆÚ‚é
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -83,7 +81,6 @@ public class MenuController : MonoBehaviour
 
     void MenuActive()
     {
->>>>>>> 76cb0b3598c2b5a4fad2ce1f4ce24791549fcb17
         if (isMenu)
         {
             //‘å€–Ú‘€ì

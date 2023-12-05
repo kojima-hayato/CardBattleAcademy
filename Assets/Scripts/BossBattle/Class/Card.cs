@@ -9,9 +9,10 @@ public class Card
     private int value;              //カードが持つ値
     private string cardType;        //roop・if・攻撃・防御など
 
-    public void CallSetCardItem(GameObject g)
+    public Card(int value, string cardType)
     {
-        SetCardItem(g);
+        SetValue(value);
+        SetCardType(cardType);
     }
 
     public Card(string cardId, int value, string cardType)
@@ -21,6 +22,12 @@ public class Card
         SetCardType(cardType);
     }
 
+    public void CallSetCardItem(GameObject g)
+    {
+        SetCardItem(g);
+    }
+
+    //以下Setter,Getter
     private void SetCardId(string cardId)
     {
         this.cardId = cardId;
@@ -38,6 +45,7 @@ public class Card
 
     private void SetCardItem(GameObject cardItem)
     {
+        Debug.Log("SetCardItem:" + cardItem);
         this.cardItem = cardItem;
     }
 
