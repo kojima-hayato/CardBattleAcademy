@@ -1,3 +1,7 @@
+
+
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -80,7 +84,7 @@ public class ConversationScript : MonoBehaviour
     //‰ï˜bƒƒO‚ªI—¹‚µ‚Ä‚¢‚é‚©”»’è
     public bool IsConversationFinished()
     {
-        return currentLine >= conversationLines.Length-1;
+        return currentLine >= conversationLines.Length - 1;
 
     }
 }
