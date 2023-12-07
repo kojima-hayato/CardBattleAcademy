@@ -15,6 +15,9 @@ public class MenuController : MonoBehaviour
     public GameObject equipment;
     public GameObject important;
 
+    public GameObject yes;
+    public GameObject no;
+
     private bool isMenu;
     private bool isRow;
     private bool isCol;
@@ -23,7 +26,10 @@ public class MenuController : MonoBehaviour
     private int col;
 
     private List<GameObject> rowList = new List<GameObject>();
-    private List<GameObject> colList = new List<GameObject>();
+    private List<List<GameObject>> colList = new List<List<GameObject>>();
+    private List<GameObject> itemColList = new List<GameObject>();
+    private List<GameObject> deckColList = new List<GameObject>();
+    private List<GameObject> choiceColList = new List<GameObject>();
 
     void Start()
     {
@@ -33,99 +39,82 @@ public class MenuController : MonoBehaviour
         rowList.Add(status);
         rowList.Add(save);
         rowList.Add(end);
+
+        choiceColList.Add(yes);
+        choiceColList.Add(no);
+
+        colList.Add(itemColList);
+        colList.Add(deckColList);
+        colList.Add(null);
+        colList.Add(choiceColList);
+        colList.Add(choiceColList);
     }
 
     void  Update()
     {
         //メニューを開く
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && isMenu == false)
         {
-            if (isMenu)
+            isMenu = true;
+            isRow = true;
+            MenuActive(isMenu);
+            //画像を差し替える
+            rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        }
+
+        if (isRow)
+        {
+            if (Input.GetKeyDown(KeyCode.W) && row > 0)
             {
-                isMenu = false;
+                row--;
+                ChangeRowImage(row + 1, row);
+            }
+
+            if (Input.GetKeyDown(KeyCode.S) && row < 4)
+            {
+                row++;
+                ChangeRowImage(row - 1, row);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
                 isRow = false;
-                MenuActive(isMenu);
+                isCol = true;
             }
-            else
+        }
+
+        if (isCol)
+        {
+            //Aまたは←を押すと左の要素に移る
+            if (Input.GetKeyDown(KeyCode.A))
             {
-                isMenu = true;
-                isRow = true;
-                MenuActive(isMenu);
-                //画像を差し替える
-                rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+                col--;
             }
-        }
 
-        //Aまたは←を押すと左の要素に移る
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            col--;
-        }
-
-        //Dまたは→を押すと右の要素に移る
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            col++;
-        }
-
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            row--;
-        }
-
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            row++;
+            //Dまたは→を押すと右の要素に移る
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                col++;
+            }
         }
     }
 
-    void MenuActive()
+    void ChangeColList(int before, int after)
     {
-        if (isMenu)
-        {
-            //大項目操作
-            if (isRow)
-            {
-                //上に移動
-                if (Input.GetKeyDown(KeyCode.W) && row > 0)
-                {
-                    Debug.Log("b");
-                    //画像を差し替える
-                    rowList[row].transform.localScale = new Vector3(1, 0.5f, 0);
-                    row--;
-                    rowList[row].transform.localScale = new Vector3(1.2f, 0.7f, 0);
-                }
-                //下に移動
-                if (Input.GetKeyDown(KeyCode.S) && row < 4)
-                {
-                    rowList[row].transform.localScale = new Vector3(1, 0.5f, 0);
-                    row++;
-                    rowList[row].transform.localScale = new Vector3(1.2f, 0.7f, 0);
-                }
-                //列選択へ
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    isRow = false;
-                    isCol = true;
-                }
-            }
+        //リスト差し替え
+    }
 
-            //小項目操作
-            if (isCol)
-            {
-                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-                {
-                    col--;
+    void ChangeColImage(int before, int after)
+    {
+        //画像を差し替える
 
-                }
-                if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    col++;
-                }
-            }
-            
-        }
-        
+    }
+
+    void ChangeRowImage(int before,int after)
+    {
+        //画像を差し替える
+        rowList[after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        rowList[before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
     void MenuActive(bool isMenu)
