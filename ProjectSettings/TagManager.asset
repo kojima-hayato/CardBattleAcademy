@@ -8,6 +8,9 @@ TagManager:
   - false
   - FollowCamera
   - Frame
+  - EncounterArea
+  - Field
+  - NPC
   layers:
   - Default
   - TransparentFX
