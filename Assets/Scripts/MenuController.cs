@@ -14,7 +14,8 @@ public class MenuController : MonoBehaviour
     public GameObject tool;
     public GameObject equipment;
     public GameObject important;
-
+    public GameObject edit;
+    public GameObject list;
     public GameObject yes;
     public GameObject no;
 
@@ -40,6 +41,13 @@ public class MenuController : MonoBehaviour
         rowList.Add(save);
         rowList.Add(end);
 
+        itemColList.Add(tool);
+        itemColList.Add(equipment);
+        itemColList.Add(important);
+
+        deckColList.Add(edit);
+        deckColList.Add(list);
+
         choiceColList.Add(yes);
         choiceColList.Add(no);
 
@@ -62,22 +70,32 @@ public class MenuController : MonoBehaviour
             rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape) && isMenu == true)
+        {
+            isMenu = false;
+            isRow = false;
+            MenuActive(isMenu);
+        }
+
         if (isRow)
         {
             if (Input.GetKeyDown(KeyCode.W) && row > 0)
             {
                 row--;
                 ChangeRowImage(row + 1, row);
+                ChangeColList(row + 1, row);
             }
 
             if (Input.GetKeyDown(KeyCode.S) && row < 4)
             {
                 row++;
                 ChangeRowImage(row - 1, row);
+                ChangeColList(row - 1, row);
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                colList[0][0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
                 isRow = false;
                 isCol = true;
             }
@@ -86,28 +104,53 @@ public class MenuController : MonoBehaviour
         if (isCol)
         {
             //Aまたは←を押すと左の要素に移る
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.A) && col > 0)
             {
                 col--;
+                ChangeColImage(col + 1, col);
             }
 
             //Dまたは→を押すと右の要素に移る
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.D) && col < colList[row].Count - 1)
             {
                 col++;
+                ChangeColImage(col - 1, col);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                isRow = true;
+                isCol = false;
+                colList[row][col].transform.localScale = new Vector3(1.0f, 0.5f, 0);
+                col = 0;
             }
         }
     }
 
     void ChangeColList(int before, int after)
     {
-        //リスト差し替え
+        if(colList[before] != null)
+        {
+            foreach (GameObject g in colList[before])
+            {
+                g.SetActive(false);
+            }
+        }
+        
+        if(colList[after] != null)
+        {
+            foreach (GameObject g in colList[after])
+            {
+                g.SetActive(true);
+            }
+        }
     }
 
     void ChangeColImage(int before, int after)
     {
         //画像を差し替える
-
+        colList[row][after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        colList[row][before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
     void ChangeRowImage(int before,int after)
