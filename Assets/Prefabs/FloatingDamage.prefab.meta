@@ -1,5 +1,4 @@
 fileFormatVersion: 2
-<<<<<<< Updated upstream
 <<<<<<< Updated upstream:Assets/Animation/NPC.anim.meta
 guid: 69da4cbb1fccdb341929d353108aa15f
 NativeFormatImporter:
@@ -7,10 +6,6 @@ NativeFormatImporter:
 guid: 3bfc7a077da1a834799fe4148045b98f
 PrefabImporter:
 >>>>>>> Stashed changes:Assets/Prefabs/FloatingDamage.prefab.meta
-=======
-guid: 69da4cbb1fccdb341929d353108aa15f
-NativeFormatImporter:
->>>>>>> Stashed changes
   externalObjects: {}
   mainObjectFileID: 7400000
   userData: 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AlgorithmExecuter
+public class AlgorithmBuilder
 {
+    FloatingDamageController fdc;
+
     private List<Card> algoList = new();
 
     List<Card> hand = CardBuilder.hand;
@@ -19,8 +21,11 @@ public class AlgorithmExecuter
 
     int heroHPvalue, bossHPvalue;
 
-    public void ExecuteAlgo(Slider heroHP, Slider bossHP)
+    public IEnumerator ExecuteAlgo(Slider heroHP, Slider bossHP, FloatingDamageController fdcParam)
     {
+        //ダメージ表示クラス
+        fdc = fdcParam;
+
         heroHPvalue = (int)heroHP.value;
         bossHPvalue = (int)bossHP.value;
 
@@ -82,8 +87,9 @@ public class AlgorithmExecuter
                                     {
                                         Debug.Log("判定成功");
                                         value = (int)(value * ic.GetRate());
+
                                         Debug.Log(value + "のダメージ");
-                                        bossHP.value -= value;
+                                        Attack(value, bossHP, fdc);
                                     }
                                     else
                                     {
@@ -96,14 +102,14 @@ public class AlgorithmExecuter
                                     for (int i = 0; i < roopCount; i++)
                                     {
                                         Debug.Log(value + "のダメージ");
-                                        bossHP.value -= value;
+                                        Attack(value, bossHP, fdc);
                                     }
 
                                 }
                                 else
                                 {
                                     Debug.Log(value + "のダメージ");
-                                    bossHP.value -= value;
+                                    Attack(value, bossHP, fdc);
                                 }
                                 break;
 
@@ -170,6 +176,8 @@ public class AlgorithmExecuter
                     isEnterRoop = false;
                     break;
             }
+            
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
@@ -235,5 +243,12 @@ public class AlgorithmExecuter
                 break;
         }
         return result;
+    }
+
+    private void Attack(int damageValue, Slider bossHP, FloatingDamageController fdc)
+    {
+        bossHP.value -= damageValue;
+
+        fdc.ShowDamage(damageValue);
     }
 }

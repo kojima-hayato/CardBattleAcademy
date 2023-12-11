@@ -15,6 +15,7 @@ public class BattleController : MonoBehaviour
     int maxHPValue, nowHPValue;
 
     CardBuilder cb;
+    FloatingDamageController fdc;
 
     AlgorithmBuilder ab = new();
     // Start is called before the first frame update
@@ -34,6 +35,7 @@ public class BattleController : MonoBehaviour
         ChangeNowHP();
 
         cb = FindObjectOfType<CardBuilder>();
+        fdc = FindObjectOfType<FloatingDamageController>();
     }
 
     // Update is called once per frame
@@ -43,29 +45,38 @@ public class BattleController : MonoBehaviour
 
     public void OnClick()
     {
-        Attack();
+        StartAttack();
     }
 
-    private void Attack()
+    private void StartAttack()
     {
         Debug.Log("勇者の行動");
-        ab.ExecuteAlgo(heroHP, bossHP);
+        ab.ExecuteAlgo(heroHP, bossHP, fdc);
 
-        Debug.Log("敵の行動");
-        heroHP.value -= 10;
-
-        ChangeNowHP();
-
-        if(bossHP.value <= 0)
+        if (bossHP.value <= 0)
         {
             Debug.Log("倒した");
-        }else
-        {
-            Debug.Log("次のターン");
-            cb.ReturnDeck();
-            cb.DrawCard(0,0,3);
+            //ここに遷移処理(マップ)
         }
+        else
+        {
+            Debug.Log("敵の行動");
+            heroHP.value -= 10;
 
+            if (heroHP.value <= 0)
+            {
+                Debug.Log("やられた");
+                //ここに遷移処理(ゲームオーバー)
+            }
+            else
+            {
+                Debug.Log("次のターン");
+                ChangeNowHP();
+
+                cb.ReturnDeck();
+                cb.DrawCard(0, 0, 3);
+            }
+        }
     }
 
     private void ChangeNowHP()

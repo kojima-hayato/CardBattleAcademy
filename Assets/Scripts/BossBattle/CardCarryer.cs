@@ -108,7 +108,7 @@ public class CardCarryer : MonoBehaviour
                         cardItemList[index] = nowFrame;
                     } else
                     {
-                        Debug.LogError("対象が見つかりませんでした");
+                        Debug.Log("対象が見つかりませんでした");
                     }
                 }
             }
@@ -188,7 +188,13 @@ public class CardCarryer : MonoBehaviour
                         cardItemList.Add(gameObject);
                     }
 
-                    nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity, nowFrame.transform.parent);
+                    if(nextPos.x < 4.5)
+                    {
+                        nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity, nowFrame.transform.parent);
+                    }else
+                    {
+                        Debug.Log("設置上限に到達");
+                    }
 
                     //カードの位置をフレームに合わせ、前に表示させる
                     transform.position = nowFrame.transform.position;
@@ -216,7 +222,7 @@ public class CardCarryer : MonoBehaviour
                         }
                         else
                         {
-                            Debug.LogError("対象が見つかりませんでした");
+                            Debug.Log("対象が見つかりませんでした");
                         }
                     } else
                     {
