@@ -72,16 +72,32 @@ public class move_chara : MonoBehaviour
     // バトルエリアに入ったときの処理
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EncounterArea"))
+        if (other.CompareTag("Field"))
+        {
+
+        }
+        else if (other.CompareTag("NPC"))
         {
             canMove = false; // 入力を受け付けないようにフラグを設定
+        }
+        else
+        {
+            canMove = false; // 入力を受け付けないようにフラグを設定(Boss判定の予定。二つもいるのかな？)
         }
     }
 
     // バトルエリアから出たときの処理
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("EncounterArea"))
+        if (other.CompareTag("Field"))
+        {
+
+        }
+        else if (other.CompareTag("NPC"))
+        {
+            canMove = true; // 入力を受け付けるようにフラグを設定
+        }
+        else
         {
             canMove = true; // 入力を受け付けるようにフラグを設定
         }

@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: 73506f5fffe272c49b2eabe07eedcfd8
+  - enabled: 1
     path: Assets/Scenes/WorldMap.unity
     guid: ef24272e30d3da44485151bacfb6e8e3
   - enabled: 1
@@ -20,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BossBattle.unity
     guid: c0f38cd27a0e7dd4ab1433904caa9852
+  - enabled: 1
+    path: Assets/Scenes/Test/TestScenes.unity
+    guid: 7507fd7a19b92d949b8802157f717d89
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000

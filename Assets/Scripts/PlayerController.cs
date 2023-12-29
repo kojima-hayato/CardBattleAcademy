@@ -14,13 +14,19 @@ public class PlayerController : MonoBehaviour
     private bool canMove = true;
     private Vector3 encounterDirection;
 
+    public static Vector3 playerPosition;
+
     private void Start()
     {
+        this.transform.position = playerPosition;
         animator = GetComponent<Animator>();
+
+   
     }
 
     void Update()
     {
+        playerPosition = this.transform.position;
         if (canMove)
         {
             float x = Input.GetAxisRaw("Horizontal");
@@ -55,12 +61,8 @@ public class PlayerController : MonoBehaviour
             // プレイヤーの入力を止める
             canMove = false;
 
-
-
-            // バトルシーンに遷移
-            //SceneManager.LoadScene("BossBattle");
         }
-    }
 
+    }
 
 }

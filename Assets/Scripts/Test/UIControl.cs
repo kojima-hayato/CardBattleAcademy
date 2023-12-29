@@ -11,7 +11,6 @@ public class UIControl : MonoBehaviour
 
     int nowIndex = 0;   //現在のカーソル位置
 
-    // Start is called before the first frame update
     void Start()
     {
         tMP = parents.GetComponentsInChildren<TextMeshProUGUI>();
@@ -23,7 +22,6 @@ public class UIControl : MonoBehaviour
         ui.SetActive(isUINow);
     }
 
-    // Update is called once per frame
     void Update()
     {
         //Escを押すとマップに戻る

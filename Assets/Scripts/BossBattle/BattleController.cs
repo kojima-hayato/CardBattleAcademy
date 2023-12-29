@@ -6,55 +6,83 @@ using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour
 {
-    public Slider HeroHP;
-    public Slider BossHP;
+    public Slider heroHP;
+    public Slider bossHP;
 
     public TextMeshProUGUI maxHP;
     public TextMeshProUGUI nowHP;
 
     int maxHPValue, nowHPValue;
 
+    CardBuilder cb;
+    FloatingDamageController fdc;
+
+    AlgorithmBuilder ab = new();
     // Start is called before the first frame update
     void Start()
     {
         //HPの最大値設定
-        HeroHP.maxValue = 100;
-        BossHP.maxValue = 100;
+        heroHP.maxValue = 100;
+        bossHP.maxValue = 100;
 
         //現在HPを最大値に合わせる
-        HeroHP.value = HeroHP.maxValue;
-        BossHP.value = BossHP.maxValue;
+        heroHP.value = heroHP.maxValue;
+        bossHP.value = bossHP.maxValue;
 
         //数字を合わせる
-        maxHPValue = (int)HeroHP.maxValue;
+        maxHPValue = (int)heroHP.maxValue;
         maxHP.text = maxHPValue.ToString();
         ChangeNowHP();
+
+        cb = FindObjectOfType<CardBuilder>();
+        fdc = FindObjectOfType<FloatingDamageController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void OnClick()
     {
-        Attack();
+        StartAttack();
     }
 
-    private void Attack()
+    private void StartAttack()
     {
-        Debug.Log("交戦した");
-        BossHP.value -= 50;
-        HeroHP.value -= 20;
+        Debug.Log("勇者の行動");
+        ab.ExecuteAlgo(heroHP, bossHP, fdc);
 
-        ChangeNowHP();
+        if (bossHP.value <= 0)
+        {
+            Debug.Log("倒した");
+            //ここに遷移処理(マップ)
+        }
+        else
+        {
+            Debug.Log("敵の行動");
+            heroHP.value -= 10;
+
+            if (heroHP.value <= 0)
+            {
+                Debug.Log("やられた");
+                //ここに遷移処理(ゲームオーバー)
+            }
+            else
+            {
+                Debug.Log("次のターン");
+                ChangeNowHP();
+
+                cb.ReturnDeck();
+                cb.DrawCard(0, 0, 3);
+            }
+        }
     }
 
     private void ChangeNowHP()
     {
         //現在HP(数字)の更新
-        nowHPValue = (int)HeroHP.value;
+        nowHPValue = (int)heroHP.value;
         nowHP.text = nowHPValue.ToString();
     }
 }

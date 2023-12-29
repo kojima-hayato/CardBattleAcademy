@@ -1,3 +1,7 @@
+
+
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,5 +57,34 @@ public class ConversationScript : MonoBehaviour
             conversationCanvas.enabled = false;
             Debug.Log("会話終了");
         }
+    }
+
+    // 会話を開始するためのメソッドを追加
+    public IEnumerator StartConversation()
+    {
+        // 最初はCanvasを表示
+        conversationCanvas.enabled = true;
+
+        while (currentLine < conversationLines.Length - 1)
+        {
+            // 次の会話文を表示
+            conversationText.text = conversationLines[currentLine];
+
+            // ここでクリック待ちなどの入力を待つ
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+            // 次の会話文に進む
+            currentLine++;
+        }
+
+        // 会話が終了したらCanvasを非表示にする
+        conversationCanvas.enabled = false;
+    }
+
+    //会話ログが終了しているか判定
+    public bool IsConversationFinished()
+    {
+        return currentLine >= conversationLines.Length - 1;
+
     }
 }

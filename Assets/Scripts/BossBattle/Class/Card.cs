@@ -4,20 +4,33 @@ using UnityEngine;
 
 public class Card
 {
-    private GameObject card;    //カードの実体
-    private int value;          //カードが持つ値
-    private string cardType;    //roop・if・攻撃・防御など
+    private GameObject cardItem;    //カードの実態
+    private string cardId;          //カードの識別番号
+    private int value;              //カードが持つ値
+    private string cardType;        //roop・if・攻撃・防御など
 
-    public Card(GameObject card, int value, string cardType)
+    public Card(int value, string cardType)
     {
-        SetCard(card);
         SetValue(value);
         SetCardType(cardType);
     }
 
-    private void SetCard(GameObject card)
+    public Card(string cardId, int value, string cardType)
     {
-        this.card = card;
+        SetCardId(cardId);
+        SetValue(value);
+        SetCardType(cardType);
+    }
+
+    public void CallSetCardItem(GameObject g)
+    {
+        SetCardItem(g);
+    }
+
+    //以下Setter,Getter
+    private void SetCardId(string cardId)
+    {
+        this.cardId = cardId;
     }
 
     private void SetValue(int value)
@@ -30,9 +43,20 @@ public class Card
         this.cardType = cardType;
     }
 
-    public GameObject GetCard()
+    private void SetCardItem(GameObject cardItem)
     {
-        return card;
+        Debug.Log("SetCardItem:" + cardItem);
+        this.cardItem = cardItem;
+    }
+
+    public GameObject GetCardItem()
+    {
+        return cardItem;
+    }
+
+    public string GetCardId()
+    {
+        return cardId;
     }
 
     public int GetValue()

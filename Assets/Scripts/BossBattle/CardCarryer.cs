@@ -5,8 +5,10 @@ using UnityEngine;
 public class CardCarryer : MonoBehaviour
 {
     Vector3 cardPos, mousePos;
-    GameObject framePrefab, nowFrame, nextFrame, childFrame, trueFrame, falseFrame;
-    public static List<GameObject> frameList, childFrameList;
+    GameObject framePrefab, nextFrame, childFrame, nowFrame;
+
+    public static List<GameObject> frameList, childFrameList, cardItemList;
+
     bool isEnterAlgo, isOnFrame, isInFrameList, isInChildFrameList;
 
     // Start is called before the first frame update
@@ -18,8 +20,11 @@ public class CardCarryer : MonoBehaviour
         //既に使用されているフレームのリスト
         frameList = new List<GameObject>();
 
-        //if文やループ文に直結するフレームのリスト
+        //if文やループ文が使用するフレームのリスト
         childFrameList = new List<GameObject>();
+
+        //配置の順番を管理するリスト
+        cardItemList = new();
     }
 
     // Update is called once per frame
@@ -33,6 +38,7 @@ public class CardCarryer : MonoBehaviour
         //フレームに重なったら使用待機状態にする
         if (collision.gameObject.tag == "Frame" && !isEnterAlgo)
         {
+            Debug.Log("フレームに触れた");
             nowFrame = collision.gameObject;
         }
     }
@@ -49,23 +55,62 @@ public class CardCarryer : MonoBehaviour
     public void OnTriggerExit2D(Collider2D collision)
     {
         //待機状態のフレームの上かつアルゴリズムに組み込まれている場合、解除する
-        if (collision.gameObject == nowFrame && isEnterAlgo)
+        if (collision.gameObject == nowFrame)
         {
-            if (!isInChildFrameList)
+            Debug.Log("フレームから離れた");
+            if (isEnterAlgo)
             {
-                if (tag == "Roop")
+                if (!isInChildFrameList)
                 {
-                    nowFrame.transform.Translate(0.0f, -1.0f, 0.0f);
-                    Destroy(childFrame);
-                }
-                else if (tag == "If")
-                {
-                    Destroy(trueFrame);
-                    Destroy(falseFrame);
-                }
-                Destroy(nextFrame);
+                    if (tag == "Roop" || tag == "If")
+                    {
+                        //順番管理リストから削除する
+                        GameObject targetObj = cardItemList.Find(x => x == gameObject);
+                        //見つかれば削除
+                        if (targetObj != null)
+                        {
+                            int index = cardItemList.IndexOf(targetObj);
+                            //ループ対象を除外
+                            cardItemList.RemoveAt(index + 1);
+                            //本体を除外
+                            cardItemList.Remove(targetObj);
+                        }
+                        else
+                        {
+                            Debug.LogError("対象が見つかりませんでした");
+                        }
 
-                frameList.Remove(nowFrame);
+                        nowFrame.transform.Translate(0.0f, -1.0f, 0.0f);
+
+                        childFrameList.Remove(childFrame);
+                        Destroy(childFrame);
+                    } else
+                    {
+                        cardItemList.Remove(gameObject);
+                    }
+                    Destroy(nextFrame);
+                    frameList.Remove(nowFrame);
+
+                }
+                else
+                {
+                    frameList.Remove(nowFrame);
+
+                    //再度仮配置を行う
+                    GameObject targetObj = cardItemList.Find(x => x == gameObject);
+                    //見つかれば再度仮配置
+                    if (targetObj != null)
+                    {
+                        Debug.Log("gameObject:" + gameObject);
+                        Debug.Log("targetObj:" + targetObj);
+
+                        int index = cardItemList.IndexOf(targetObj);
+                        cardItemList[index] = nowFrame;
+                    } else
+                    {
+                        Debug.Log("対象が見つかりませんでした");
+                    }
+                }
             }
 
             nowFrame = null;
@@ -78,8 +123,6 @@ public class CardCarryer : MonoBehaviour
     public void OnMouseDown()
     {
         //画面の座標とunity空間の座標を連結させる
-        Debug.Log("カードをつかんだ");
-
         cardPos = Camera.main.WorldToScreenPoint(transform.position);
         cardPos = Camera.main.ScreenToWorldPoint(cardPos);
     }
@@ -94,6 +137,8 @@ public class CardCarryer : MonoBehaviour
 
     public void OnMouseUp()
     {
+        Debug.Log("カードを離した");
+
         //同じフレームに置こうとすると配置を止める
         if (frameList != null && !isOnFrame)
         {
@@ -115,13 +160,11 @@ public class CardCarryer : MonoBehaviour
 
                 Vector3 nextPos = nowFrame.transform.position;
                 Vector3 childPos = nowFrame.transform.position;
-                Vector3 truePos = nowFrame.transform.position;
-                Vector3 falsePos = nowFrame.transform.position;
 
                 //ループや分岐の対象でなければ次のフレームを配置する
                 if (!isInChildFrameList)
                 {
-                    if (tag == "Roop")
+                    if (tag == "Roop" || tag == "If")
                     {
                         nowFrame.transform.Translate(0.0f, 1.0f, 0.0f);
                         nextPos.x += 1.5f;
@@ -133,35 +176,25 @@ public class CardCarryer : MonoBehaviour
 
                         childFrameList.Add(childFrame);
 
-                    }
-                    else if (tag == "If")
-                    {
-                        nextPos.x += 3.0f;
-
-                        //true分岐のフレーム
-                        truePos.x += 1.5f;
-                        truePos.y += 1.0f;
-
-                        trueFrame = Instantiate(framePrefab, truePos, Quaternion.identity);
-                        trueFrame.transform.SetParent(nowFrame.transform.parent);
-
-                        //false分岐のフレーム
-                        falsePos.x += 1.5f;
-                        falsePos.y -= 1.0f;
-
-                        falseFrame = Instantiate(framePrefab, falsePos, Quaternion.identity);
-                        falseFrame.transform.SetParent(nowFrame.transform.parent);
-
-                        childFrameList.Add(trueFrame);
-                        childFrameList.Add(falseFrame);
+                        //順番管理リストに追加
+                        cardItemList.Add(gameObject);
+                        //対象用に仮置きする
+                        cardItemList.Add(childFrame);
                     }
                     else
                     {
                         nextPos.x += 1.5f;
+                        //順番管理リストに追加
+                        cardItemList.Add(gameObject);
                     }
 
-                    nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity);
-                    nextFrame.transform.SetParent(nowFrame.transform.parent);
+                    if(nextPos.x < 4.5)
+                    {
+                        nextFrame = Instantiate(framePrefab, nextPos, Quaternion.identity, nowFrame.transform.parent);
+                    }else
+                    {
+                        Debug.Log("設置上限に到達");
+                    }
 
                     //カードの位置をフレームに合わせ、前に表示させる
                     transform.position = nowFrame.transform.position;
@@ -178,6 +211,19 @@ public class CardCarryer : MonoBehaviour
                         //カードの位置をフレームに合わせ、前に表示させる
                         transform.position = nowFrame.transform.position;
                         transform.Translate(0.0f, 0.0f, -1.0f);
+
+                        //配置したフレームと仮置きしたフレームが一致すれば取得する
+                        GameObject reserveObj = cardItemList.Find(x => x == nowFrame);
+                        //一致したものがあれば上書きする
+                        if(reserveObj != null)
+                        {
+                            int index = cardItemList.IndexOf(reserveObj);
+                            cardItemList[index] = gameObject;
+                        }
+                        else
+                        {
+                            Debug.Log("対象が見つかりませんでした");
+                        }
                     } else
                     {
                         Debug.Log("多重ループ・多重分岐の発生");
@@ -185,7 +231,7 @@ public class CardCarryer : MonoBehaviour
                 }
 
             }
-            else if (isOnFrame)
+            else if (isOnFrame && !isInChildFrameList)
             {
                 //カードの位置をフレームに合わせ、前に表示させる
                 transform.position = nowFrame.transform.position;
@@ -194,7 +240,9 @@ public class CardCarryer : MonoBehaviour
         }
     }
 
-    private bool CheckDuplicate(List<GameObject> gameObjects, GameObject target)    //重複チェック
+
+    //重複チェック
+    private bool CheckDuplicate(List<GameObject> gameObjects, GameObject target)
     {
         bool result = false;
 
