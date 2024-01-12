@@ -1,34 +1,38 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
     private bool isPlayerNearNPC = false; // プレイヤーがNPCに近づいているかどうかを判定するフラグ
-    private Talkrog TalkrogScript; // Talkrogスクリプトへの参照
+    public Talkrog TalkrogScript; // Talkrogスクリプトへの参照
+
 
     void Start()
     {
-        TalkrogScript = GetComponent<Talkrog>(); // Talkrogスクリプトへの参照を取得
+        
+
+        if (TalkrogScript == null)
+        {
+            // 手動でアタッチするか、Inspectorで設定するように警告を表示
+            Debug.LogWarning("Talkrogスクリプトがアタッチされていません。Inspectorでアタッチするか、手動でアタッチしてください。");
+        }
     }
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("NPC"))
         {
-            if (TalkrogScript != null) // nullチェックを追加することでNullReferenceExceptionを防ぎます
+            isPlayerNearNPC = true;
+
+            if (TalkrogScript != null)
             {
-                isPlayerNearNPC = true;
                 TalkrogScript.StartConversation();
+            }
+            else
+            {
+                Debug.LogWarning("TalkrogScriptがnullです。");
             }
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("NPC"))
-        {
-            isPlayerNearNPC = false; // プレイヤーがNPCから離れたらフラグを下げる
-            TalkrogScript.EndConversation(); // 会話が終了したことを通知して再度入力を受け付ける
-        }
-    }
 }

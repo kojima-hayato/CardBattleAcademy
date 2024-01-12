@@ -30805,7 +30805,7 @@ GameObject:
   - component: {fileID: 1086431672}
   m_Layer: 0
   m_Name: "\u738B\u69D8\uFF08\u4EEE\uFF09"
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33298,6 +33298,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6773006975399113885, guid: f649007c222196a4f9e8d6105730936b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -217
+      objectReference: {fileID: 0}
+    - target: {fileID: 6773006976280647879, guid: f649007c222196a4f9e8d6105730936b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -216
+      objectReference: {fileID: 0}
     - target: {fileID: 6773006976891938643, guid: f649007c222196a4f9e8d6105730936b, type: 3}
       propertyPath: m_Name
       value: TalkLog
