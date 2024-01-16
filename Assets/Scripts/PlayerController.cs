@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class PlayerController : MonoBehaviour
 {
     private Animator animator;
@@ -23,6 +24,18 @@ public class PlayerController : MonoBehaviour
 
    
     }
+
+  /*  public void SetCanMove(bool value)
+    {
+        canMove = value;
+        if (!canMove)
+        {
+            // 動けないようにするときは、アニメーションも停止する
+            
+            animator.SetFloat("X", 0.0f);
+            animator.SetFloat("Y", 0.0f);
+        }
+    }*/
 
     void Update()
     {
@@ -64,5 +77,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+
 
 }

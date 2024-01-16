@@ -7,6 +7,7 @@ public class move_chara : MonoBehaviour
     private Rigidbody2D rb;
     public RandomEncount randomEncount;
     public float speedThreshold = 0.5f;
+
     private bool canMove = true; // 入力を受け付けるかどうかのフラグ
 
     private void Start()
@@ -15,6 +16,10 @@ public class move_chara : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         randomEncount = FindObjectOfType<RandomEncount>(); // RandomEncountのインスタンスを取得する
     }
+
+
+
+
 
     void Update()
     {
@@ -67,6 +72,22 @@ public class move_chara : MonoBehaviour
         }
     }
 
+
+ 
+
+
+
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
+        if (!value)
+        {
+            // 入力を受け付けない場合は、速度とアニメーションもリセットする
+            rb.velocity = Vector2.zero;
+            animator.SetFloat("x", 0.0f);
+            animator.SetFloat("y", 0.0f);
+        }
+    }
 
 
 

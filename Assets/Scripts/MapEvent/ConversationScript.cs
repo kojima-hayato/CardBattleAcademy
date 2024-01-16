@@ -1,90 +1,102 @@
-
-
-
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+
 
 public class ConversationScript : MonoBehaviour
 {
     public Canvas conversationCanvas;
     public Text conversationText;
-    public string[] conversationLines;
     private int currentLine = 0;
+    public string[] conversationLines;
+    private move_chara playerController;
 
-    void Start()
+    // DialogueDataクラス定義が必要です
+    [System.Serializable]
+    public class DialogueData
     {
-        // 最初はCanvasを非表示にする
+        public string[] lines;
+    }
+
+   private void Start()
+    {
+       
+        playerController = FindObjectOfType<move_chara>();
+
+        // 最初はCanvasを非表示に
         conversationCanvas.enabled = false;
 
-        if (conversationText != null && conversationLines.Length > 0)
-        {
-            // 初期の会話文を表示
-            conversationText.text = conversationLines[currentLine];
-        }
+        // JSONから会話データを読み込む
+        LoadDialogueFromJSON("king");
     }
+
 
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            // プレイヤーが触れたらCanvasを表示
-            conversationCanvas.enabled = true;
+            // プレイヤーが触れたら会話を開始
+            StartCoroutine(StartConversation());
         }
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            // クリックしたら次の会話文へ
-            ShowNextLine();
-        }
-    }
 
-    void ShowNextLine()
-    {
-        if (currentLine < conversationLines.Length - 1)
-        {
-            currentLine++;
-            conversationText.text = conversationLines[currentLine];
-        }
-        else
-        {
-            // 会話が終了した場合、Canvasを非表示にする
-            conversationCanvas.enabled = false;
-            Debug.Log("会話終了");
-        }
-    }
-
-    // 会話を開始するためのメソッドを追加
     public IEnumerator StartConversation()
     {
         // 最初はCanvasを表示
         conversationCanvas.enabled = true;
 
-        while (currentLine < conversationLines.Length - 1)
+        // 会話開始時にプレイヤーの動きをF止める
+        if (playerController != null)
         {
-            // 次の会話文を表示
+            playerController.SetCanMove(false);
+        }
+
+        while (currentLine < conversationLines.Length)
+        {
+            //次の会話文を表示
             conversationText.text = conversationLines[currentLine];
-
-            // ここでクリック待ちなどの入力を待つ
-            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-
-            // 次の会話文に進む
+            
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0)); // クリックを待つ
+            yield return new WaitForSeconds(0.1f); // 小さな遅延を挿入してダブルクリックを防ぐ
             currentLine++;
         }
 
+        // 会話終了時にプレイヤーの動きを再開する
+        if (playerController != null)
+        {
+            playerController.SetCanMove(true);
+        }
+
+
+
+
         // 会話が終了したらCanvasを非表示にする
         conversationCanvas.enabled = false;
+        currentLine = 0; // 会話をリセット
     }
 
     //会話ログが終了しているか判定
     public bool IsConversationFinished()
     {
-        return currentLine >= conversationLines.Length - 1;
+        return currentLine >= conversationLines.Length;
 
     }
+
+    // JSONファイルからデータを読み込むメソッド
+    public void LoadDialogueFromJSON(string fileName)
+    {
+        TextAsset fileData = Resources.Load<TextAsset>(fileName);
+        if (fileData == null)
+        {
+            Debug.LogError("ファイルが見つからない: " + fileName);
+            return;
+        }
+
+        DialogueData dialogueData = JsonUtility.FromJson<DialogueData>(fileData.text);
+        conversationLines = dialogueData.lines;
+        currentLine = 0; // 現在のラインをリセット
+    }
+
+    // その他のメソッド
 }
