@@ -11,6 +11,9 @@ public class ConversationScript : MonoBehaviour
     public string[] conversationLines;
     private move_chara playerController;
 
+    //キャラクターごとの会話データを指定するための変数
+    public string dialogueFileName;
+
     // DialogueDataクラス定義が必要です
     [System.Serializable]
     public class DialogueData
@@ -27,7 +30,7 @@ public class ConversationScript : MonoBehaviour
         conversationCanvas.enabled = false;
 
         // JSONから会話データを読み込む
-        LoadDialogueFromJSON("king");
+        LoadDialogueFromJSON(dialogueFileName);
     }
 
 
@@ -40,7 +43,7 @@ public class ConversationScript : MonoBehaviour
         }
     }
 
-
+    
     public IEnumerator StartConversation()
     {
         // 最初はCanvasを表示
@@ -50,6 +53,7 @@ public class ConversationScript : MonoBehaviour
         if (playerController != null)
         {
             playerController.SetCanMove(false);
+            
         }
 
         while (currentLine < conversationLines.Length)

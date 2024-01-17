@@ -15,11 +15,11 @@ public class PlayerController : MonoBehaviour
     private bool canMove = true;
     private Vector3 encounterDirection;
 
-    public static Vector3 playerPosition;
+    private Vector3 playerPosition;
 
     private void Start()
     {
-        this.transform.position = playerPosition;
+        playerPosition = this.transform.position;
         animator = GetComponent<Animator>();
 
    
@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         playerPosition = this.transform.position;
+
         if (canMove)
         {
             float x = Input.GetAxisRaw("Horizontal");
@@ -77,7 +78,5 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
-
 
 }
