@@ -16,13 +16,16 @@ public class MenuController : MonoBehaviour
     public GameObject save;
     public GameObject end;
     public GameObject tool;
-    public GameObject equipment;
+    public GameObject player;
     public GameObject important;
     public GameObject edit;
     public GameObject list;
     public GameObject yes;
     public GameObject no;
     public GameObject detail;
+
+    public GameObject movePlayer;
+    public GameObject encount;
 
     private bool isMenu;
     private bool isRow;
@@ -35,14 +38,19 @@ public class MenuController : MonoBehaviour
     private List<List<GameObject>> colList = new List<List<GameObject>>();
     private List<GameObject> itemColList = new List<GameObject>(); //道具
     private List<GameObject> deckColList = new List<GameObject>(); //デッキ
+    private List<GameObject> statusColList = new List<GameObject>(); //ステータス
     private List<GameObject> choiceColList = new List<GameObject>(); //セーブ、ゲーム終了
 
     string toolText;
+    string importantText;
     string deckText;
+    string listText;
     string playerText;
 
     string toolSql;
+    string importantSql;
     string deckSql;
+    string listSql;
     string playerSql;
 
     DataBaseConnector dbc;
@@ -55,6 +63,7 @@ public class MenuController : MonoBehaviour
 
         //アイテム
         toolSql = "SELECT" +
+            " ii.item_id," +
             " item_name," +
             " quantity" +
             " FROM" +
@@ -70,9 +79,16 @@ public class MenuController : MonoBehaviour
             {
                 continue;
             }
-            toolText += "・" + row["item_name"] + "    ×" + row["quantity"] + "\n";
+            string s = (string)row["item_id"];
+            if (s.StartsWith("t"))
+            {
+                importantText += "・" + row["item_name"] + "    ×" + row["quantity"] + "\n";
+            }
+            else
+            {
+                toolText += "・" + row["item_name"] + "    ×" + row["quantity"] + "\n";
+            }
         }
-        detail.GetComponent<Text>().text = toolText;
 
         //デッキ
         deckSql = "SELECT" +
@@ -82,11 +98,30 @@ public class MenuController : MonoBehaviour
             " battle_card_deck AS bcd," +
             " data_card AS dc" +
             " WHERE bcd.card_id = dc.card_id" +
-            " ;";
+            " ;"; 
         dt = dbc.ExecuteSQL(deckSql);
         foreach (DataRow row in dt.Rows)
         {
             deckText += "・" + row["card_type"] + "    ×" + row["quantity"] + "\n";
+        }
+
+        //リスト
+        listSql = "SELECT" +
+            " card_type," +
+            " quantity" +
+            " FROM" +
+            " inventory_card AS ic," +
+            " data_card AS dc" +
+            " WHERE ic.card_id = dc.card_id" +
+            " ;";
+        dt = dbc.ExecuteSQL(listSql);
+        foreach (DataRow row in dt.Rows)
+        {
+            if ((int)row["quantity"] == 0)
+            {
+                continue;
+            }
+            listText += "・" + row["card_type"] + "    ×" + row["quantity"] + "\n";
         }
 
         //プレイヤー
@@ -104,8 +139,8 @@ public class MenuController : MonoBehaviour
                       "攻撃力：" + row["hero_attack"];
         }
         
-
         isMenu = false;
+
         rowList.Add(item);
         rowList.Add(deck);
         rowList.Add(status);
@@ -113,18 +148,19 @@ public class MenuController : MonoBehaviour
         rowList.Add(end);
 
         itemColList.Add(tool);
-        itemColList.Add(equipment);
         itemColList.Add(important);
 
         deckColList.Add(edit);
         deckColList.Add(list);
+
+        statusColList.Add(player);
 
         choiceColList.Add(yes);
         choiceColList.Add(no);
 
         colList.Add(itemColList);
         colList.Add(deckColList);
-        colList.Add(null);
+        colList.Add(statusColList);
         colList.Add(choiceColList);
         colList.Add(choiceColList);
     }
@@ -140,17 +176,21 @@ public class MenuController : MonoBehaviour
                 isMenu = true;
                 isRow = true;
                 //画像を差し替える
-                rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+                rowList[0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
+                detail.GetComponent<Text>().text = toolText;
+                movePlayer.SetActive(false);
+                MenuActive();
             }
-            else
+            else if(isMenu == true && isRow == true)
             {
                 //閉じる
                 isMenu = false;
                 isRow = false;
                 rowList[row].transform.localScale = new Vector3(1.0f, 0.5f, 0);
                 row = 0;
+                movePlayer.SetActive(true);
+                MenuActive();
             }
-            Invoke("MenuActive", 0.1f);
         }
 
         //縦
@@ -161,7 +201,7 @@ public class MenuController : MonoBehaviour
                 row--;
                 ChangeRowImage(row + 1, row);
                 ChangeColList(row + 1, row);
-                ChangeDetailRow();
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.S) && row < 4)
@@ -169,12 +209,12 @@ public class MenuController : MonoBehaviour
                 row++;
                 ChangeRowImage(row - 1, row);
                 ChangeColList(row - 1, row);
-                ChangeDetailRow();
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                colList[row][0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+                colList[row][0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
                 isRow = false;
                 isCol = true;
             }
@@ -188,6 +228,7 @@ public class MenuController : MonoBehaviour
             {
                 col--;
                 ChangeColImage(col + 1, col);
+                ChangeDetail();
             }
 
             //Dまたは→を押すと右の要素に移る
@@ -195,6 +236,7 @@ public class MenuController : MonoBehaviour
             {
                 col++;
                 ChangeColImage(col - 1, col);
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
@@ -208,7 +250,6 @@ public class MenuController : MonoBehaviour
                 isCol = false;
                 colList[row][col].transform.localScale = new Vector3(1.0f, 0.5f, 0);
                 col = 0;
-                Invoke("Interval", 0.1f);
             }
         }
     }
@@ -234,15 +275,13 @@ public class MenuController : MonoBehaviour
 
     void ChangeColImage(int before, int after)
     {
-        //画像を差し替える
-        colList[row][after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        colList[row][after].transform.localScale = new Vector3(1.4f, 0.7f, 0);
         colList[row][before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
     void ChangeRowImage(int before,int after)
     {
-        //画像を差し替える
-        rowList[after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        rowList[after].transform.localScale = new Vector3(1.4f, 0.7f, 0);
         rowList[before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
@@ -256,12 +295,12 @@ public class MenuController : MonoBehaviour
         save.SetActive(isMenu);
         end.SetActive(isMenu);
         tool.SetActive(isMenu);
-        equipment.SetActive(isMenu);
         important.SetActive(isMenu);
         detail.SetActive(isMenu);
 
         if(isMenu == false)
         {
+            player.SetActive(isMenu);
             list.SetActive(isMenu);
             edit.SetActive(isMenu);
             yes.SetActive(isMenu);
@@ -269,15 +308,29 @@ public class MenuController : MonoBehaviour
         }
     }
 
-    void ChangeDetailRow()
+    void ChangeDetail()
     {
         switch (row)
         {
             case 0:
-                detail.GetComponent<Text>().text = toolText;
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = toolText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = importantText;
+                }
                 break;
             case 1:
-                detail.GetComponent<Text>().text = deckText;
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = deckText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = listText;
+                }
                 break;
             case 2:
                 detail.GetComponent<Text>().text = playerText;
@@ -289,12 +342,5 @@ public class MenuController : MonoBehaviour
                 detail.GetComponent<Text>().text = "ゲームを終了しますか？";
                 break;
         }
-        Debug.Log(detail.GetComponent<Text>().text);
-        Debug.Log(playerText);
-    }
-
-    void Interval()
-    {
-
     }
 }
