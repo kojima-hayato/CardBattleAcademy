@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AlgorithmBuilder
+public class AlgorithmExecuter
 {
-    FloatingDamageController fdc;
-
     private List<Card> algoList = new();
 
     List<Card> hand = CardBuilder.hand;
@@ -19,16 +18,10 @@ public class AlgorithmBuilder
     bool isEnterIf, isEnterRoop;
     int roopCount;
 
-    int heroHPvalue, bossHPvalue;
+    int heroHPValue, bossHPValue;
 
-    public IEnumerator ExecuteAlgo(Slider heroHP, Slider bossHP, FloatingDamageController fdcParam)
+    public void BuildAlgo()
     {
-        //ダメージ表示クラス
-        fdc = fdcParam;
-
-        heroHPvalue = (int)heroHP.value;
-        bossHPvalue = (int)bossHP.value;
-
         //初期化
         algoList.Clear();
 
@@ -53,13 +46,14 @@ public class AlgorithmBuilder
             }
         }
 
-        foreach (Card c in algoList)
-        {
-            Debug.Log("algoList:" + c.GetCardType());
-        }
+    }
+
+    public IEnumerator ExecuteAlgo(Slider heroHP, Slider bossHP, TextMeshProUGUI nowHP, GameObject textFrame, Text textBox, float waitTime)
+    {
+        heroHPValue = (int)heroHP.value;
+        bossHPValue = (int)bossHP.value;
 
         //アルゴリズムを実行する
-
         isEnterIf = false;
         isEnterRoop = false;
 
@@ -70,46 +64,85 @@ public class AlgorithmBuilder
             //初期化処理
             int value = c.GetValue();
 
+            Debug.Log("c.GetCardType():" + c.GetCardType());
             switch (c.GetCardType())
             {
                 case "act":
                     ac = actList.Find(x => x.GetCardId() == c.GetCardId());
+
+                    Debug.Log(ac.GetActType());
                     if (ac != null)
                     {
-
                         switch (ac.GetActType())
                         {
                             case "attack":
                                 Debug.Log("攻撃");
                                 if (isEnterIf)
                                 {
-                                    if(ifCheck(ic))
+                                    if (IfCheck(ic))
                                     {
-                                        Debug.Log("判定成功");
                                         value = (int)(value * ic.GetRate());
 
-                                        Debug.Log(value + "のダメージ");
-                                        Attack(value, bossHP, fdc);
+                                        textBox.text = "判定成功！効果" + ic.GetRate() + "倍";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(waitTime);
+                                        Debug.Log("再開");
+
+                                        textBox.text = "";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(0.1f);
+                                        Debug.Log("再開");
+
+                                        Attack(value, bossHP, textBox);
                                     }
                                     else
                                     {
-                                        Debug.Log("判定失敗");
+                                        textBox.text = "判定失敗・・・";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(waitTime);
+                                        Debug.Log("再開");
+
+                                        textBox.text = "";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(0.1f);
+                                        Debug.Log("再開");
                                     }
                                 }
                                 else if (isEnterRoop)
                                 {
-                                    Debug.Log((roopCount) + "連行動");
+                                    textBox.text = roopCount + "連行動";
+                                    Debug.Log("一時停止実行");
+                                    yield return new WaitForSeconds(waitTime);
+                                    Debug.Log("再開");
+
+                                    textBox.text = "";
+                                    Debug.Log("一時停止実行");
+                                    yield return new WaitForSeconds(0.1f);
+                                    Debug.Log("再開");
+
                                     for (int i = 0; i < roopCount; i++)
                                     {
-                                        Debug.Log(value + "のダメージ");
-                                        Attack(value, bossHP, fdc);
+                                        if(bossHP.value <= 0)
+                                        {
+                                            break;
+                                        }
+
+                                        Attack(value, bossHP, textBox);
+
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(waitTime);
+                                        Debug.Log("再開");
+
+                                        textBox.text = "";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(0.1f);
+                                        Debug.Log("再開");
                                     }
 
                                 }
                                 else
                                 {
-                                    Debug.Log(value + "のダメージ");
-                                    Attack(value, bossHP, fdc);
+                                    Attack(value, bossHP, textBox);
                                 }
                                 break;
 
@@ -117,35 +150,91 @@ public class AlgorithmBuilder
                                 Debug.Log("回復");
                                 if (isEnterIf)
                                 {
-                                    if (ifCheck(ic))
+                                    if (IfCheck(ic))
                                     {
                                         Debug.Log("判定成功");
                                         value = (int)(value * ic.GetRate());
 
-                                        Debug.Log(value + "のHPを回復");
-                                        heroHP.value += value;
+                                        textBox.text = "判定成功！効果" + ic.GetRate() + "倍";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(waitTime);
+                                        Debug.Log("再開");
+
+                                        textBox.text = "";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(0.1f);
+                                        Debug.Log("再開");
+
+                                        Heal(value, heroHP, nowHP, textBox);
                                     }
                                     else
                                     {
-                                        Debug.Log("判定失敗");
+                                        textBox.text = "判定失敗・・・";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(waitTime);
+                                        Debug.Log("再開");
+
+                                        textBox.text = "";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(0.1f);
+                                        Debug.Log("再開");
                                     }
                                 }
                                 else if (isEnterRoop)
                                 {
-                                    Debug.Log((roopCount) + "連行動");
+                                    textBox.text = roopCount + "連行動";
+                                    Debug.Log("一時停止実行");
+                                    yield return new WaitForSeconds(waitTime);
+                                    Debug.Log("再開");
+
+                                    textBox.text = "";
+                                    Debug.Log("一時停止実行");
+                                    yield return new WaitForSeconds(0.1f);
+                                    Debug.Log("再開");
+
                                     for (int i = 0; i < roopCount; i++)
                                     {
-                                        Debug.Log(value + "のHPを回復");
-                                        heroHP.value += value;
+                                        if(heroHP.value >= heroHP.maxValue)
+                                        {
+                                            textBox.text = "これ以上回復できない！";
+
+                                            Debug.Log("一時停止実行");
+                                            yield return new WaitForSeconds(waitTime);
+                                            Debug.Log("再開");
+
+                                            break;
+                                        }
+
+                                        Heal(value, heroHP, nowHP, textBox);
+
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(waitTime);
+                                        Debug.Log("再開");
+
+                                        textBox.text = "";
+                                        Debug.Log("一時停止実行");
+                                        yield return new WaitForSeconds(0.1f);
+                                        Debug.Log("再開");
                                     }
 
                                 }
                                 else
                                 {
-                                    Debug.Log(value + "のHPを回復");
-                                    heroHP.value += value;
+                                    Heal(value, heroHP, nowHP, textBox);
                                 }
                                 break;
+                        }
+
+                        if (!isEnterRoop)
+                        {
+                            Debug.Log("一時停止実行");
+                            yield return new WaitForSeconds(waitTime);
+                            Debug.Log("再開");
+
+                            textBox.text = "";
+                            Debug.Log("一時停止実行");
+                            yield return new WaitForSeconds(0.1f);
+                            Debug.Log("再開");
                         }
                     }
 
@@ -176,12 +265,11 @@ public class AlgorithmBuilder
                     isEnterRoop = false;
                     break;
             }
-            
-            yield return new WaitForSeconds(1.0f);
+
         }
     }
 
-    private bool ifCheck(IfCard i)
+    private bool IfCheck(IfCard i)
     {
         bool result = false;
         int targetValue = 0;
@@ -190,11 +278,11 @@ public class AlgorithmBuilder
         switch (i.GetJudgeTarget())
         {
             case "hero_hp":
-                targetValue = heroHPvalue;
+                targetValue = heroHPValue;
                 break;
 
             case "boss_hp":
-                targetValue = bossHPvalue;
+                targetValue = bossHPValue;
                 break;
         }
 
@@ -245,10 +333,24 @@ public class AlgorithmBuilder
         return result;
     }
 
-    private void Attack(int damageValue, Slider bossHP, FloatingDamageController fdc)
+    private void Attack(int damageValue, Slider bossHP, Text textBox)
     {
         bossHP.value -= damageValue;
+        bossHPValue = (int)bossHP.value;
 
-        fdc.ShowDamage(damageValue);
+        textBox.text = damageValue + "のダメージを与えた";
+    }
+
+    private void Heal(int healValue, Slider heroHP, TextMeshProUGUI nowHP, Text textBox)
+    {
+        heroHP.value += healValue;
+
+        heroHPValue = (int)heroHP.value;
+
+        //現在HP(数字)の更新
+        int nowHPValue = (int)heroHP.value;
+        nowHP.text = nowHPValue.ToString();
+
+        textBox.text = healValue + "回復";
     }
 }

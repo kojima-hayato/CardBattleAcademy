@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour
@@ -12,12 +13,22 @@ public class BattleController : MonoBehaviour
     public TextMeshProUGUI maxHP;
     public TextMeshProUGUI nowHP;
 
-    int maxHPValue, nowHPValue;
+    public GameObject textFrame;
+    public Text textBox;
 
-    CardBuilder cb;
-    FloatingDamageController fdc;
+    public List<Button> buttons = new();
 
-    AlgorithmBuilder ab = new();
+    private int maxHPValue, nowHPValue;
+
+    private readonly float waitTime = 1.0f;
+
+    private CardBuilder cb;
+
+    private readonly AlgorithmExecuter ae = new();
+
+    //戦闘しているかどうか判別する
+    public bool isBattleNow = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +46,8 @@ public class BattleController : MonoBehaviour
         ChangeNowHP();
 
         cb = FindObjectOfType<CardBuilder>();
-        fdc = FindObjectOfType<FloatingDamageController>();
+
+        textFrame.SetActive(false);
     }
 
     // Update is called once per frame
@@ -45,36 +57,75 @@ public class BattleController : MonoBehaviour
 
     public void OnClick()
     {
-        StartAttack();
+        //ボタンを押せなくする
+        foreach(Button b in buttons)
+        {
+            b.interactable = false;
+        }
+
+        StartCoroutine(StartAttack());
     }
 
-    private void StartAttack()
+    private IEnumerator StartAttack()
     {
-        Debug.Log("勇者の行動");
-        ab.ExecuteAlgo(heroHP, bossHP, fdc);
+        ae.BuildAlgo();
+
+        //テキストボックスの表示
+        textFrame.SetActive(true);
+        isBattleNow = true;
+
+        textBox.text = "勇者の行動";
+        Debug.Log("一時停止実行");
+        yield return new WaitForSeconds(waitTime);
+        Debug.Log("再開");
+
+        textBox.text = "";
+        Debug.Log("一時停止実行");
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("再開");
+
+        //構築したアルゴリズムを実行する
+        yield return StartCoroutine(ae.ExecuteAlgo(heroHP, bossHP, nowHP, textFrame, textBox, waitTime));
+
+        ChangeNowHP();
 
         if (bossHP.value <= 0)
         {
-            Debug.Log("倒した");
-            //ここに遷移処理(マップ)
+            textBox.text = "倒した！\n(Enterで終了)";
+
+            // エンターキーが押されるまで待機
+            yield return WaitForKeyCode(KeyCode.Return);
+
+            //シーン遷移(マップ)
+            SceneManager.LoadScene("WorldMap");
         }
         else
         {
-            Debug.Log("敵の行動");
-            heroHP.value -= 10;
+            yield return StartCoroutine(EnemyAttack());
 
             if (heroHP.value <= 0)
             {
-                Debug.Log("やられた");
-                //ここに遷移処理(ゲームオーバー)
+                textBox.text = "やられた・・・\n(Enterで終了)";
+
+                // エンターキーが押されるまで待機
+                yield return WaitForKeyCode(KeyCode.Return);
+
+                //シーン遷移(ゲームオーバー)
+                SceneManager.LoadScene("Title");
             }
             else
             {
-                Debug.Log("次のターン");
-                ChangeNowHP();
+                textFrame.SetActive(false);
+                isBattleNow = false;
 
                 cb.ReturnDeck();
                 cb.DrawCard(0, 0, 3);
+
+                //ボタンを押せるようにする
+                foreach (Button b in buttons)
+                {
+                    b.interactable = true;
+                }
             }
         }
     }
@@ -84,5 +135,42 @@ public class BattleController : MonoBehaviour
         //現在HP(数字)の更新
         nowHPValue = (int)heroHP.value;
         nowHP.text = nowHPValue.ToString();
+    }
+
+    private IEnumerator EnemyAttack()
+    {
+        int damage = 10;
+
+        textBox.text = "敵の行動";
+
+        Debug.Log("一時停止実行");
+        yield return new WaitForSeconds(waitTime);
+        Debug.Log("再開");
+
+        textBox.text = "";
+        Debug.Log("一時停止実行");
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("再開");
+
+        heroHP.value -= damage;
+        ChangeNowHP();
+
+        textBox.text = damage + "のダメージを受けた";
+        Debug.Log("一時停止実行");
+        yield return new WaitForSeconds(waitTime);
+        Debug.Log("再開");
+
+        textBox.text = "";
+        Debug.Log("一時停止実行");
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("再開");
+    }
+    private IEnumerator WaitForKeyCode(KeyCode keyCode)
+    {
+        // エンターキーが押されるまで待機
+        while (!Input.GetKeyUp(keyCode))
+        {
+            yield return null;
+        }
     }
 }
