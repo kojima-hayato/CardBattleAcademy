@@ -11,7 +11,7 @@ public class move_chara : MonoBehaviour
 
 
 
-    private Vector3 playerPosition; // ‚±‚±‚Å playerPosition ‚ğéŒ¾
+    //private Vector3 playerPosition; // ‚±‚±‚Å playerPosition ‚ğéŒ¾
     private Vector2 lastMoveDirection = Vector2.zero;
 
     private void SavePlayerPosition()
@@ -50,7 +50,7 @@ public class move_chara : MonoBehaviour
 
     void Update()
     {
-        playerPosition = this.transform.position;
+        //playerPosition = this.transform.position;
 
         if (canMove)
         {
