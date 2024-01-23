@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using MySql.Data.MySqlClient;
+using System;
+using System.Data;
+using System.Linq;
 
 public class BattleManager : MonoBehaviour
 {
+    DataBaseConnector dbc;
+    DataTable dt;
+
     //スクリプト
     PlayerModel pm;
     SkillModel sm;
     ItemModel im;
     MonsterModel mm;
+    QuestionModel qm;
     PlayerDB p;
     MonsterDB m;
     List<Skill> skills = new List<Skill>();
@@ -124,13 +132,43 @@ public class BattleManager : MonoBehaviour
 
     int battleSpeed = 1;
 
+    string questionSql;
+    List<QuestionModel> questionList = new List<QuestionModel>();
 
     void Start()
     {
+        dbc = new();
+        dt = new();
+
         sm = GetComponent<SkillModel>(); //スキル情報
         im = GetComponent<ItemModel>(); //アイテム情報
         mm = GetComponent<MonsterModel>(); //モンスター情報
         pm = GetComponent<PlayerModel>();//プレイヤー情報
+
+        questionSql = "SELECT" +
+            " question," +
+            " choice1," +
+            " choice2," +
+            " choice3," +
+            " choice4" +
+            " FROM" +
+            " data_question AS dq" +
+            " ;";
+        dbc.SetCommand();
+        dt = dbc.ExecuteSQL(questionSql);
+
+        int i = 0;
+        foreach (DataRow row in dt.Rows)
+        {
+            qm = new();
+            qm.question = row["question"].ToString();
+            qm.choice1 = row["choice1"].ToString();
+            qm.choice2 = row["choice2"].ToString();
+            qm.choice3 = row["choice3"].ToString();
+            qm.choice4 = row["choice4"].ToString();
+            questionList.Add(qm);
+        }
+
         StartCoroutine("StartBattle");
     }
 
@@ -605,18 +643,47 @@ public class BattleManager : MonoBehaviour
     //問題セット
     void SetQuestion()
     {
-        //問題文と選択肢
-        questionText.GetComponent<Text>().text = "人の不注意に付け込んで機密情報などを不正に入手する手法は？";
-        choiceText1.GetComponent<Text>().text = "プログラミング言語を使ってソースコードをかくこと。";
-        choiceText2.GetComponent<Text>().text = "ソーシャルエンジニアリング";
-        choiceText3.GetComponent<Text>().text = "DDOS攻撃";
-        choiceText4.GetComponent<Text>().text = "バッファオーバーフロー";
-
-        //正答セット
         choiceWindow1.tag = "false";
-        choiceWindow2.tag = "true";
+        choiceWindow2.tag = "false";
         choiceWindow3.tag = "false";
         choiceWindow4.tag = "false";
+        int q = UnityEngine.Random.Range(0, questionList.Count);//問題番号
+        string[] choiceList = { questionList[q].choice1, questionList[q].choice2, questionList[q].choice3, questionList[q].choice4 };
+        int[] a = { 0, 1, 2, 3 };
+
+        //選択肢ランダム
+        int[] order = GetRandomElements(a, a.Length);
+
+        //正答セット
+        for (int i = 0; i <= 3; i++)
+        {
+            if(order[i] == 0)
+            {
+                switch (i)
+                {
+                    case 0:
+                        choiceWindow1.tag = "true";
+                        break;
+                    case 1:
+                        choiceWindow2.tag = "true";
+                        break;
+                    case 2:
+                        choiceWindow3.tag = "true";
+                        break;
+                    case 3:
+                        choiceWindow4.tag = "true";
+                        break;
+                }
+                break;
+            }
+        }
+
+        //問題文と選択肢
+        questionText.GetComponent<Text>().text = questionList[q].question;
+        choiceText1.GetComponent<Text>().text = choiceList[order[0]];
+        choiceText2.GetComponent<Text>().text = choiceList[order[1]];
+        choiceText3.GetComponent<Text>().text = choiceList[order[2]];
+        choiceText4.GetComponent<Text>().text = choiceList[order[3]];
     }
 
     //倍率リセット
@@ -805,5 +872,15 @@ public class BattleManager : MonoBehaviour
         expoWindow.SetActive(false);
         expoText.SetActive(false);
         costText.SetActive(false);
+    }
+
+    static int[] GetRandomElements(int[] array, int count)
+    {
+        // Fisher-Yatesシャッフルアルゴリズムを使用して配列をシャッフル
+        System.Random random = new System.Random();
+        int[] shuffledArray = array.OrderBy(x => random.Next()).ToArray();
+
+        // 指定された数だけ要素を取得
+        return shuffledArray.Take(count).ToArray();
     }
 }

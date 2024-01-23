@@ -135,8 +135,10 @@ public class MenuController : MonoBehaviour
         {
             playerText += "名前：" + row["hero_name"] + "\n" +
                       "レベル：" + row["hero_level"] + "\n" +
-                      "HP：" + row["hero_hp"] + "\n" +
-                      "攻撃力：" + row["hero_attack"];
+                      "HP：" + row["hero_hp"] + "/" + row["hero_max_hp"] + "\n" +
+                      "SP：" + row["hero_sp"] + "/" + row["hero_max_sp"] + "\n" +
+                      "攻撃力：" + row["hero_attack"] + "\n" +
+                      "防御力：" + row["hero_defense"];
         }
         
         isMenu = false;
