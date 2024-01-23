@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardCarryer : MonoBehaviour
 {
@@ -31,7 +32,6 @@ public class CardCarryer : MonoBehaviour
     void Update()
     {
     }
-
 
     public void OnTriggerEnter2D(Collider2D collision)
     {

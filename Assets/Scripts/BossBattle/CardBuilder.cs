@@ -186,6 +186,13 @@ public class CardBuilder : MonoBehaviour
     {
         //行動カード
         int index;
+
+        if(acl.Count < actNum)
+        {
+            Debug.Log("枚数不足");
+            actNum = acl.Count;
+        }
+
         for (int i = 0; i < actNum; i++)
         {
             index = rnd.Next(0, acl.Count);
@@ -195,11 +202,24 @@ public class CardBuilder : MonoBehaviour
 
         //分岐カード
         List<Card> algoCardList = deck.FindAll(x => x.GetCardType() == "if" || x.GetCardType() == "roop");
+
+        if (algoCardList.Count < actNum)
+        {
+            Debug.Log("枚数不足");
+            algoNum = algoCardList.Count;
+        }
+
         for (int i = 0; i < algoNum; i++)
         {
             index = rnd.Next(0, algoCardList.Count);
             hand.Add(algoCardList[index]);
             deck.Remove(algoCardList[index]);
+        }
+
+        if (deck.Count < rndNum)
+        {
+            Debug.Log("枚数不足");
+            rndNum = deck.Count;
         }
 
         //ランダム

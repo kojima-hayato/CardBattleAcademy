@@ -26,7 +26,7 @@ public class MonsterModel : MonoBehaviour
                 
                 break;
             case 2:
-                m.name = "‚½‚¿‚Î‚È‚Î‚¿‚½";
+                m.name = "‘å–Ú‹Ê";
                 m.hp = 20;
                 m.atk = 7;
                 m.def = 4;
