@@ -10,56 +10,81 @@ public class move_chara : MonoBehaviour
     private bool canMove = true; // 入力を受け付けるかどうかのフラグ
 
 
-    
+
     private Vector3 playerPosition; // ここで playerPosition を宣言
     private Vector2 lastMoveDirection = Vector2.zero;
 
-    private void Start()
+    private void SavePlayerPosition()
     {
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        randomEncount = FindObjectOfType<RandomEncount>();
-        playerPosition = this.transform.position; // 初期位置を設定
+        PlayerPrefs.SetFloat("PlayerPositionX", transform.position.x);
+        PlayerPrefs.SetFloat("PlayerPositionY", transform.position.y);
+        PlayerPrefs.Save();
+    }
 
+    private void LoadPlayerPosition()
+    {
+        float x = PlayerPrefs.GetFloat("PlayerPositionX", 0);
+        float y = PlayerPrefs.GetFloat("PlayerPositionY", 0);
+        transform.position = new Vector2(x, y);
     }
 
 
 
 
 
-    void FixedUpdate()
+
+    private void Start()
+    { 
+        LoadPlayerPosition();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        randomEncount = FindObjectOfType<RandomEncount>();
+        //playerPosition = this.transform.position; // 初期位置を設定
+
+       
+
+    }
+
+
+
+
+    void Update()
     {
-        
+        playerPosition = this.transform.position;
 
         if (canMove)
         {
             float x = Input.GetAxisRaw("Horizontal");
             float y = (x == 0) ? Input.GetAxisRaw("Vertical") : 0.0f;
 
-            Vector2 movement = new Vector2(x, y) * speed;
-            rb.MovePosition(rb.position + movement * Time.deltaTime);
-
-
-
-        if (x != 0 || y != 0)
+            if (x != 0 || y != 0)
             {
-                // 移動とアニメーションの更新
                 transform.position += new Vector3(x, y) * Time.deltaTime * speed;
                 animator.SetFloat("x", x);
                 animator.SetFloat("y", y);
-                
-                lastMoveDirection = new Vector2(x, y);
+                lastMoveDirection = new Vector3(x, y).normalized;
             }
             else
             {
                 animator.SetFloat("x", lastMoveDirection.x);
                 animator.SetFloat("y", lastMoveDirection.y);
             }
-           
+
             UpdateRandomEncounter();
+
         }
-        playerPosition = this.transform.position;
-        //Debug.Log(playerPosition);
+    }
+
+
+    void FixedUpdate()
+    {
+        if (canMove)
+        {
+            float x = Input.GetAxisRaw("Horizontal");
+            float y = (x == 0) ? Input.GetAxisRaw("Vertical") : 0.0f;
+            Vector2 movement = new Vector2(x, y) * speed;
+            rb.MovePosition(rb.position + movement * Time.fixedDeltaTime);
+        }
     }
 
     public bool IsMoving()

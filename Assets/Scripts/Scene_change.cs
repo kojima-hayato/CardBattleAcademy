@@ -8,7 +8,8 @@ public class Scene_change : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            SceneManager.LoadScene("BlueCastle");//移動先のシーンの名前を必ずafterにしてください！
+            SceneManager.LoadScene("BlueCastle");//移動先のシーンの名前を必ず遷移先のシーン名にする
+
         }
     }
 
