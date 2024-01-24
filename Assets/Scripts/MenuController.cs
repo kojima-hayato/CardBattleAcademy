@@ -1,6 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using MySql.Data.MySqlClient;
+using System;
+using System.Data;
 
 public class MenuController : MonoBehaviour
 {
@@ -32,8 +36,110 @@ public class MenuController : MonoBehaviour
     private List<GameObject> deckColList = new List<GameObject>();
     private List<GameObject> choiceColList = new List<GameObject>();
 
+
+    string toolText;
+    string importantText;
+    string deckText;
+    string listText;
+    string playerText;
+
+    string toolSql;
+    string importantSql;
+    string deckSql;
+    string listSql;
+    string playerSql;
+
+    DataBaseConnector dbc;
+    DataTable dt;
+
+
+
+
     void Start()
     {
+        dbc = new();
+        dt = new();
+
+        //ã‚¢ã‚¤ãƒ†ãƒ 
+        toolSql = "SELECT" +
+            " ii.item_id," +
+            " item_name," +
+            " quantity" +
+            " FROM" +
+            " data_item AS di," +
+            " inventory_item AS ii" +
+            " WHERE di.item_id = ii.item_id" +
+            " ;";
+        dbc.SetCommand();
+        dt = dbc.ExecuteSQL(toolSql);
+        foreach (DataRow row in dt.Rows)
+        {
+            if ((int)row["quantity"] == 0)
+            {
+                continue;
+            }
+            string s = (string)row["item_id"];
+            if (s.StartsWith("t"))
+            {
+                importantText += "ãƒ»" + row["item_name"] + "    Ã—" + row["quantity"] + "\n";
+            }
+            else
+            {
+                toolText += "ãƒ»" + row["item_name"] + "    Ã—" + row["quantity"] + "\n";
+            }
+        }
+
+        //ãƒ‡ãƒƒã‚­
+        deckSql = "SELECT" +
+            " card_type," +
+            " quantity" +
+            " FROM" +
+            " battle_card_deck AS bcd," +
+            " data_card AS dc" +
+            " WHERE bcd.card_id = dc.card_id" +
+            " ;";
+        dt = dbc.ExecuteSQL(deckSql);
+        foreach (DataRow row in dt.Rows)
+        {
+            deckText += "ãƒ»" + row["card_type"] + "    Ã—" + row["quantity"] + "\n";
+        }
+
+        //ãƒªã‚¹ãƒˆ
+        listSql = "SELECT" +
+            " card_type," +
+            " quantity" +
+            " FROM" +
+            " inventory_card AS ic," +
+            " data_card AS dc" +
+            " WHERE ic.card_id = dc.card_id" +
+            " ;";
+        dt = dbc.ExecuteSQL(listSql);
+        foreach (DataRow row in dt.Rows)
+        {
+            if ((int)row["quantity"] == 0)
+            {
+                continue;
+            }
+            listText += "ãƒ»" + row["card_type"] + "    Ã—" + row["quantity"] + "\n";
+        }
+
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+        playerSql = "SELECT" +
+            " *" +
+            " FROM" +
+            " data_hero_status AS dhs" +
+            " ;";
+        dt = dbc.ExecuteSQL(playerSql);
+        foreach (DataRow row in dt.Rows)
+        {
+            playerText += "åå‰ï¼š" + row["hero_name"] + "\n" +
+                      "ãƒ¬ãƒ™ãƒ«ï¼š" + row["hero_level"] + "\n" +
+                      "HPï¼š" + row["hero_hp"] + "/" + row["hero_max_hp"] + "\n" +
+                      "SPï¼š" + row["hero_sp"] + "/" + row["hero_max_sp"] + "\n" +
+                      "æ”»æ’ƒåŠ›ï¼š" + row["hero_attack"] + "\n" +
+                      "é˜²å¾¡åŠ›ï¼š" + row["hero_defense"];
+        }
+
         isMenu = false;
         rowList.Add(item);
         rowList.Add(deck);
@@ -58,15 +164,15 @@ public class MenuController : MonoBehaviour
         colList.Add(choiceColList);
     }
 
-    void  Update()
+    void Update()
     {
-        //ƒƒjƒ…[‚ğŠJ‚­
+        //ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’é–‹ã
         if (Input.GetKeyDown(KeyCode.Escape) && isMenu == false)
         {
             isMenu = true;
             isRow = true;
             MenuActive(isMenu);
-            //‰æ‘œ‚ğ·‚µ‘Ö‚¦‚é
+            //ç”»åƒã‚’å·®ã—æ›¿ãˆã‚‹
             rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
         }
 
@@ -103,14 +209,14 @@ public class MenuController : MonoBehaviour
 
         if (isCol)
         {
-            //A‚Ü‚½‚Í©‚ğ‰Ÿ‚·‚Æ¶‚Ì—v‘f‚ÉˆÚ‚é
+            //Aã¾ãŸã¯â†ã‚’æŠ¼ã™ã¨å·¦ã®è¦ç´ ã«ç§»ã‚‹
             if (Input.GetKeyDown(KeyCode.A) && col > 0)
             {
                 col--;
                 ChangeColImage(col + 1, col);
             }
 
-            //D‚Ü‚½‚Í¨‚ğ‰Ÿ‚·‚Æ‰E‚Ì—v‘f‚ÉˆÚ‚é
+            //Dã¾ãŸã¯â†’ã‚’æŠ¼ã™ã¨å³ã®è¦ç´ ã«ç§»ã‚‹
             if (Input.GetKeyDown(KeyCode.D) && col < colList[row].Count - 1)
             {
                 col++;
@@ -129,15 +235,15 @@ public class MenuController : MonoBehaviour
 
     void ChangeColList(int before, int after)
     {
-        if(colList[before] != null)
+        if (colList[before] != null)
         {
             foreach (GameObject g in colList[before])
             {
                 g.SetActive(false);
             }
         }
-        
-        if(colList[after] != null)
+
+        if (colList[after] != null)
         {
             foreach (GameObject g in colList[after])
             {
@@ -148,14 +254,14 @@ public class MenuController : MonoBehaviour
 
     void ChangeColImage(int before, int after)
     {
-        //‰æ‘œ‚ğ·‚µ‘Ö‚¦‚é
+        //ç”»åƒã‚’å·®ã—æ›¿ãˆã‚‹
         colList[row][after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
         colList[row][before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
-    void ChangeRowImage(int before,int after)
+    void ChangeRowImage(int before, int after)
     {
-        //‰æ‘œ‚ğ·‚µ‘Ö‚¦‚é
+        //ç”»åƒã‚’å·®ã—æ›¿ãˆã‚‹
         rowList[after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
         rowList[before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
