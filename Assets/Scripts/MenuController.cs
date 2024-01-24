@@ -1,6 +1,10 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using MySql.Data.MySqlClient;
+using System;
+using System.Data;
 
 public class MenuController : MonoBehaviour
 {
@@ -12,12 +16,16 @@ public class MenuController : MonoBehaviour
     public GameObject save;
     public GameObject end;
     public GameObject tool;
-    public GameObject equipment;
+    public GameObject player;
+    public GameObject skill;
     public GameObject important;
     public GameObject edit;
     public GameObject list;
     public GameObject yes;
     public GameObject no;
+    public GameObject detail;
+
+    public GameObject movePlayer;
 
     private bool isMenu;
     private bool isRow;
@@ -30,11 +38,125 @@ public class MenuController : MonoBehaviour
     private List<List<GameObject>> colList = new List<List<GameObject>>();
     private List<GameObject> itemColList = new List<GameObject>();
     private List<GameObject> deckColList = new List<GameObject>();
+    private List<GameObject> statusColList = new List<GameObject>();
     private List<GameObject> choiceColList = new List<GameObject>();
+
+    string toolText;
+    string importantText;
+    string deckText;
+    string listText;
+    string playerText;
+    string skillText;
+
+    string sql;
+
+    DataBaseConnector dbc;
+    DataTable dt;
 
     void Start()
     {
+        dbc = new();
+        dt = new();
+
+        //„Ç¢„Ç§„ÉÜ„É†
+        sql = "SELECT" +
+            " ii.item_id," +
+            " item_name," +
+            " quantity" +
+            " FROM" +
+            " data_item AS di," +
+            " inventory_item AS ii" +
+            " WHERE di.item_id = ii.item_id" +
+            " ;";
+        dbc.SetCommand();
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            if ((int)row["quantity"] == 0)
+            {
+                continue;
+            }
+            string s = (string)row["item_id"];
+            if (s.StartsWith("t"))
+            {
+                importantText += "„Éª" + row["item_name"] + "    √ó" + row["quantity"] + "\n";
+            }
+            else
+            {
+                toolText += "„Éª" + row["item_name"] + "    √ó" + row["quantity"] + "\n";
+            }
+        }
+
+        //„Éá„ÉÉ„Ç≠
+        sql = "SELECT" +
+            " card_type," +
+            " quantity" +
+            " FROM" +
+            " battle_card_deck AS bcd," +
+            " data_card AS dc" +
+            " WHERE bcd.card_id = dc.card_id" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            deckText += "„Éª" + row["card_type"] + "    √ó" + row["quantity"] + "\n";
+        }
+
+        //„É™„Çπ„Éà
+        sql = "SELECT" +
+            " card_type," +
+            " quantity" +
+            " FROM" +
+            " inventory_card AS ic," +
+            " data_card AS dc" +
+            " WHERE ic.card_id = dc.card_id" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            if ((int)row["quantity"] == 0)
+            {
+                continue;
+            }
+            listText += "„Éª" + row["card_type"] + "    √ó" + row["quantity"] + "\n";
+        }
+
+        //„Éó„É¨„Ç§„É§„Éº
+        sql = "SELECT" +
+            " *" +
+            " FROM" +
+            " data_hero_status AS dhs" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            playerText += "ÂêçÂâçÔºö" + row["hero_name"] + "\n" +
+                      "„É¨„Éô„É´Ôºö" + row["hero_level"] + "\n" +
+                      "HPÔºö" + row["hero_hp"] + "/" + row["hero_max_hp"] + "\n" +
+                      "SPÔºö" + row["hero_sp"] + "/" + row["hero_max_sp"] + "\n" +
+                      "ÊîªÊíÉÂäõÔºö" + row["hero_attack"] + "\n" +
+                      "Èò≤Âæ°ÂäõÔºö" + row["hero_defense"];
+        }
+
+        //„Çπ„Ç≠„É´
+        sql = "SELECT" +
+            " skill_name," +
+            " cost," +
+            " value," +
+            " expo" +
+            " FROM" +
+            " data_hero_status AS dhs," +
+            " data_skill AS ds" +
+            " WHERE dhs.hero_level >= ds.hero_level" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            skillText += "„Éª" + row["skill_name"] + "\n";
+        }
+
         isMenu = false;
+
         rowList.Add(item);
         rowList.Add(deck);
         rowList.Add(status);
@@ -42,41 +164,50 @@ public class MenuController : MonoBehaviour
         rowList.Add(end);
 
         itemColList.Add(tool);
-        itemColList.Add(equipment);
         itemColList.Add(important);
 
         deckColList.Add(edit);
         deckColList.Add(list);
+
+        statusColList.Add(player);
+        statusColList.Add(skill);
 
         choiceColList.Add(yes);
         choiceColList.Add(no);
 
         colList.Add(itemColList);
         colList.Add(deckColList);
-        colList.Add(null);
+        colList.Add(statusColList);
         colList.Add(choiceColList);
         colList.Add(choiceColList);
     }
 
-    void  Update()
+    void Update()
     {
-        //ÉÅÉjÉÖÅ[ÇäJÇ≠
-        if (Input.GetKeyDown(KeyCode.Escape) && isMenu == false)
+        //„É°„Éã„É•„Éº„ÇíÈñã„Åè
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            isMenu = true;
-            isRow = true;
-            MenuActive(isMenu);
-            //âÊëúÇç∑Çµë÷Ç¶ÇÈ
-            rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+            if (isMenu == false)
+            {
+                isMenu = true;
+                isRow = true;
+                rowList[0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
+                detail.GetComponent<Text>().text = toolText;
+                movePlayer.SetActive(false);
+                MenuActive();
+            }
+            else if (isMenu == true && isRow == true)
+            {
+                isMenu = false;
+                isRow = false;
+                rowList[row].transform.localScale = new Vector3(1.0f, 0.5f, 0);
+                row = 0;
+                movePlayer.SetActive(true);
+                MenuActive();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && isMenu == true)
-        {
-            isMenu = false;
-            isRow = false;
-            MenuActive(isMenu);
-        }
-
+        //Á∏¶
         if (isRow)
         {
             if (Input.GetKeyDown(KeyCode.W) && row > 0)
@@ -84,6 +215,7 @@ public class MenuController : MonoBehaviour
                 row--;
                 ChangeRowImage(row + 1, row);
                 ChangeColList(row + 1, row);
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.S) && row < 4)
@@ -91,30 +223,39 @@ public class MenuController : MonoBehaviour
                 row++;
                 ChangeRowImage(row - 1, row);
                 ChangeColList(row - 1, row);
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                colList[0][0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+                colList[row][0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
                 isRow = false;
                 isCol = true;
             }
         }
 
+        //Ê®™
         if (isCol)
         {
-            //AÇ‹ÇΩÇÕÅ©ÇâüÇ∑Ç∆ç∂ÇÃóvëfÇ…à⁄ÇÈ
+            //A„Åæ„Åü„ÅØ‚Üê„ÇíÊäº„Åô„Å®Â∑¶„ÅÆË¶ÅÁ¥†„Å´Áßª„Çã
             if (Input.GetKeyDown(KeyCode.A) && col > 0)
             {
                 col--;
                 ChangeColImage(col + 1, col);
+                ChangeDetail();
             }
 
-            //DÇ‹ÇΩÇÕÅ®ÇâüÇ∑Ç∆âEÇÃóvëfÇ…à⁄ÇÈ
+            //D„Åæ„Åü„ÅØ‚Üí„ÇíÊäº„Åô„Å®Âè≥„ÅÆË¶ÅÁ¥†„Å´Áßª„Çã
             if (Input.GetKeyDown(KeyCode.D) && col < colList[row].Count - 1)
             {
                 col++;
                 ChangeColImage(col - 1, col);
+                ChangeDetail();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -129,15 +270,15 @@ public class MenuController : MonoBehaviour
 
     void ChangeColList(int before, int after)
     {
-        if(colList[before] != null)
+        if (colList[before] != null)
         {
             foreach (GameObject g in colList[before])
             {
                 g.SetActive(false);
             }
         }
-        
-        if(colList[after] != null)
+
+        if (colList[after] != null)
         {
             foreach (GameObject g in colList[after])
             {
@@ -148,19 +289,19 @@ public class MenuController : MonoBehaviour
 
     void ChangeColImage(int before, int after)
     {
-        //âÊëúÇç∑Çµë÷Ç¶ÇÈ
-        colList[row][after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        //ÁîªÂÉè„ÇíÂ∑Æ„ÅóÊõø„Åà„Çã
+        colList[row][after].transform.localScale = new Vector3(1.4f, 0.7f, 0);
         colList[row][before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
-    void ChangeRowImage(int before,int after)
+    void ChangeRowImage(int before, int after)
     {
-        //âÊëúÇç∑Çµë÷Ç¶ÇÈ
-        rowList[after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        //ÁîªÂÉè„ÇíÂ∑Æ„ÅóÊõø„Åà„Çã
+        rowList[after].transform.localScale = new Vector3(1.4f, 0.7f, 0);
         rowList[before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
-    void MenuActive(bool isMenu)
+    void MenuActive()
     {
         back.SetActive(isMenu);
         back2.SetActive(isMenu);
@@ -170,7 +311,60 @@ public class MenuController : MonoBehaviour
         save.SetActive(isMenu);
         end.SetActive(isMenu);
         tool.SetActive(isMenu);
-        equipment.SetActive(isMenu);
         important.SetActive(isMenu);
+        detail.SetActive(isMenu);
+
+        if (isMenu == false)
+        {
+            player.SetActive(isMenu);
+            skill.SetActive(isMenu);
+            list.SetActive(isMenu);
+            edit.SetActive(isMenu);
+            yes.SetActive(isMenu);
+            no.SetActive(isMenu);
+        }
+    }
+
+    void ChangeDetail()
+    {
+        switch (row)
+        {
+            case 0:
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = toolText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = importantText;
+                }
+                break;
+            case 1:
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = deckText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = listText;
+                }
+                break;
+            case 2:
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = playerText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = skillText;
+                }
+                break;
+            case 3:
+                detail.GetComponent<Text>().text = "„Çª„Éº„Éñ„Åó„Åæ„Åô„ÅãÔºü";
+                break;
+            case 4:
+                detail.GetComponent<Text>().text = "„Ç≤„Éº„É†„ÇíÁµÇ‰∫Ü„Åó„Åæ„Åô„ÅãÔºü";
+                break;
+        }
     }
 }
