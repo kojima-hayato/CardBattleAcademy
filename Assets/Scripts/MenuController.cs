@@ -16,12 +16,16 @@ public class MenuController : MonoBehaviour
     public GameObject save;
     public GameObject end;
     public GameObject tool;
-    public GameObject equipment;
+    public GameObject player;
+    public GameObject skill;
     public GameObject important;
     public GameObject edit;
     public GameObject list;
     public GameObject yes;
     public GameObject no;
+    public GameObject detail;
+
+    public GameObject movePlayer;
 
     private bool isMenu;
     private bool isRow;
@@ -34,26 +38,20 @@ public class MenuController : MonoBehaviour
     private List<List<GameObject>> colList = new List<List<GameObject>>();
     private List<GameObject> itemColList = new List<GameObject>();
     private List<GameObject> deckColList = new List<GameObject>();
+    private List<GameObject> statusColList = new List<GameObject>();
     private List<GameObject> choiceColList = new List<GameObject>();
-
 
     string toolText;
     string importantText;
     string deckText;
     string listText;
     string playerText;
+    string skillText;
 
-    string toolSql;
-    string importantSql;
-    string deckSql;
-    string listSql;
-    string playerSql;
+    string sql;
 
     DataBaseConnector dbc;
     DataTable dt;
-
-
-
 
     void Start()
     {
@@ -61,7 +59,7 @@ public class MenuController : MonoBehaviour
         dt = new();
 
         //アイテム
-        toolSql = "SELECT" +
+        sql = "SELECT" +
             " ii.item_id," +
             " item_name," +
             " quantity" +
@@ -71,7 +69,7 @@ public class MenuController : MonoBehaviour
             " WHERE di.item_id = ii.item_id" +
             " ;";
         dbc.SetCommand();
-        dt = dbc.ExecuteSQL(toolSql);
+        dt = dbc.ExecuteSQL(sql);
         foreach (DataRow row in dt.Rows)
         {
             if ((int)row["quantity"] == 0)
@@ -90,7 +88,7 @@ public class MenuController : MonoBehaviour
         }
 
         //デッキ
-        deckSql = "SELECT" +
+        sql = "SELECT" +
             " card_type," +
             " quantity" +
             " FROM" +
@@ -98,14 +96,14 @@ public class MenuController : MonoBehaviour
             " data_card AS dc" +
             " WHERE bcd.card_id = dc.card_id" +
             " ;";
-        dt = dbc.ExecuteSQL(deckSql);
+        dt = dbc.ExecuteSQL(sql);
         foreach (DataRow row in dt.Rows)
         {
             deckText += "・" + row["card_type"] + "    ×" + row["quantity"] + "\n";
         }
 
         //リスト
-        listSql = "SELECT" +
+        sql = "SELECT" +
             " card_type," +
             " quantity" +
             " FROM" +
@@ -113,7 +111,7 @@ public class MenuController : MonoBehaviour
             " data_card AS dc" +
             " WHERE ic.card_id = dc.card_id" +
             " ;";
-        dt = dbc.ExecuteSQL(listSql);
+        dt = dbc.ExecuteSQL(sql);
         foreach (DataRow row in dt.Rows)
         {
             if ((int)row["quantity"] == 0)
@@ -124,12 +122,12 @@ public class MenuController : MonoBehaviour
         }
 
         //プレイヤー
-        playerSql = "SELECT" +
+        sql = "SELECT" +
             " *" +
             " FROM" +
             " data_hero_status AS dhs" +
             " ;";
-        dt = dbc.ExecuteSQL(playerSql);
+        dt = dbc.ExecuteSQL(sql);
         foreach (DataRow row in dt.Rows)
         {
             playerText += "名前：" + row["hero_name"] + "\n" +
@@ -140,7 +138,25 @@ public class MenuController : MonoBehaviour
                       "防御力：" + row["hero_defense"];
         }
 
+        //スキル
+        sql = "SELECT" +
+            " skill_name," +
+            " cost," +
+            " value," +
+            " expo" +
+            " FROM" +
+            " data_hero_status AS dhs," +
+            " data_skill AS ds" +
+            " WHERE dhs.hero_level >= ds.hero_level" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            skillText += "・" + row["skill_name"] + "\n";
+        }
+
         isMenu = false;
+
         rowList.Add(item);
         rowList.Add(deck);
         rowList.Add(status);
@@ -148,18 +164,20 @@ public class MenuController : MonoBehaviour
         rowList.Add(end);
 
         itemColList.Add(tool);
-        itemColList.Add(equipment);
         itemColList.Add(important);
 
         deckColList.Add(edit);
         deckColList.Add(list);
+
+        statusColList.Add(player);
+        statusColList.Add(skill);
 
         choiceColList.Add(yes);
         choiceColList.Add(no);
 
         colList.Add(itemColList);
         colList.Add(deckColList);
-        colList.Add(null);
+        colList.Add(statusColList);
         colList.Add(choiceColList);
         colList.Add(choiceColList);
     }
@@ -167,22 +185,29 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         //メニューを開く
-        if (Input.GetKeyDown(KeyCode.Escape) && isMenu == false)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            isMenu = true;
-            isRow = true;
-            MenuActive(isMenu);
-            //画像を差し替える
-            rowList[0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+            if (isMenu == false)
+            {
+                isMenu = true;
+                isRow = true;
+                rowList[0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
+                detail.GetComponent<Text>().text = toolText;
+                movePlayer.SetActive(false);
+                MenuActive();
+            }
+            else if (isMenu == true && isRow == true)
+            {
+                isMenu = false;
+                isRow = false;
+                rowList[row].transform.localScale = new Vector3(1.0f, 0.5f, 0);
+                row = 0;
+                movePlayer.SetActive(true);
+                MenuActive();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && isMenu == true)
-        {
-            isMenu = false;
-            isRow = false;
-            MenuActive(isMenu);
-        }
-
+        //縦
         if (isRow)
         {
             if (Input.GetKeyDown(KeyCode.W) && row > 0)
@@ -190,6 +215,7 @@ public class MenuController : MonoBehaviour
                 row--;
                 ChangeRowImage(row + 1, row);
                 ChangeColList(row + 1, row);
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.S) && row < 4)
@@ -197,16 +223,18 @@ public class MenuController : MonoBehaviour
                 row++;
                 ChangeRowImage(row - 1, row);
                 ChangeColList(row - 1, row);
+                ChangeDetail();
             }
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                colList[0][0].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+                colList[row][0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
                 isRow = false;
                 isCol = true;
             }
         }
 
+        //横
         if (isCol)
         {
             //Aまたは←を押すと左の要素に移る
@@ -214,6 +242,7 @@ public class MenuController : MonoBehaviour
             {
                 col--;
                 ChangeColImage(col + 1, col);
+                ChangeDetail();
             }
 
             //Dまたは→を押すと右の要素に移る
@@ -221,6 +250,12 @@ public class MenuController : MonoBehaviour
             {
                 col++;
                 ChangeColImage(col - 1, col);
+                ChangeDetail();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -255,18 +290,18 @@ public class MenuController : MonoBehaviour
     void ChangeColImage(int before, int after)
     {
         //画像を差し替える
-        colList[row][after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        colList[row][after].transform.localScale = new Vector3(1.4f, 0.7f, 0);
         colList[row][before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
     void ChangeRowImage(int before, int after)
     {
         //画像を差し替える
-        rowList[after].transform.localScale = new Vector3(1.2f, 0.7f, 0);
+        rowList[after].transform.localScale = new Vector3(1.4f, 0.7f, 0);
         rowList[before].transform.localScale = new Vector3(1.0f, 0.5f, 0);
     }
 
-    void MenuActive(bool isMenu)
+    void MenuActive()
     {
         back.SetActive(isMenu);
         back2.SetActive(isMenu);
@@ -276,7 +311,60 @@ public class MenuController : MonoBehaviour
         save.SetActive(isMenu);
         end.SetActive(isMenu);
         tool.SetActive(isMenu);
-        equipment.SetActive(isMenu);
         important.SetActive(isMenu);
+        detail.SetActive(isMenu);
+
+        if (isMenu == false)
+        {
+            player.SetActive(isMenu);
+            skill.SetActive(isMenu);
+            list.SetActive(isMenu);
+            edit.SetActive(isMenu);
+            yes.SetActive(isMenu);
+            no.SetActive(isMenu);
+        }
+    }
+
+    void ChangeDetail()
+    {
+        switch (row)
+        {
+            case 0:
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = toolText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = importantText;
+                }
+                break;
+            case 1:
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = deckText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = listText;
+                }
+                break;
+            case 2:
+                if (col == 0)
+                {
+                    detail.GetComponent<Text>().text = playerText;
+                }
+                else
+                {
+                    detail.GetComponent<Text>().text = skillText;
+                }
+                break;
+            case 3:
+                detail.GetComponent<Text>().text = "セーブしますか？";
+                break;
+            case 4:
+                detail.GetComponent<Text>().text = "ゲームを終了しますか？";
+                break;
+        }
     }
 }

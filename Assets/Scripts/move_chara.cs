@@ -28,14 +28,9 @@ public class move_chara : MonoBehaviour
         transform.position = new Vector2(x, y);
     }
 
-
-
-
-
-
     private void Start()
     { 
-        LoadPlayerPosition();
+        //LoadPlayerPosition();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         randomEncount = FindObjectOfType<RandomEncount>();

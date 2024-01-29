@@ -21,7 +21,7 @@ public class BattleManager : MonoBehaviour
     QuestionModel qm;
     PlayerDB p;
     MonsterDB m;
-    List<Skill> skills = new List<Skill>();
+    List<SkillModel> skills = new List<SkillModel>();
     List<Item> items = new List<Item>();
 
     public GameObject monsterImage;
@@ -132,7 +132,7 @@ public class BattleManager : MonoBehaviour
 
     int battleSpeed = 1;
 
-    string questionSql;
+    string sql;
     List<QuestionModel> questionList = new List<QuestionModel>();
 
     void Start()
@@ -140,12 +140,12 @@ public class BattleManager : MonoBehaviour
         dbc = new();
         dt = new();
 
-        sm = GetComponent<SkillModel>(); //スキル情報
         im = GetComponent<ItemModel>(); //アイテム情報
         mm = GetComponent<MonsterModel>(); //モンスター情報
         pm = GetComponent<PlayerModel>();//プレイヤー情報
 
-        questionSql = "SELECT" +
+        //問題
+        sql = "SELECT" +
             " question," +
             " choice1," +
             " choice2," +
@@ -155,9 +155,8 @@ public class BattleManager : MonoBehaviour
             " data_question AS dq" +
             " ;";
         dbc.SetCommand();
-        dt = dbc.ExecuteSQL(questionSql);
+        dt = dbc.ExecuteSQL(sql);
 
-        int i = 0;
         foreach (DataRow row in dt.Rows)
         {
             qm = new();
@@ -168,6 +167,46 @@ public class BattleManager : MonoBehaviour
             qm.choice4 = row["choice4"].ToString();
             questionList.Add(qm);
         }
+
+        //スキル
+        skillTextList.Add(skillText1);
+        skillTextList.Add(skillText2);
+        skillTextList.Add(skillText3);
+        skillTextList.Add(skillText4);
+        skillTextList.Add(skillText5);
+        skillTextList.Add(skillText6);
+
+        sql = "SELECT" +
+            " skill_id," +
+            " skill_name," +
+            " cost," +
+            " value," +
+            " message," +
+            " expo" +
+            " FROM" +
+            " data_hero_status AS dhs," +
+            " data_skill AS ds" +
+            " WHERE dhs.hero_level >= ds.hero_level" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+
+        int i = 0;
+        foreach (DataRow row in dt.Rows)
+        {
+            sm = new();
+            sm.id = row["skill_id"].ToString();
+            sm.name = row["skill_name"].ToString();
+            sm.cost = (int)row["cost"];
+            sm.value = (float)row["value"];
+            sm.message = row["message"].ToString();
+            sm.expo = row["expo"].ToString();
+            skillTextList[i].GetComponent<Text>().text = sm.name;
+            skills.Add(sm);
+            i++;
+        }
+        skillActMax = skills.Count;
+
+        //アイテム
 
         StartCoroutine("StartBattle");
     }
@@ -207,12 +246,7 @@ public class BattleManager : MonoBehaviour
         timeRate = 1;
         remainTime = 15;
 
-        skillTextList.Add(skillText1);
-        skillTextList.Add(skillText2);
-        skillTextList.Add(skillText3);
-        skillTextList.Add(skillText4);
-        skillTextList.Add(skillText5);
-        skillTextList.Add(skillText6);
+        
         itemTextList.Add(itemText1);
         itemTextList.Add(itemText2);
         itemTextList.Add(itemText3);
@@ -220,20 +254,9 @@ public class BattleManager : MonoBehaviour
         itemTextList.Add(itemText5);
         itemTextList.Add(itemText6);
 
-        sm.Set();
-        int a = 0;
-        foreach(int x in p.skillID)
-        {
-            skills.Add(sm.SkillSet(x));
-            skillTextList[a].GetComponent<Text>().text = skills[a].name;
-            a++;
-        }
-
-        skillActMax = skills.Count;
 
         im.Set();
         int itemId = 1;
-        a = 0;
         foreach (int x in p.haveItem)
         {
             Item i = im.ItemSet(x, itemId);
@@ -441,7 +464,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    IEnumerator SkillUse(Skill skill)
+    IEnumerator SkillUse(SkillModel skill)
     {
         //スキル
         isSkillTurn = false;
@@ -457,7 +480,7 @@ public class BattleManager : MonoBehaviour
         else
         {
             messageText.GetComponent<Text>().text = p.name + "の" + skill.name + "!\n" + skill.message;
-            sm.SkillUse(skill.id);
+            SkillSet(skill);
             p.nowSp -= skill.cost;
             //SPバー反映
             playerSpBar.GetComponent<Slider>().value = p.nowSp;
@@ -874,6 +897,36 @@ public class BattleManager : MonoBehaviour
         costText.SetActive(false);
     }
 
+    public void SkillSet(SkillModel skill)
+    {
+        switch (skill.id)
+        {
+            case "s01":
+                timeRate = 0.5f;
+                break;
+
+            case "s02":
+                playerDefRate = 3;
+                break;
+
+            case "s03":
+                playerAtkRate = 1.5f;
+                break;
+
+            case "s04":
+                addDamage = 10;
+                break;
+
+            case "s05":
+
+                break;
+            case "s06":
+
+                break;
+        }
+    }
+
+    //選択肢ランダム
     static int[] GetRandomElements(int[] array, int count)
     {
         // Fisher-Yatesシャッフルアルゴリズムを使用して配列をシャッフル
