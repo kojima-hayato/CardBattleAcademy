@@ -25,7 +25,8 @@ public class MenuController : MonoBehaviour
     public GameObject no;
     public GameObject detail;
 
-    public GameObject movePlayer;
+    GameObject movePlayer;
+    move_chara mc;
 
     private bool isMenu;
     private bool isRow;
@@ -41,14 +42,14 @@ public class MenuController : MonoBehaviour
     private List<GameObject> statusColList = new List<GameObject>();
     private List<GameObject> choiceColList = new List<GameObject>();
 
-    string toolText;
-    string importantText;
-    string deckText;
-    string listText;
-    string playerText;
-    string skillText;
+    private string toolText;
+    private string importantText;
+    private string deckText;
+    private string listText;
+    private string playerText;
+    private string skillText;
 
-    string sql;
+    private string sql;
 
     DataBaseConnector dbc;
     DataTable dt;
@@ -57,6 +58,9 @@ public class MenuController : MonoBehaviour
     {
         dbc = new();
         dt = new();
+
+        movePlayer = GameObject.Find("主人公");
+        mc = movePlayer.GetComponent<move_chara>();
 
         //アイテム
         sql = "SELECT" +
@@ -193,7 +197,7 @@ public class MenuController : MonoBehaviour
                 isRow = true;
                 rowList[0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
                 detail.GetComponent<Text>().text = toolText;
-                movePlayer.SetActive(false);
+                mc.enabled = false;
                 MenuActive();
             }
             else if (isMenu == true && isRow == true)
@@ -202,7 +206,7 @@ public class MenuController : MonoBehaviour
                 isRow = false;
                 rowList[row].transform.localScale = new Vector3(1.0f, 0.5f, 0);
                 row = 0;
-                movePlayer.SetActive(true);
+                mc.enabled = true;
                 MenuActive();
             }
         }

@@ -2855,7 +2855,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: aa7b71cd8d1c21b42bd6c91a0aca5e99, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3639,7 +3639,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: aa7b71cd8d1c21b42bd6c91a0aca5e99, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4883,7 +4883,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5541,6 +5541,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c2338ac7f27a74b8fcaa993f3d8e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 
+  name: 
+  type: 
+  quantity: 0
+  value: 0
+  expo: 
 --- !u!114 &2019435706
 MonoBehaviour:
   m_ObjectHideFlags: 0
