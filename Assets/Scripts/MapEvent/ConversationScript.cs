@@ -2,94 +2,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-
 public class ConversationScript : MonoBehaviour
 {
     public Canvas conversationCanvas;
     public Text conversationText;
     private int currentLine = 0;
-    public string[] conversationLines;
-    private move_chara playerController;
+    private string[] conversationLines;
+    public string fileNameBase; // 会話ファイルのベース名
 
-    //キャラクターごとの会話データを指定するための変数
-    public string dialogueFileName;
-
-    // DialogueDataクラス定義が必要です
     [System.Serializable]
     public class DialogueData
     {
         public string[] lines;
     }
 
-   private void Start()
+    private void Start()
     {
-       
-        playerController = FindObjectOfType<move_chara>();
+        // StoryManagerが存在するか確認
+        if (StoryManager.Instance != null)
+        {
+            LoadDialogueFromJSON();
+        }
+        else
+        {
+            Debug.LogError("StoryManagerが見つかりません。");
+        }
 
-        // 最初はCanvasを非表示に
+        
+
         conversationCanvas.enabled = false;
-
-        // JSONから会話データを読み込む
-        LoadDialogueFromJSON(dialogueFileName);
+        LoadDialogueFromJSON();
+        StartCoroutine(WaitForStoryManagerInitialization());
     }
 
-
-    private void OnCollisionEnter2D(Collision2D other)
+    private void LoadDialogueFromJSON()
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            // プレイヤーが触れたら会話を開始
-            StartCoroutine(StartConversation());
-        }
-    }
+        // 現在のストーリー進行状況に応じたファイル名を生成
+        Debug.Log("LoadDialogueFromJSONが呼ばれました。現在のストーリー進行状況: " + StoryManager.Instance.StoryProgress);
+        string fileName = fileNameBase + StoryManager.Instance.StoryProgress;
+        Debug.Log("fileNameBase: " + fileNameBase);
 
-    
-    public IEnumerator StartConversation()
-    {
-        // 最初はCanvasを表示
-        conversationCanvas.enabled = true;
-
-        // 会話開始時にプレイヤーの動きをF止める
-        if (playerController != null)
-        {
-            playerController.SetCanMove(false);
-            
-        }
-
-        while (currentLine < conversationLines.Length)
-        {
-            //次の会話文を表示
-            conversationText.text = conversationLines[currentLine];
-            
-            yield return new WaitUntil(() => Input.GetMouseButtonDown(0)); // クリックを待つ
-            yield return new WaitForSeconds(0.1f); // 小さな遅延を挿入してダブルクリックを防ぐ
-            currentLine++;
-        }
-
-        // 会話終了時にプレイヤーの動きを再開する
-        if (playerController != null)
-        {
-            playerController.SetCanMove(true);
-        }
-
-
-
-
-        // 会話が終了したらCanvasを非表示にする
-        conversationCanvas.enabled = false;
-        currentLine = 0; // 会話をリセット
-    }
-
-    //会話ログが終了しているか判定
-    public bool IsConversationFinished()
-    {
-        return currentLine >= conversationLines.Length;
-
-    }
-
-    // JSONファイルからデータを読み込むメソッド
-    public void LoadDialogueFromJSON(string fileName)
-    {
         TextAsset fileData = Resources.Load<TextAsset>(fileName);
         if (fileData == null)
         {
@@ -99,8 +51,56 @@ public class ConversationScript : MonoBehaviour
 
         DialogueData dialogueData = JsonUtility.FromJson<DialogueData>(fileData.text);
         conversationLines = dialogueData.lines;
-        currentLine = 0; // 現在のラインをリセット
+        currentLine = 0;
     }
 
-    // その他のメソッド
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            StartCoroutine(StartConversation());
+        }
+    }
+
+    public IEnumerator StartConversation()
+    {
+        conversationCanvas.enabled = true;
+        bool waitingForInput = true;
+
+        while (currentLine < conversationLines.Length)
+        {
+           // Debug.Log("現在のライン: " + currentLine);   会話ログが飛んだ時用の確認デバッグ
+
+            conversationText.text = conversationLines[currentLine];
+
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+            // ダブルクリック防止のための短い遅延
+            yield return new WaitForSeconds(0.2f);
+
+            currentLine++;
+            waitingForInput = false;
+        }
+
+        conversationCanvas.enabled = false;
+        currentLine = 0;
+    }
+
+    private IEnumerator WaitForStoryManagerInitialization()
+    {
+        // StoryManagerの初期化が完了するのを待つ
+        yield return new WaitUntil(() => StoryManager.Instance != null);
+
+        // 初期化が完了した後、会話データをロード
+        LoadDialogueFromJSON();
+
+        // その他の初期化処理があればここに記述
+    }
+
+
+    // 会話内容を更新するためのメソッド
+    public void UpdateDialogue()
+    {
+        LoadDialogueFromJSON();
+    }
 }
