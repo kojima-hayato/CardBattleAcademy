@@ -11,7 +11,6 @@ public class SkillModel : MonoBehaviour
     public float value;
     public string message;
     public string expo;
-    BattleManager bm;
 
     // Start is called before the first frame update
     void Start()

@@ -14,15 +14,13 @@ public class BattleManager : MonoBehaviour
     DataTable dt;
 
     //スクリプト
-    PlayerModel pm;
+    PlayerModel p;
+    MonsterModel m;
     SkillModel sm;
     ItemModel im;
-    MonsterModel mm;
     QuestionModel qm;
-    PlayerDB p;
-    MonsterDB m;
     List<SkillModel> skills = new List<SkillModel>();
-    List<Item> items = new List<Item>();
+    List<ItemModel> items = new List<ItemModel>();
 
     public GameObject monsterImage;
 
@@ -106,6 +104,7 @@ public class BattleManager : MonoBehaviour
     public GameObject playerName;
 
     //モンスター情報
+    public string enemyId;
     public static int monsterID;
     public GameObject monsterText;
     int monsterMaxHp;
@@ -139,10 +138,57 @@ public class BattleManager : MonoBehaviour
     {
         dbc = new();
         dt = new();
+        dbc.SetCommand();
 
-        im = GetComponent<ItemModel>(); //アイテム情報
-        mm = GetComponent<MonsterModel>(); //モンスター情報
-        pm = GetComponent<PlayerModel>();//プレイヤー情報
+        //プレイヤー
+        sql = "SELECT" +
+            " *" +
+            " FROM" +
+            " data_hero_status AS dhs" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            p = new();
+            p.name = row["hero_name"].ToString();
+            p.lv = (int)row["hero_level"];
+            p.maxHp = (int)row["hero_max_hp"];
+            p.nowHp = (int)row["hero_hp"];
+            p.maxSp = (int)row["hero_max_sp"];
+            p.nowSp = (int)row["hero_sp"];
+            p.atk = (int)row["hero_attack"];
+            p.def = (int)row["hero_defense"];
+        }
+
+        //モンスター
+        //enemyIdをいれる
+        enemyId = "e0002";
+
+        sql = "SELECT" +
+            " *" +
+            " FROM" +
+            " data_enemy_status AS des" +
+            " WHERE" +
+            " enemy_id = '" + enemyId + "'" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+
+        foreach (DataRow row in dt.Rows)
+        {
+            m = new();
+            m.name = row["enemy_name"].ToString();
+            m.exp = (int)row["enemy_exp"];
+            m.hp = (int)row["enemy_hp"];
+            m.atk = (int)row["enemy_attack"];
+            m.def = (int)row["enemy_defense"];
+            m.imagePath = row["image_path"].ToString();
+        }
+        
+
+        //画像
+        m.image = Resources.Load<Sprite>(m.imagePath);
+        var monsterSprite = monsterImage.GetComponent<SpriteRenderer>();
+        monsterSprite.sprite = m.image;
 
         //問題
         sql = "SELECT" +
@@ -154,7 +200,6 @@ public class BattleManager : MonoBehaviour
             " FROM" +
             " data_question AS dq" +
             " ;";
-        dbc.SetCommand();
         dt = dbc.ExecuteSQL(sql);
 
         foreach (DataRow row in dt.Rows)
@@ -207,6 +252,45 @@ public class BattleManager : MonoBehaviour
         skillActMax = skills.Count;
 
         //アイテム
+        itemTextList.Add(itemText1);
+        itemTextList.Add(itemText2);
+        itemTextList.Add(itemText3);
+        itemTextList.Add(itemText4);
+        itemTextList.Add(itemText5);
+        itemTextList.Add(itemText6);
+
+        sql = "SELECT" +
+            " ii.item_id," +
+            " item_name," +
+            " item_type," +
+            " item_value," +
+            " quantity," +
+            " item_expo" +
+            " FROM" +
+            " data_item AS di" +
+            " JOIN" + 
+            " inventory_item AS ii ON di.item_id = ii.item_id" +
+            " WHERE" +
+            " di.item_id LIKE 'i%'" +
+            " AND" +
+            " quantity <> 0" + 
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+        i = 0;
+        foreach (DataRow row in dt.Rows)
+        {
+            im = new();
+            im.id = row["item_id"].ToString();
+            im.name = row["item_name"].ToString();
+            im.type = row["item_type"].ToString();
+            im.value = (int)row["item_value"];
+            im.quantity = (int)row["quantity"];
+            im.expo = row["item_expo"].ToString();
+            itemTextList[i].GetComponent<Text>().text = im.name;
+            items.Add(im);
+            i++;
+        }
+        itemActMax = items.Count;
 
         StartCoroutine("StartBattle");
     }
@@ -214,16 +298,6 @@ public class BattleManager : MonoBehaviour
     //バトル初期設定
     IEnumerator StartBattle()
     {
-
-        //プレイヤー情報
-        p = pm.PlayerSet();
-
-        //モンスター情報
-        m = mm.MonsterDB(2);
-
-        //画像
-        var monsterSprite = monsterImage.GetComponent<SpriteRenderer>();
-        monsterSprite.sprite = m.image;
 
         monsterText.GetComponent<Text>().text = m.name;
         messageText.GetComponent<Text>().text = m.name + "があらわれた！";
@@ -234,41 +308,21 @@ public class BattleManager : MonoBehaviour
         playerHpBar.GetComponent<Slider>().value = p.nowHp;
         playerSpBar.GetComponent<Slider>().maxValue = p.maxSp;
         playerSpBar.GetComponent<Slider>().value = p.nowSp;
-        monsterHpBar.GetComponent<Slider>().maxValue = m.hp;
-        monsterHpBar.GetComponent<Slider>().value = m.hp;
         maxHp.GetComponent<Text>().text = p.maxHp.ToString();
         nowHp.GetComponent<Text>().text = p.nowHp.ToString();
         maxSp.GetComponent<Text>().text = p.maxSp.ToString();
         nowSp.GetComponent<Text>().text = p.nowSp.ToString();
+
+        monsterHpBar.GetComponent<Slider>().maxValue = m.hp;
+        monsterHpBar.GetComponent<Slider>().value = m.hp;
+
 
         playerAtkRate = 1;
         playerDefRate = 1;
         timeRate = 1;
         remainTime = 15;
 
-        
-        itemTextList.Add(itemText1);
-        itemTextList.Add(itemText2);
-        itemTextList.Add(itemText3);
-        itemTextList.Add(itemText4);
-        itemTextList.Add(itemText5);
-        itemTextList.Add(itemText6);
 
-
-        im.Set();
-        int itemId = 1;
-        foreach (int x in p.haveItem)
-        {
-            Item i = im.ItemSet(x, itemId);
-            if(i != null)
-            {
-                items.Add(i);
-                itemTextList[items.Count - 1].GetComponent<Text>().text = items[items.Count - 1].name;
-            }
-            itemId++;
-        }
-
-        itemActMax = items.Count;
 
         yield return new WaitForSeconds(battleSpeed);
         
@@ -370,7 +424,7 @@ public class BattleManager : MonoBehaviour
         //アイテム
         if (isItemTurn)
         {
-            costText.GetComponent<Text>().text = items[skillAct - 1].have.ToString() + " 個";
+            costText.GetComponent<Text>().text = items[skillAct - 1].quantity.ToString() + " 個";
             expoText.GetComponent<Text>().text = items[skillAct - 1].expo;
 
             if (Input.GetKeyDown(KeyCode.W) && skillAct != 1 && skillAct != 4)
@@ -495,7 +549,7 @@ public class BattleManager : MonoBehaviour
     }
 
     //アイテム
-    IEnumerator ItemUse(Item item)
+    IEnumerator ItemUse(ItemModel item)
     {
         isItemTurn = false;
         MessageActive();
@@ -503,8 +557,8 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(battleSpeed);
 
         //アイテムの個数減らす
-        items[skillAct - 1].have--;
-        if(items[skillAct - 1].have == 0)
+        items[skillAct - 1].quantity--;
+        if(items[skillAct - 1].quantity == 0)
         {
             items.RemoveAt(skillAct - 1);
             for(int i = 0; i < items.Count; i++)
@@ -515,7 +569,7 @@ public class BattleManager : MonoBehaviour
             itemTextList[itemActMax].GetComponent<Text>().text = "";
         }
 
-        im.ItemUse(item.id);
+        ItemSet(item);
         yield return new WaitForSeconds(battleSpeed);
 
         isQuestionTurn = true;
@@ -523,25 +577,7 @@ public class BattleManager : MonoBehaviour
         QuestionActive();
     }
 
-    //回復
-    public void Heal(int heal)
-    {
-        int healValue;
-        if (p.nowHp + heal > p.maxHp)
-        {
-            healValue = p.maxHp - p.nowHp;
-            p.nowHp = p.maxHp;
-        }
-        else
-        {
-            healValue = heal;
-            p.nowHp += heal;
-        }
-        playerHpBar.GetComponent<Slider>().value = p.nowHp;
-        nowHp.GetComponent<Text>().text = p.nowHp.ToString();
-        messageText.GetComponent<Text>().text = p.name + "は" + healValue + "回復した！";
-    }
-
+    
     IEnumerator PlayerTurn()
     {
         //2秒待つ
@@ -923,6 +959,74 @@ public class BattleManager : MonoBehaviour
             case "s06":
 
                 break;
+        }
+    }
+
+    public void ItemSet(ItemModel item)
+    {
+        switch (item.id)
+        {
+            case "i00001":
+                Heal(30,item.type);
+                break;
+
+            case "i00002":
+                Heal(90,item.type);
+                break;
+
+            case "i00003":
+                Heal(200, item.type);
+                break;
+
+            case "i00004":
+                Heal(20, item.type);
+                break;
+
+            case "i00005":
+                Heal(60, item.type);
+                break;
+
+            case "i00006":
+                Heal(100, item.type);
+                break;
+        }
+    }
+
+    //回復
+    public void Heal(int heal, string healType)
+    {
+        int healValue;
+        if(healType == "heal_hp")
+        {
+            if (p.nowHp + heal > p.maxHp)
+            {
+                healValue = p.maxHp - p.nowHp;
+                p.nowHp = p.maxHp;
+            }
+            else
+            {
+                healValue = heal;
+                p.nowHp += heal;
+            }
+            playerHpBar.GetComponent<Slider>().value = p.nowHp;
+            nowHp.GetComponent<Text>().text = p.nowHp.ToString();
+            messageText.GetComponent<Text>().text = p.name + "のHPが" + healValue + "回復した！";
+        }
+        else if(healType == "heal_sp")
+        {
+            if (p.nowSp + heal > p.maxSp)
+            {
+                healValue = p.maxSp - p.nowSp;
+                p.nowSp = p.maxSp;
+            }
+            else
+            {
+                healValue = heal;
+                p.nowSp += heal;
+            }
+            playerSpBar.GetComponent<Slider>().value = p.nowSp;
+            nowSp.GetComponent<Text>().text = p.nowSp.ToString();
+            messageText.GetComponent<Text>().text = p.name + "のSPが" + healValue + "回復した！";
         }
     }
 
