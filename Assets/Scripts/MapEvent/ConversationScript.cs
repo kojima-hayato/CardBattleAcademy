@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class ConversationScript : MonoBehaviour
 {
@@ -18,21 +19,24 @@ public class ConversationScript : MonoBehaviour
 
     private void Start()
     {
-        // StoryManagerが存在するか確認
-        if (StoryManager.Instance != null)
+        // Canvasを最初に非表示に設定
+        conversationCanvas.enabled = false;
+
+        // 特定のシーンでのみ会話ログを読み込む
+        if (SceneManager.GetActiveScene().name == "BlueCastle")
+        {
+            LoadDialogueFromJSON();
+        }
+        else if(SceneManager.GetActiveScene().name == "WorldMap")
         {
             LoadDialogueFromJSON();
         }
         else
         {
-            Debug.LogError("StoryManagerが見つかりません。");
+
+        // 特定のシーンでない場合は何もしない
+
         }
-
-        
-
-        conversationCanvas.enabled = false;
-        LoadDialogueFromJSON();
-        StartCoroutine(WaitForStoryManagerInitialization());
     }
 
     private void LoadDialogueFromJSON()
@@ -69,7 +73,7 @@ public class ConversationScript : MonoBehaviour
 
         while (currentLine < conversationLines.Length)
         {
-           // Debug.Log("現在のライン: " + currentLine);   会話ログが飛んだ時用の確認デバッグ
+            // Debug.Log("現在のライン: " + currentLine);   会話ログが飛んだ時用の確認デバッグ
 
             conversationText.text = conversationLines[currentLine];
 
