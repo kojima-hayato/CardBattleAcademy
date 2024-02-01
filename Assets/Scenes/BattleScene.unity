@@ -1785,7 +1785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.26666668, a: 1}
+  m_Color: {r: 1, g: 0.99197686, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3797,7 +3797,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4113,7 +4113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.26666668, a: 1}
+  m_Color: {r: 0.97885394, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4269,7 +4269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.26666668, a: 1}
+  m_Color: {r: 1, g: 0.99149597, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4434,7 +4434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5559,6 +5559,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b468cbacb75cc488e0682d892f67ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
+  name: 
+  exp: 0
+  hp: 0
+  atk: 0
+  def: 0
+  imagePath: 
+  image: {fileID: 0}
 --- !u!114 &2019435707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5571,6 +5579,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0831ceb9163006e428f2d089c28c82c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: 
+  lv: 0
+  maxHp: 0
+  nowHp: 0
+  maxSp: 0
+  nowSp: 0
+  atk: 0
+  def: 0
 --- !u!114 &2019435709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5630,6 +5646,7 @@ MonoBehaviour:
   timeBar: {fileID: 439691476}
   timeText: {fileID: 458502320}
   playerName: {fileID: 392198335}
+  enemyId: 
   monsterText: {fileID: 241798328}
   costSp: 0
   timeRate: 0

@@ -563,6 +563,10 @@ public class BattleManager : MonoBehaviour
             items.RemoveAt(skillAct - 1);
             for(int i = 0; i < items.Count; i++)
             {
+                if(i == skillAct - 1)
+                {
+                    continue;
+                }
                 itemTextList[i].GetComponent<Text>().text = items[i].name;
             }
             itemActMax = items.Count;
@@ -695,6 +699,7 @@ public class BattleManager : MonoBehaviour
         }
         //2ïbë“Ç¬
         yield return new WaitForSeconds(battleSpeed);
+        DBUpdate();
         SceneManager.LoadScene(sceneName);
     }
 
@@ -933,7 +938,7 @@ public class BattleManager : MonoBehaviour
         costText.SetActive(false);
     }
 
-    public void SkillSet(SkillModel skill)
+    void SkillSet(SkillModel skill)
     {
         switch (skill.id)
         {
@@ -962,7 +967,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ItemSet(ItemModel item)
+    void ItemSet(ItemModel item)
     {
         switch (item.id)
         {
@@ -993,7 +998,7 @@ public class BattleManager : MonoBehaviour
     }
 
     //âÒïú
-    public void Heal(int heal, string healType)
+    void Heal(int heal, string healType)
     {
         int healValue;
         if(healType == "heal_hp")
@@ -1028,6 +1033,45 @@ public class BattleManager : MonoBehaviour
             nowSp.GetComponent<Text>().text = p.nowSp.ToString();
             messageText.GetComponent<Text>().text = p.name + "ÇÃSPÇ™" + healValue + "âÒïúÇµÇΩÅI";
         }
+    }
+
+    void DBUpdate()
+    {
+        string subSql1 = "";
+        string subSql2 = "";
+        int x = 0;
+        foreach (ItemModel i in items)
+        {
+            subSql1 += "'" + i.id + "'";
+            subSql2 += i.quantity.ToString();
+            if(x == items.Count)
+            {
+                subSql1 += "),";
+                subSql2 += ",";
+            }
+            else
+            {
+                subSql1 += ",";
+                subSql2 += ")";
+            }
+            x++;
+        }
+        sql = "UPDATE" +
+            " data_hero_status," +
+            " inventory_item" +
+            " SET" +
+            " hero_level = " + p.lv + "," +
+            " hero_max_hp = " + p.maxHp + "," +
+            " hero_hp = " + p.nowHp + "," +
+            " hero_max_sp = " + p.maxSp + "," +
+            " hero_sp = " + p.nowSp + "," +
+            " hero_attack = " + p.atk + "," +
+            " hero_defense = " + p.def + "," +
+            " quantity = ELT(FIELD(item_id," + subSql1 + subSql2 +
+            " WHERE" +
+            " item_id IN('i00001','i00002','i00003','i00004','i00005','i00006')" +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
     }
 
     //ëIëéàÉâÉìÉ_ÉÄ

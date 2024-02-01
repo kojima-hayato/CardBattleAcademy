@@ -25,6 +25,8 @@ public class MenuController : MonoBehaviour
     public GameObject no;
     public GameObject detail;
 
+    PlayerModel p;
+
     GameObject movePlayer;
     move_chara mc;
 
@@ -132,14 +134,23 @@ public class MenuController : MonoBehaviour
             " data_hero_status AS dhs" +
             " ;";
         dt = dbc.ExecuteSQL(sql);
+        p = new();
         foreach (DataRow row in dt.Rows)
         {
+            p.lv = (int)row["hero_level"];
+            p.maxHp = (int)row["hero_max_hp"];
+            p.nowHp = (int)row["hero_hp"];
+            p.maxSp = (int)row["hero_max_sp"];
+            p.nowSp = (int)row["hero_sp"];
+            p.atk = (int)row["hero_attack"];
+            p.def = (int)row["hero_defense"];
+
             playerText += "名前：" + row["hero_name"] + "\n" +
-                      "レベル：" + row["hero_level"] + "\n" +
-                      "HP：" + row["hero_hp"] + "/" + row["hero_max_hp"] + "\n" +
-                      "SP：" + row["hero_sp"] + "/" + row["hero_max_sp"] + "\n" +
-                      "攻撃力：" + row["hero_attack"] + "\n" +
-                      "防御力：" + row["hero_defense"];
+                      "レベル：" + p.lv + "\n" +
+                      "HP：" + p.nowHp + "/" + p.maxHp + "\n" +
+                      "SP：" + p.nowSp + "/" + p.maxSp + "\n" +
+                      "攻撃力：" + p.atk + "\n" +
+                      "防御力：" + p.def;
         }
 
         //スキル
@@ -259,7 +270,35 @@ public class MenuController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-
+                switch (row)
+                {
+                    case 3:
+                        if (col == 0)
+                        {
+                            Save();
+                        }
+                        else
+                        {
+                            isRow = true;
+                            isCol = false;
+                            colList[row][col].transform.localScale = new Vector3(1.0f, 0.5f, 0);
+                            col = 0;
+                        }
+                        break;
+                    case 4:
+                        if (col == 0)
+                        {
+                            //GameEnd();
+                        }
+                        else
+                        {
+                            isRow = true;
+                            isCol = false;
+                            colList[row][col].transform.localScale = new Vector3(1.0f, 0.5f, 0);
+                            col = 0;
+                        }
+                        break;
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -370,5 +409,22 @@ public class MenuController : MonoBehaviour
                 detail.GetComponent<Text>().text = "ゲームを終了しますか？";
                 break;
         }
+    }
+
+    void Save()
+    {
+        sql = "UPDATE" +
+            " data_hero_status" +
+            " SET" +
+            " hero_level = " + p.lv + "," +
+            " hero_max_hp = " + p.maxHp + "," +
+            " hero_hp = " + p.nowHp + "," +
+            " hero_max_sp = " + p.maxSp + "," +
+            " hero_sp = " + p.nowSp + "," +
+            " hero_attack = " + p.atk + "," +
+            " hero_defense = " + p.def +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+
     }
 }
