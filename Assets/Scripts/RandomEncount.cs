@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class RandomEncount : MonoBehaviour
 {
-    public float encountInterval = 0.1f; // ランダムエンカウントの間隔（秒）
-    public float encountChance = 0.2f;
+    public float encountInterval; // ランダムエンカウントの間隔（秒）
+    public float encountChance;
     public move_chara playerMovement;
 
     void Start()

@@ -152,6 +152,7 @@ public class BattleManager : MonoBehaviour
             p = new();
             p.name = row["hero_name"].ToString();
             p.lv = (int)row["hero_level"];
+            p.exp = (int)row["hero_exp"];
             p.maxHp = (int)row["hero_max_hp"];
             p.nowHp = (int)row["hero_hp"];
             p.maxSp = (int)row["hero_max_sp"];
@@ -162,7 +163,7 @@ public class BattleManager : MonoBehaviour
 
         //モンスター
         //enemyIdをいれる
-        enemyId = "e0002";
+        enemyId = "e0001";
 
         sql = "SELECT" +
             " *" +
@@ -284,7 +285,14 @@ public class BattleManager : MonoBehaviour
             im.name = row["item_name"].ToString();
             im.type = row["item_type"].ToString();
             im.value = (int)row["item_value"];
-            im.quantity = (int)row["quantity"];
+            if((int)row["quantity"] == null)
+            {
+                im.quantity = 0;
+            }
+            else
+            {
+                im.quantity = (int)row["quantity"];
+            }
             im.expo = row["item_expo"].ToString();
             itemTextList[i].GetComponent<Text>().text = im.name;
             items.Add(im);
@@ -686,6 +694,7 @@ public class BattleManager : MonoBehaviour
         {
             messageText.GetComponent<Text>().text = "敵を倒した！";
             sceneName = "WorldMap";
+            StartCoroutine("Levelup");
         }
         else if(p.nowHp <= 0)
         {
@@ -1035,27 +1044,46 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    IEnumerator Levelup()
+    {
+        yield return new WaitForSeconds(battleSpeed);
+        messageText.GetComponent<Text>().text = p.name + "は" + m.exp + "の経験値を手に入れた！";
+        int nextLv = p.lv + 1;
+        int nextExp = p.exp + m.exp;
+        sql = "SELECT" +
+            " *" +
+            " FROM" +
+            " data_hero_levelup AS dhl" +
+            " WHERE hero_level = " + nextLv +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
+
+        foreach (DataRow row in dt.Rows)
+        {
+            if ((int)row["hero_exp"] <= nextExp)
+            {
+                messageText.GetComponent<Text>().text = p.name + "はレベルが" + nextLv + "になった！";
+                p.lv = nextLv;
+                p.exp = nextExp;
+                p.maxHp = (int)row["hero_max_hp"];
+                p.maxSp = (int)row["hero_max_sp"];
+                p.atk = (int)row["hero_attack"];
+                p.def = (int)row["hero_defense"];
+            }
+        }
+        yield return new WaitForSeconds(battleSpeed);
+    }
+
     void DBUpdate()
     {
-        string subSql1 = "";
-        string subSql2 = "";
-        int x = 0;
+        string subSql = "quantity = CASE ";
+
         foreach (ItemModel i in items)
         {
-            subSql1 += "'" + i.id + "'";
-            subSql2 += i.quantity.ToString();
-            if(x == items.Count)
-            {
-                subSql1 += "),";
-                subSql2 += ",";
-            }
-            else
-            {
-                subSql1 += ",";
-                subSql2 += ")";
-            }
-            x++;
+            subSql += "WHEN item_id = '" + i.id + "' THEN " + i.quantity.ToString() + " ";
         }
+        subSql += "ELSE 0 END";
+
         sql = "UPDATE" +
             " data_hero_status," +
             " inventory_item" +
@@ -1067,7 +1095,7 @@ public class BattleManager : MonoBehaviour
             " hero_sp = " + p.nowSp + "," +
             " hero_attack = " + p.atk + "," +
             " hero_defense = " + p.def + "," +
-            " quantity = ELT(FIELD(item_id," + subSql1 + subSql2 +
+            subSql +
             " WHERE" +
             " item_id IN('i00001','i00002','i00003','i00004','i00005','i00006')" +
             " ;";
