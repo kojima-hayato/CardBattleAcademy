@@ -31,8 +31,11 @@ public class ConversationScript : MonoBehaviour
         {
             LoadDialogueFromJSON();
         }
-        else
+        else if (SceneManager.GetActiveScene().name == "Village")
         {
+            LoadDialogueFromJSON();
+        }
+        else {
 
         // 特定のシーンでない場合は何もしない
 
@@ -71,6 +74,9 @@ public class ConversationScript : MonoBehaviour
         conversationCanvas.enabled = true;
         bool waitingForInput = true;
 
+        FindObjectOfType<move_chara>().SetCanMove(false);
+
+
         while (currentLine < conversationLines.Length)
         {
             // Debug.Log("現在のライン: " + currentLine);   会話ログが飛んだ時用の確認デバッグ
@@ -88,6 +94,8 @@ public class ConversationScript : MonoBehaviour
 
         conversationCanvas.enabled = false;
         currentLine = 0;
+
+        FindObjectOfType<move_chara>().SetCanMove(true);
     }
 
     private IEnumerator WaitForStoryManagerInitialization()
