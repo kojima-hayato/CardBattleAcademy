@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
@@ -243,9 +244,7 @@ public class MenuController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                colList[row][0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
-                isRow = false;
-                isCol = true;
+                Invoke("ColActive", 0.1f);
             }
         }
 
@@ -276,6 +275,7 @@ public class MenuController : MonoBehaviour
                         if (col == 0)
                         {
                             Save();
+                            detail.GetComponent<Text>().text = "セーブしました！";
                         }
                         else
                         {
@@ -288,7 +288,7 @@ public class MenuController : MonoBehaviour
                     case 4:
                         if (col == 0)
                         {
-                            //GameEnd();
+                            GameEnd();
                         }
                         else
                         {
@@ -403,10 +403,10 @@ public class MenuController : MonoBehaviour
                 }
                 break;
             case 3:
-                detail.GetComponent<Text>().text = "セーブしますか？";
+                detail.GetComponent<Text>().text = "セーブしますか？\n\n" + playerText;
                 break;
             case 4:
-                detail.GetComponent<Text>().text = "ゲームを終了しますか？";
+                detail.GetComponent<Text>().text = "ゲームを終了しますか？\nセーブしていない内容は保存されません。";
                 break;
         }
     }
@@ -415,6 +415,7 @@ public class MenuController : MonoBehaviour
     {
         sql = "UPDATE" +
             " data_hero_status" +
+            " inventory_item" +
             " SET" +
             " hero_level = " + p.lv + "," +
             " hero_max_hp = " + p.maxHp + "," +
@@ -426,5 +427,17 @@ public class MenuController : MonoBehaviour
             " ;";
         dt = dbc.ExecuteSQL(sql);
 
+    }
+
+    void GameEnd()
+    {
+        SceneManager.LoadScene("Title");
+    }
+
+    void ColActive()
+    {
+        colList[row][0].transform.localScale = new Vector3(1.4f, 0.7f, 0);
+        isCol = true;
+        isRow = false;
     }
 }

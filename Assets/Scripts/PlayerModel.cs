@@ -6,6 +6,7 @@ public class PlayerModel : MonoBehaviour
 {
     public string name;
     public int lv;
+    public int exp;
     public int maxHp;
     public int nowHp;
     public int maxSp;
