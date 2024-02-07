@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3632071408797013803}
   - component: {fileID: 3632071408797013800}
   - component: {fileID: 3632071408797013802}
+  - component: {fileID: -1856787024956764680}
   m_Layer: 0
   m_Name: HealPrefab
   m_TagString: Untagged
@@ -81,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 2043157801
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: df08b82cb62da184cab94754f3ed1012, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -109,7 +110,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.72, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -151,3 +152,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1037e103ba8654bbead5d547f63f8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1856787024956764680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632071408797013807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07045c087efcebb4f9ad3f75e8301746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  square: {fileID: 3632071408797013807}
