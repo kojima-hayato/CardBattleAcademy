@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -5,6 +6,8 @@ using UnityEngine;
 
 public class Warp_KB : MonoBehaviour
 {
+    public CinemachineVirtualCamera camera;
+
     StringBuilder sb;
 
     GameObject warpTarget;
@@ -24,7 +27,7 @@ public class Warp_KB : MonoBehaviour
         
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isAfterWarp)
         {
@@ -49,6 +52,7 @@ public class Warp_KB : MonoBehaviour
 
                 if (warpTarget != null)
                 {
+                    camera.transform.position = warpTarget.transform.position;
                     transform.position = warpTarget.transform.position;
 
                     isAfterWarp = true;
@@ -57,11 +61,11 @@ public class Warp_KB : MonoBehaviour
         }
     }
 
-    public void OnCollisionExit2D(Collision2D collision)
+    public void OnTriggerExit2D(Collider2D collision)
     {
         if (isAfterWarp)
         {
-            if(targetName == collision.gameObject.name)
+            if (targetName == collision.gameObject.name)
             {
                 collisionName = "";
                 sb = new StringBuilder();
