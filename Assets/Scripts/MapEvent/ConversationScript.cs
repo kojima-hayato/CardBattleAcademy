@@ -35,10 +35,15 @@ public class ConversationScript : MonoBehaviour
         {
             LoadDialogueFromJSON();
         }
-        else {
+        else if (SceneManager.GetActiveScene().name == "villageHouse")
+        {
 
-        // 特定のシーンでない場合は何もしない
-
+             LoadDialogueFromJSON();
+          
+        }
+        else
+        {
+     // 特定のシーンでない場合は何もしない
         }
     }
 
