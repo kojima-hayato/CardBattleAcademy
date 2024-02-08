@@ -64518,7 +64518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: WorldMap
-  playerPosition: {x: -8, y: -1.5, z: 0}
+  playerPosition: {x: -8, y: -1.6, z: 0}
 --- !u!114 &71292512 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6773006975399113882, guid: f649007c222196a4f9e8d6105730936b, type: 3}
@@ -64558,11 +64558,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5563439249177754972, guid: bed276eea8231e64da8e4773fec5ca80, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.5
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 5563439249177754972, guid: bed276eea8231e64da8e4773fec5ca80, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.4
+      value: -9.4
       objectReference: {fileID: 0}
     - target: {fileID: 5563439249177754972, guid: bed276eea8231e64da8e4773fec5ca80, type: 3}
       propertyPath: m_LocalPosition.z
@@ -107715,11 +107715,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5896222299929635670, guid: 6c5668fcde5f8d54a9abb46eb71ef06d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.5
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 5896222299929635670, guid: 6c5668fcde5f8d54a9abb46eb71ef06d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.4
+      value: -9.4
       objectReference: {fileID: 0}
     - target: {fileID: 5896222299929635670, guid: 6c5668fcde5f8d54a9abb46eb71ef06d, type: 3}
       propertyPath: m_LocalPosition.z
