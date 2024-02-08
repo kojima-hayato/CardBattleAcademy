@@ -35,13 +35,7 @@ public class move_chara : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         randomEncount = FindObjectOfType<RandomEncount>();
         //playerPosition = this.transform.position; // 初期位置を設定
-
-       
-
     }
-
-
-
 
     void Update()
     {
@@ -64,12 +58,9 @@ public class move_chara : MonoBehaviour
                 animator.SetFloat("x", lastMoveDirection.x);
                 animator.SetFloat("y", lastMoveDirection.y);
             }
-
             UpdateRandomEncounter();
-
         }
     }
-
 
     void FixedUpdate()
     {
@@ -109,9 +100,6 @@ public class move_chara : MonoBehaviour
         }
     }
 
-
-
-
     public void SetCanMove(bool value)
     {
         canMove = value;
@@ -125,8 +113,6 @@ public class move_chara : MonoBehaviour
             animator.SetFloat("y", lastMoveDirection.y);
         }
     }
-
-
 
     // バトルエリアから出たときの処理
     private void OnTriggerExit2D(Collider2D other)
@@ -145,12 +131,8 @@ public class move_chara : MonoBehaviour
     {
         if (other.CompareTag("EncounterArea") && canMove)
         {
-
-
             // プレイヤーの入力を止める
             canMove = false;
-
         }
-
     }
 }
