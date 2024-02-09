@@ -37,7 +37,7 @@ public class BattleController : MonoBehaviour
     {
         //HP‚ÌÅ‘å’lİ’è
         heroHP.maxValue = 100;
-        bossHP.maxValue = 1;
+        bossHP.maxValue = 200;
 
         //Œ»İHP‚ğÅ‘å’l‚É‡‚í‚¹‚é
         heroHP.value = heroHP.maxValue;
