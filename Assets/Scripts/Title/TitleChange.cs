@@ -12,5 +12,7 @@ public class TitleChange : MonoBehaviour
     {
         Debug.Log("‰Ÿ‚³‚ê‚½!");  // ƒƒO‚ğo—Í
         SceneManager.LoadScene("WorldMap");
+
+        PlayerPrefs.DeleteAll();
     }
 }
