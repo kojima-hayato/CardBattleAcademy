@@ -139,6 +139,7 @@ public class MenuController : MonoBehaviour
         foreach (DataRow row in dt.Rows)
         {
             p.lv = (int)row["hero_level"];
+            p.exp = (int)row["hero_exp"];
             p.maxHp = (int)row["hero_max_hp"];
             p.nowHp = (int)row["hero_hp"];
             p.maxSp = (int)row["hero_max_sp"];
@@ -148,6 +149,7 @@ public class MenuController : MonoBehaviour
 
             playerText += "名前：" + row["hero_name"] + "\n" +
                       "レベル：" + p.lv + "\n" +
+                      "経験値：" + p.exp + "\n" +
                       "HP：" + p.nowHp + "/" + p.maxHp + "\n" +
                       "SP：" + p.nowSp + "/" + p.maxSp + "\n" +
                       "攻撃力：" + p.atk + "\n" +
@@ -418,6 +420,7 @@ public class MenuController : MonoBehaviour
             " inventory_item" +
             " SET" +
             " hero_level = " + p.lv + "," +
+            " hero_exp = " + p.exp + "," +
             " hero_max_hp = " + p.maxHp + "," +
             " hero_hp = " + p.nowHp + "," +
             " hero_max_sp = " + p.maxSp + "," +
@@ -426,7 +429,6 @@ public class MenuController : MonoBehaviour
             " hero_defense = " + p.def +
             " ;";
         dt = dbc.ExecuteSQL(sql);
-
     }
 
     void GameEnd()
