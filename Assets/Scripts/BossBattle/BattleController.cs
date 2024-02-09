@@ -18,6 +18,9 @@ public class BattleController : MonoBehaviour
 
     public List<Button> buttons = new();
 
+    public string sceneName;
+    public Vector3 playerPosition;
+
     private int maxHPValue, nowHPValue;
 
     private readonly float waitTime = 1.0f;
@@ -34,7 +37,7 @@ public class BattleController : MonoBehaviour
     {
         //HPの最大値設定
         heroHP.maxValue = 100;
-        bossHP.maxValue = 100;
+        bossHP.maxValue = 1;
 
         //現在HPを最大値に合わせる
         heroHP.value = heroHP.maxValue;
@@ -97,6 +100,8 @@ public class BattleController : MonoBehaviour
             yield return WaitForKeyCode(KeyCode.Return);
 
             //シーン遷移(マップ)
+            SceneManager.sceneLoaded += WarpPlayerAfterScene;
+
             SceneManager.LoadScene("WorldMap");
         }
         else
@@ -172,5 +177,23 @@ public class BattleController : MonoBehaviour
         {
             yield return null;
         }
+    }
+
+    void WarpPlayerAfterScene(Scene scene, LoadSceneMode mode)
+    {
+        foreach(Card c in CardBuilder.hand)
+        {
+            CardBuilder.deck.Add(c);
+            Destroy(c.GetCardItem());
+        }
+        CardBuilder.hand.Clear();
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            player.transform.position = playerPosition;
+        }
+
+        SceneManager.sceneLoaded -= WarpPlayerAfterScene;
     }
 }

@@ -2205,6 +2205,8 @@ MonoBehaviour:
   - {fileID: 777823776}
   - {fileID: 455110670}
   - {fileID: 1683838884}
+  sceneName: WorldMap
+  playerPosition: {x: -139.5, y: 81.5, z: 0}
   isBattleNow: 0
 --- !u!114 &973693133
 MonoBehaviour:

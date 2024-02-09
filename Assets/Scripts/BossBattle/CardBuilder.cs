@@ -20,7 +20,7 @@ public class CardBuilder : MonoBehaviour
     ActCard actCard;
     IfCard ifc;
 
-    List<Card> deck = new();
+    public static List<Card> deck = new();
     public static List<Card> hand = new();
     public static List<ActCard> actList = new();
     public static List<IfCard> ifList = new();
@@ -36,7 +36,6 @@ public class CardBuilder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         //DBからデッキ内容を取得する
         sql = "SELECT" +
         " dc.card_id," +
