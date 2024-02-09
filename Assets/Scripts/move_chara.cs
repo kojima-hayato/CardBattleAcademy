@@ -29,8 +29,9 @@ public class move_chara : MonoBehaviour
     }
 
     private void Start()
-    { 
+    {
         //LoadPlayerPosition();
+        LoadPlayerPosition(); // プレイヤーの位置をロード
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         randomEncount = FindObjectOfType<RandomEncount>();
