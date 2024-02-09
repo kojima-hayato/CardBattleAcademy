@@ -192,6 +192,17 @@ public class BattleController : MonoBehaviour
         if (player != null)
         {
             player.transform.position = playerPosition;
+            
+            GameObject Encount = GameObject.Find("EncountArea");
+            GameObject BOSS= GameObject.Find("BOSS");
+            GameObject Log = GameObject.Find("BOSSLog");
+
+
+            Encount.SetActive(false);
+            BOSS.SetActive(false);
+            Log.SetActive(false);
+
+
         }
 
         SceneManager.sceneLoaded -= WarpPlayerAfterScene;
