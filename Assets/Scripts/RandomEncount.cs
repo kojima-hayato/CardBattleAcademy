@@ -10,6 +10,7 @@ public class RandomEncount : MonoBehaviour
     void Start()
     {
         InvokeRepeating("Encount", 0f, encountInterval);
+       
     }
 
     public void PlayerIsMoving(bool isMoving)
@@ -37,6 +38,11 @@ public class RandomEncount : MonoBehaviour
 
                 if (RateEncount < encountChance)
                 {
+                    // プレイヤーの位置を保存
+                    PlayerPrefs.SetFloat("PlayerPositionX", playerMovement.transform.position.x);
+                    PlayerPrefs.SetFloat("PlayerPositionY", playerMovement.transform.position.y);
+                    PlayerPrefs.Save();
+
                     SceneManager.LoadScene("BattleScene");
                 }
             }

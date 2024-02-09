@@ -21,20 +21,16 @@ public class move_chara : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void LoadPlayerPosition()
-    {
-        float x = PlayerPrefs.GetFloat("PlayerPositionX", 0);
-        float y = PlayerPrefs.GetFloat("PlayerPositionY", 0);
-        transform.position = new Vector2(x, y);
-    }
+  
 
     private void Start()
-    { 
-        //LoadPlayerPosition();
+    {
+        LoadPlayerPosition();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         randomEncount = FindObjectOfType<RandomEncount>();
         //playerPosition = this.transform.position; // 初期位置を設定
+
     }
 
     void Update()
@@ -135,4 +131,18 @@ public class move_chara : MonoBehaviour
             canMove = false;
         }
     }
+
+    private void LoadPlayerPosition()
+    {
+        float x = PlayerPrefs.GetFloat("PlayerPositionX", this.transform.position.x);
+        float y = PlayerPrefs.GetFloat("PlayerPositionY", this.transform.position.y);
+        this.transform.position = new Vector2(x, y);
+        
+        //この行を消したらバグります
+        PlayerPrefs.DeleteAll();
+
+
+
+    }
+
 }

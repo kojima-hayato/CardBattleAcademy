@@ -127,7 +127,6 @@ public class BattleManager : MonoBehaviour
     public float timeRate;
     public float playerAtkRate;
     public float playerDefRate;
-    public int addDamage;
 
     int battleSpeed = 1;
 
@@ -163,7 +162,8 @@ public class BattleManager : MonoBehaviour
 
         //モンスター
         //enemyIdをいれる
-        enemyId = "e0001";
+        enemyId = "e000";
+        enemyId += UnityEngine.Random.Range(1, 4);
 
         sql = "SELECT" +
             " *" +
@@ -371,12 +371,17 @@ public class BattleManager : MonoBehaviour
                 //スキル
                 else if(act == 2)
                 {
-                    Invoke("SkillActive", 0.1f);
-                    
+                    if(skillText1.GetComponent<Text>().text != "")
+                    {
+                        Invoke("SkillActive", 0.1f);
+                    }
                 }
                 else if(act == 3)
                 {
-                    Invoke("ItemActive", 0.1f);
+                    if(itemText1.GetComponent<Text>().text != "")
+                    {
+                        Invoke("ItemActive", 0.1f);
+                    }
                 }
                 //逃げる
                 else if(act == 4)
@@ -604,14 +609,6 @@ public class BattleManager : MonoBehaviour
             messageText.GetComponent<Text>().text = m.name + "に" + damage + "のダメージを与えた";
             //HPバー反映
             monsterHpBar.GetComponent<Slider>().value = m.hp;
-            if (addDamage != 0)
-            {
-                yield return new WaitForSeconds(battleSpeed);
-                m.hp -= addDamage;
-                messageText.GetComponent<Text>().text = m.name + "に追加で" + addDamage + "のダメージを与えた";
-                //HPバー反映
-                monsterHpBar.GetComponent<Slider>().value = m.hp;
-            }
         }
         else
         {
@@ -695,20 +692,23 @@ public class BattleManager : MonoBehaviour
             messageText.GetComponent<Text>().text = "敵を倒した！";
             sceneName = "WorldMap";
             StartCoroutine("Levelup");
+            yield return new WaitForSeconds(battleSpeed * 2);
+            DBUpdate();
         }
         else if(p.nowHp <= 0)
         {
             messageText.GetComponent<Text>().text = "全滅した...";
-            sceneName = "";
+            Restart();
+            sceneName = "Title";
+            yield return new WaitForSeconds(battleSpeed * 2);
         }
         else
         {
             messageText.GetComponent<Text>().text = "逃げ出した！";
             sceneName = "WorldMap";
+            yield return new WaitForSeconds(battleSpeed * 2);
+            DBUpdate();
         }
-        //2秒待つ
-        yield return new WaitForSeconds(battleSpeed);
-        DBUpdate();
         SceneManager.LoadScene(sceneName);
     }
 
@@ -765,7 +765,6 @@ public class BattleManager : MonoBehaviour
         playerAtkRate = 1;
         playerDefRate = 1;
         timeRate = 1;
-        addDamage = 0;
     }
 
     //問題出す
@@ -952,26 +951,26 @@ public class BattleManager : MonoBehaviour
         switch (skill.id)
         {
             case "s01":
-                timeRate = 0.5f;
+                timeRate = skill.value;
                 break;
 
             case "s02":
-                playerDefRate = 3;
+                playerDefRate = skill.value;
                 break;
 
             case "s03":
-                playerAtkRate = 1.5f;
+                playerAtkRate = skill.value;
                 break;
 
             case "s04":
-                addDamage = 10;
+                Heal(60, "heal_hp");
                 break;
 
             case "s05":
-
                 break;
-            case "s06":
 
+            case "s06":
+                playerAtkRate = 3;
                 break;
         }
     }
@@ -1049,7 +1048,7 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(battleSpeed);
         messageText.GetComponent<Text>().text = p.name + "は" + m.exp + "の経験値を手に入れた！";
         int nextLv = p.lv + 1;
-        int nextExp = p.exp + m.exp;
+        p.exp += m.exp;
         sql = "SELECT" +
             " *" +
             " FROM" +
@@ -1060,11 +1059,10 @@ public class BattleManager : MonoBehaviour
 
         foreach (DataRow row in dt.Rows)
         {
-            if ((int)row["hero_exp"] <= nextExp)
+            if ((int)row["hero_exp"] <= p.exp)
             {
                 messageText.GetComponent<Text>().text = p.name + "はレベルが" + nextLv + "になった！";
                 p.lv = nextLv;
-                p.exp = nextExp;
                 p.maxHp = (int)row["hero_max_hp"];
                 p.maxSp = (int)row["hero_max_sp"];
                 p.atk = (int)row["hero_attack"];
@@ -1089,6 +1087,7 @@ public class BattleManager : MonoBehaviour
             " inventory_item" +
             " SET" +
             " hero_level = " + p.lv + "," +
+            " hero_exp = " + p.exp + "," +
             " hero_max_hp = " + p.maxHp + "," +
             " hero_hp = " + p.nowHp + "," +
             " hero_max_sp = " + p.maxSp + "," +
@@ -1111,5 +1110,24 @@ public class BattleManager : MonoBehaviour
 
         // 指定された数だけ要素を取得
         return shuffledArray.Take(count).ToArray();
+    }
+
+    void Restart()
+    {
+        sql = "UPDATE" +
+            " data_hero_status," +
+            " inventory_item" +
+            " SET" +
+            " hero_level = " + 1 + "," +
+            " hero_exp = " + 0 + "," +
+            " hero_max_hp = " + 20 + "," +
+            " hero_hp = " + 20 + "," +
+            " hero_max_sp = " + 0 + "," +
+            " hero_sp = " + 0 + "," +
+            " hero_attack = " + 7 + "," +
+            " hero_defense = " + 3 + "," +
+            " quantity = " + 3 +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
     }
 }

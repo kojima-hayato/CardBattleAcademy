@@ -20,9 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BossBattle.unity
     guid: c0f38cd27a0e7dd4ab1433904caa9852
-  - enabled: 1
-    path: Assets/Scenes/Test/TestScenes.unity
-    guid: 7507fd7a19b92d949b8802157f717d89
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MapScene/Village.unity
     guid: f88b484ca32dde5499c49f60ca20cd1c
