@@ -127,7 +127,6 @@ public class BattleManager : MonoBehaviour
     public float timeRate;
     public float playerAtkRate;
     public float playerDefRate;
-    public int addDamage;
 
     int battleSpeed = 1;
 
@@ -163,7 +162,7 @@ public class BattleManager : MonoBehaviour
 
         //モンスター
         //enemyIdをいれる
-        enemyId = "e0001";
+        enemyId = "e0003";
 
         sql = "SELECT" +
             " *" +
@@ -604,14 +603,6 @@ public class BattleManager : MonoBehaviour
             messageText.GetComponent<Text>().text = m.name + "に" + damage + "のダメージを与えた";
             //HPバー反映
             monsterHpBar.GetComponent<Slider>().value = m.hp;
-            if (addDamage != 0)
-            {
-                yield return new WaitForSeconds(battleSpeed);
-                m.hp -= addDamage;
-                messageText.GetComponent<Text>().text = m.name + "に追加で" + addDamage + "のダメージを与えた";
-                //HPバー反映
-                monsterHpBar.GetComponent<Slider>().value = m.hp;
-            }
         }
         else
         {
@@ -699,7 +690,7 @@ public class BattleManager : MonoBehaviour
         else if(p.nowHp <= 0)
         {
             messageText.GetComponent<Text>().text = "全滅した...";
-            sceneName = "";
+            sceneName = "Title";
         }
         else
         {
@@ -765,7 +756,6 @@ public class BattleManager : MonoBehaviour
         playerAtkRate = 1;
         playerDefRate = 1;
         timeRate = 1;
-        addDamage = 0;
     }
 
     //問題出す
@@ -952,26 +942,26 @@ public class BattleManager : MonoBehaviour
         switch (skill.id)
         {
             case "s01":
-                timeRate = 0.5f;
+                timeRate = skill.value;
                 break;
 
             case "s02":
-                playerDefRate = 3;
+                playerDefRate = skill.value;
                 break;
 
             case "s03":
-                playerAtkRate = 1.5f;
+                playerAtkRate = skill.value;
                 break;
 
             case "s04":
-                addDamage = 10;
+                Heal(60, "heal_hp");
                 break;
 
             case "s05":
-
                 break;
-            case "s06":
 
+            case "s06":
+                playerAtkRate = 3;
                 break;
         }
     }
@@ -1089,6 +1079,7 @@ public class BattleManager : MonoBehaviour
             " inventory_item" +
             " SET" +
             " hero_level = " + p.lv + "," +
+            " hero_exp = " + p.exp + "," +
             " hero_max_hp = " + p.maxHp + "," +
             " hero_hp = " + p.nowHp + "," +
             " hero_max_sp = " + p.maxSp + "," +
