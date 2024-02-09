@@ -162,7 +162,7 @@ public class BattleManager : MonoBehaviour
 
         //モンスター
         //enemyIdをいれる
-        enemyId = "e0003";
+        enemyId = "e0001";
 
         sql = "SELECT" +
             " *" +
@@ -370,12 +370,17 @@ public class BattleManager : MonoBehaviour
                 //スキル
                 else if(act == 2)
                 {
-                    Invoke("SkillActive", 0.1f);
-                    
+                    if(skillText1.GetComponent<Text>().text != "")
+                    {
+                        Invoke("SkillActive", 0.1f);
+                    }
                 }
                 else if(act == 3)
                 {
-                    Invoke("ItemActive", 0.1f);
+                    if(itemText1.GetComponent<Text>().text != "")
+                    {
+                        Invoke("ItemActive", 0.1f);
+                    }
                 }
                 //逃げる
                 else if(act == 4)
@@ -698,7 +703,7 @@ public class BattleManager : MonoBehaviour
             sceneName = "WorldMap";
         }
         //2秒待つ
-        yield return new WaitForSeconds(battleSpeed);
+        yield return new WaitForSeconds(battleSpeed * 2);
         DBUpdate();
         SceneManager.LoadScene(sceneName);
     }
@@ -1039,7 +1044,7 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(battleSpeed);
         messageText.GetComponent<Text>().text = p.name + "は" + m.exp + "の経験値を手に入れた！";
         int nextLv = p.lv + 1;
-        int nextExp = p.exp + m.exp;
+        p.exp += m.exp;
         sql = "SELECT" +
             " *" +
             " FROM" +
@@ -1050,11 +1055,10 @@ public class BattleManager : MonoBehaviour
 
         foreach (DataRow row in dt.Rows)
         {
-            if ((int)row["hero_exp"] <= nextExp)
+            if ((int)row["hero_exp"] <= p.exp)
             {
                 messageText.GetComponent<Text>().text = p.name + "はレベルが" + nextLv + "になった！";
                 p.lv = nextLv;
-                p.exp = nextExp;
                 p.maxHp = (int)row["hero_max_hp"];
                 p.maxSp = (int)row["hero_max_sp"];
                 p.atk = (int)row["hero_attack"];
