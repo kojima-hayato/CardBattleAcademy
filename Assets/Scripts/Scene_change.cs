@@ -18,13 +18,13 @@ public class Scene_change : MonoBehaviour
     // シーンが読み込まれた時にプレイヤーの位置を設定する
     void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     // イベントの登録を解除する
     void OnDisable()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     // 遷移後のシーンでプレイヤーの位置を指定する
@@ -36,6 +36,8 @@ public class Scene_change : MonoBehaviour
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
+                Debug.Log("プレイヤーの位置を変更します");
+
                 player.transform.position = playerPosition;
             }
         }
