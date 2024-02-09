@@ -162,7 +162,8 @@ public class BattleManager : MonoBehaviour
 
         //モンスター
         //enemyIdをいれる
-        enemyId = "e0001";
+        enemyId = "e000";
+        enemyId += UnityEngine.Random.Range(1, 4);
 
         sql = "SELECT" +
             " *" +
@@ -691,20 +692,23 @@ public class BattleManager : MonoBehaviour
             messageText.GetComponent<Text>().text = "敵を倒した！";
             sceneName = "WorldMap";
             StartCoroutine("Levelup");
+            yield return new WaitForSeconds(battleSpeed * 2);
+            DBUpdate();
         }
         else if(p.nowHp <= 0)
         {
             messageText.GetComponent<Text>().text = "全滅した...";
+            Restart();
             sceneName = "Title";
+            yield return new WaitForSeconds(battleSpeed * 2);
         }
         else
         {
             messageText.GetComponent<Text>().text = "逃げ出した！";
             sceneName = "WorldMap";
+            yield return new WaitForSeconds(battleSpeed * 2);
+            DBUpdate();
         }
-        //2秒待つ
-        yield return new WaitForSeconds(battleSpeed * 2);
-        DBUpdate();
         SceneManager.LoadScene(sceneName);
     }
 
@@ -1106,5 +1110,24 @@ public class BattleManager : MonoBehaviour
 
         // 指定された数だけ要素を取得
         return shuffledArray.Take(count).ToArray();
+    }
+
+    void Restart()
+    {
+        sql = "UPDATE" +
+            " data_hero_status," +
+            " inventory_item" +
+            " SET" +
+            " hero_level = " + 1 + "," +
+            " hero_exp = " + 0 + "," +
+            " hero_max_hp = " + 20 + "," +
+            " hero_hp = " + 20 + "," +
+            " hero_max_sp = " + 0 + "," +
+            " hero_sp = " + 0 + "," +
+            " hero_attack = " + 7 + "," +
+            " hero_defense = " + 3 + "," +
+            " quantity = " + 3 +
+            " ;";
+        dt = dbc.ExecuteSQL(sql);
     }
 }
